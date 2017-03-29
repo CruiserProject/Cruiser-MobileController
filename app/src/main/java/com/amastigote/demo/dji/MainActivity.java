@@ -23,6 +23,7 @@ import dji.sdk.codec.DJICodecManager;
 import dji.sdk.missionmanager.DJICustomMission;
 import dji.sdk.missionmanager.DJIMission;
 import dji.sdk.missionmanager.DJIMissionManager;
+import dji.sdk.missionmanager.missionstep.DJIGoHomeStep;
 import dji.sdk.missionmanager.missionstep.DJIMissionStep;
 import dji.sdk.missionmanager.missionstep.DJITakeoffStep;
 import dji.sdk.sdkmanager.DJISDKManager;
@@ -114,13 +115,16 @@ public class MainActivity extends Activity
         takeOffButton = (Button) findViewById(R.id.takeoff_btn);
         landButton = (Button) findViewById(R.id.land_btn);
 
+        takeOffButton.setEnabled(false);
+        landButton.setEnabled(false);
+
         takeOffButton.setOnClickListener((view -> {
-            takeOffButton.setEnabled(false);
-            landButton.setEnabled(false);
+            djiMissionStepList.clear();
             djiMissionStepList.add(new DJITakeoffStep(this));
             DJICustomMission customMission = new DJICustomMission(djiMissionStepList);
             DJIMission.DJIMissionProgressHandler progressHandler = ((type, progress) -> {
             });
+
             missionManager.prepareMission(customMission, progressHandler, djiError -> {
                 if (djiError != null) {
                     SimpleAlertDialog.show(
@@ -132,6 +136,7 @@ public class MainActivity extends Activity
                     );
                 } else {
                     missionManager.startMissionExecution(djiError2 -> {
+                        landButton.setEnabled(true);
                         if (djiError2 != null) {
                             SimpleAlertDialog.show(
                                     MainActivity.this,
@@ -149,6 +154,36 @@ public class MainActivity extends Activity
         }));
 
         landButton.setOnClickListener((view -> {
+            djiMissionStepList.clear();
+            djiMissionStepList.add(new DJIGoHomeStep(this));
+            DJICustomMission customMission = new DJICustomMission(djiMissionStepList);
+            DJIMission.DJIMissionProgressHandler progressHandler = ((type, progress) -> {
+            });
+
+            missionManager.prepareMission(customMission, progressHandler, djiError -> {
+                if (djiError != null) {
+                    SimpleAlertDialog.show(
+                            MainActivity.this,
+                            false,
+                            "Mission Preparation Error",
+                            djiError.getDescription(),
+                            new SimpleDialogButton("ok", null)
+                    );
+                } else {
+                    missionManager.startMissionExecution(djiError2 -> {
+                        landButton.setEnabled(true);
+                        if (djiError2 != null) {
+                            SimpleAlertDialog.show(
+                                    MainActivity.this,
+                                    false,
+                                    "Mission Execution Error",
+                                    djiError2.getDescription(),
+                                    new SimpleDialogButton("ok", null)
+                            );
+                        }
+                    });
+                }
+            });
 
         }));
         videoTextureView = (TextureView) findViewById(R.id.texture_view);
@@ -167,6 +202,7 @@ public class MainActivity extends Activity
 
     public void initMissionManager() {
         missionManager = djiBaseProduct.getMissionManager();
+        takeOffButton.setEnabled(true);
     }
 
     /*
