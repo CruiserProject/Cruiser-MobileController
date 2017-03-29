@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.TextureView;
 
 import com.amastigote.demo.dji.UIComponentUtil.SimpleProgressDialog;
 
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
+import dji.common.product.Model;
 import dji.sdk.airlink.DJILBAirLink;
 import dji.sdk.base.DJIBaseProduct;
 import dji.sdk.camera.DJICamera;
@@ -25,6 +27,7 @@ public class MainActivity extends Activity
      */
     private SimpleProgressDialog regProgDialog;
     private SimpleProgressDialog waitForProdProgDialog;
+    private TextureView videoTextureView;
 
     /*
         Video Utils
@@ -41,8 +44,30 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        regProgDialog = new SimpleProgressDialog(this, "Registering Application API Key");
-        waitForProdProgDialog = new SimpleProgressDialog(this, "Waiting For Product");
+        videoTextureView = (TextureView) findViewById(R.id.texture_view);
+        videoTextureView.setSurfaceTextureListener(this);
+
+        regProgDialog = new SimpleProgressDialog(this, "Validating API key");
+        waitForProdProgDialog = new SimpleProgressDialog(this, "Waiting for aircraft");
+
+        djiOnReceivedVideoCallback = (videoBuffer, size) -> {
+            if (djiCodecManager != null)
+                djiCodecManager.sendDataToDecoder(videoBuffer, size);
+        };
+
+        cameraReceivedVideoDataCallback = (videoBuffer, size) -> {
+            if (djiCodecManager != null)
+                djiCodecManager.sendDataToDecoder(videoBuffer, size);
+        };
+
+        try {
+            if (djiBaseProduct.getModel() != Model.UnknownAircraft)
+                djiBaseProduct.getCamera().setDJICameraReceivedVideoDataCallback(cameraReceivedVideoDataCallback);
+            else
+                djiBaseProduct.getAirLink().getLBAirLink().setDJIOnReceivedVideoCallback(djiOnReceivedVideoCallback);
+        } catch (Exception e) {
+            Log.e("--->", "error in set video callback");
+        }
 
         regProgDialog.show();
         DJISDKManager.getInstance().initSDKManager(this, djisdkManagerCallback);
