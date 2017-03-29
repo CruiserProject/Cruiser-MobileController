@@ -40,8 +40,7 @@ public class MainActivity extends Activity
 
     private Button takeOffButton;
     private Button landButton;
-    private SimpleProgressDialog regProgDialog;
-    private SimpleProgressDialog waitForProdProgDialog;
+    private SimpleProgressDialog startUpInfoDialog;
     private TextureView videoTextureView;
 
     private List<DJIMissionStep> djiMissionStepList = new ArrayList<>();
@@ -52,8 +51,7 @@ public class MainActivity extends Activity
         @Override
         public void onGetRegisteredResult(DJIError djiError) {
             if (djiError.toString().equals(DJISDKError.REGISTRATION_SUCCESS.toString())) {
-                regProgDialog.dismiss();
-                waitForProdProgDialog.show();
+                startUpInfoDialog.switchMessage("Waiting for aircraft");
                 DJISDKManager.getInstance().startConnectionToProduct();
             } else {
                 SimpleAlertDialog.show(
@@ -71,7 +69,7 @@ public class MainActivity extends Activity
             djiBaseProduct = presentProd;
             if (djiBaseProduct != null && djiBaseProduct.isConnected()) {
 //                djiBaseProduct.setDJIBaseProductListener(...);
-                waitForProdProgDialog.dismiss();
+                startUpInfoDialog.dismiss();
 
                 initMissionManager();
 
@@ -189,10 +187,9 @@ public class MainActivity extends Activity
         videoTextureView = (TextureView) findViewById(R.id.texture_view);
         videoTextureView.setSurfaceTextureListener(this);
 
-        regProgDialog = new SimpleProgressDialog(this, "Validating API key");
-        waitForProdProgDialog = new SimpleProgressDialog(this, "Waiting for aircraft");
+        startUpInfoDialog = new SimpleProgressDialog(this, "Validating API key");
 
-        regProgDialog.show();
+        startUpInfoDialog.show();
         DJISDKManager.getInstance().initSDKManager(this, djisdkManagerCallback);
     }
 
