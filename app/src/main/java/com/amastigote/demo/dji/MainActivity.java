@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.view.TextureView;
+import android.view.WindowManager;
 
 import com.amastigote.demo.dji.UIComponentUtil.SimpleAlertDialog;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleDialogButton;
@@ -33,6 +34,7 @@ public class MainActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         videoTextureView = (TextureView) findViewById(R.id.texture_view);
         videoTextureView.setSurfaceTextureListener(this);
