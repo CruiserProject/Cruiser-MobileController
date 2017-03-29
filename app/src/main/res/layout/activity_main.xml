@@ -29,8 +29,9 @@
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content" />-->
         <ToggleButton
+            android:textOff="record"
+            android:textOn="stop record"
             android:layout_weight="1"
-            android:text="record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
