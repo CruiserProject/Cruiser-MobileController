@@ -71,8 +71,6 @@ public class MainActivity extends Activity
 //                djiBaseProduct.setDJIBaseProductListener(...);
                 startUpInfoDialog.dismiss();
 
-                initMissionManager();
-
                 SimpleAlertDialog.show(
                         MainActivity.this,
                         false,
@@ -80,6 +78,9 @@ public class MainActivity extends Activity
                         "Present product is " + djiBaseProduct.getModel().getDisplayName(),
                         new SimpleDialogButton("ok", null)
                 );
+
+                initMissionManager();
+
                 try {
                     if (djiBaseProduct.getModel() != Model.UnknownAircraft)
                         djiBaseProduct.getCamera().setDJICameraReceivedVideoDataCallback((videoBuffer, size) -> {
@@ -113,9 +114,6 @@ public class MainActivity extends Activity
         takeOffButton = (Button) findViewById(R.id.takeoff_btn);
         landButton = (Button) findViewById(R.id.land_btn);
 
-        takeOffButton.setEnabled(false);
-        landButton.setEnabled(false);
-
         takeOffButton.setOnClickListener((view -> {
             djiMissionStepList.clear();
             djiMissionStepList.add(new DJITakeoffStep(this));
@@ -134,7 +132,6 @@ public class MainActivity extends Activity
                     );
                 } else {
                     missionManager.startMissionExecution(djiError2 -> {
-                        landButton.setEnabled(true);
                         if (djiError2 != null) {
                             SimpleAlertDialog.show(
                                     MainActivity.this,
@@ -169,7 +166,6 @@ public class MainActivity extends Activity
                     );
                 } else {
                     missionManager.startMissionExecution(djiError2 -> {
-                        landButton.setEnabled(true);
                         if (djiError2 != null) {
                             SimpleAlertDialog.show(
                                     MainActivity.this,
@@ -199,7 +195,6 @@ public class MainActivity extends Activity
 
     public void initMissionManager() {
         missionManager = djiBaseProduct.getMissionManager();
-        takeOffButton.setEnabled(true);
     }
 
     /*
