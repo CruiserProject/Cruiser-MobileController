@@ -54,7 +54,7 @@ public class MainActivity extends Activity
                 DJISDKManager.getInstance().startConnectionToProduct();
             } else {
                 SimpleAlertDialog.show(
-                        getBaseContext(),
+                        MainActivity.this,
                         false,
                         "API Key Validation Error",
                         "Contact the developers or check your network connection",
@@ -70,7 +70,7 @@ public class MainActivity extends Activity
 //                djiBaseProduct.setDJIBaseProductListener(...);
                 waitForProdProgDialog.dismiss();
                 SimpleAlertDialog.show(
-                        getBaseContext(),
+                        MainActivity.this,
                         false,
                         "Product Connected",
                         "Present product is " + djiBaseProduct.getModel().getDisplayName(),
@@ -89,7 +89,7 @@ public class MainActivity extends Activity
                         });
                 } catch (Exception e) {
                     SimpleAlertDialog.show(
-                            getBaseContext(),
+                            MainActivity.this,
                             false,
                             "Exception",
                             e.toString(),
