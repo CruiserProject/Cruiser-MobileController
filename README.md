@@ -1,6 +1,7 @@
 # DJiMobileControllerDevel
 ### Collaborators
-@TrafalgarZZZ @hwding
+  - [@TrafalgarZZZ](https://github.com/TrafalgarZZZ)
+  - [@hwding](https://github.com/hwding)
 
 ### Introduction
 A DJI aircraft controlling terminal based on Android Platform.  
