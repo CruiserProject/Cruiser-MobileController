@@ -653,8 +653,8 @@
                     "startLine": 36,
                     "startColumn": 4,
                     "startOffset": 2949,
-                    "endColumn": 73,
-                    "endOffset": 3018
+                    "endColumn": 76,
+                    "endOffset": 3021
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
@@ -662,8 +662,8 @@
                         "startLine": 36,
                         "startColumn": 4,
                         "startOffset": 2949,
-                        "endColumn": 73,
-                        "endOffset": 3018
+                        "endColumn": 76,
+                        "endOffset": 3021
                     }
                 }
             },
@@ -671,18 +671,18 @@
                 "to": {
                     "startLine": 37,
                     "startColumn": 4,
-                    "startOffset": 3023,
-                    "endColumn": 105,
-                    "endOffset": 3124
+                    "startOffset": 3026,
+                    "endColumn": 73,
+                    "endOffset": 3095
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 37,
                         "startColumn": 4,
-                        "startOffset": 3023,
-                        "endColumn": 105,
-                        "endOffset": 3124
+                        "startOffset": 3026,
+                        "endColumn": 73,
+                        "endOffset": 3095
                     }
                 }
             },
@@ -690,18 +690,18 @@
                 "to": {
                     "startLine": 38,
                     "startColumn": 4,
-                    "startOffset": 3129,
-                    "endColumn": 76,
-                    "endOffset": 3201
+                    "startOffset": 3100,
+                    "endColumn": 73,
+                    "endOffset": 3169
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 38,
                         "startColumn": 4,
-                        "startOffset": 3129,
-                        "endColumn": 76,
-                        "endOffset": 3201
+                        "startOffset": 3100,
+                        "endColumn": 73,
+                        "endOffset": 3169
                     }
                 }
             },
@@ -709,18 +709,18 @@
                 "to": {
                     "startLine": 39,
                     "startColumn": 4,
-                    "startOffset": 3206,
-                    "endColumn": 100,
-                    "endOffset": 3302
+                    "startOffset": 3174,
+                    "endColumn": 105,
+                    "endOffset": 3275
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 39,
                         "startColumn": 4,
-                        "startOffset": 3206,
-                        "endColumn": 100,
-                        "endOffset": 3302
+                        "startOffset": 3174,
+                        "endColumn": 105,
+                        "endOffset": 3275
                     }
                 }
             },
@@ -728,18 +728,18 @@
                 "to": {
                     "startLine": 40,
                     "startColumn": 4,
-                    "startOffset": 3307,
-                    "endColumn": 77,
-                    "endOffset": 3380
+                    "startOffset": 3280,
+                    "endColumn": 76,
+                    "endOffset": 3352
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 40,
                         "startColumn": 4,
-                        "startOffset": 3307,
-                        "endColumn": 77,
-                        "endOffset": 3380
+                        "startOffset": 3280,
+                        "endColumn": 76,
+                        "endOffset": 3352
                     }
                 }
             },
@@ -747,18 +747,18 @@
                 "to": {
                     "startLine": 41,
                     "startColumn": 4,
-                    "startOffset": 3385,
+                    "startOffset": 3357,
                     "endColumn": 100,
-                    "endOffset": 3481
+                    "endOffset": 3453
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 41,
                         "startColumn": 4,
-                        "startOffset": 3385,
+                        "startOffset": 3357,
                         "endColumn": 100,
-                        "endOffset": 3481
+                        "endOffset": 3453
                     }
                 }
             },
@@ -766,18 +766,18 @@
                 "to": {
                     "startLine": 42,
                     "startColumn": 4,
-                    "startOffset": 3486,
-                    "endColumn": 63,
-                    "endOffset": 3545
+                    "startOffset": 3458,
+                    "endColumn": 77,
+                    "endOffset": 3531
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 42,
                         "startColumn": 4,
-                        "startOffset": 3486,
-                        "endColumn": 63,
-                        "endOffset": 3545
+                        "startOffset": 3458,
+                        "endColumn": 77,
+                        "endOffset": 3531
                     }
                 }
             },
@@ -785,18 +785,18 @@
                 "to": {
                     "startLine": 43,
                     "startColumn": 4,
-                    "startOffset": 3550,
-                    "endColumn": 89,
-                    "endOffset": 3635
+                    "startOffset": 3536,
+                    "endColumn": 100,
+                    "endOffset": 3632
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 43,
                         "startColumn": 4,
-                        "startOffset": 3550,
-                        "endColumn": 89,
-                        "endOffset": 3635
+                        "startOffset": 3536,
+                        "endColumn": 100,
+                        "endOffset": 3632
                     }
                 }
             },
@@ -804,18 +804,18 @@
                 "to": {
                     "startLine": 44,
                     "startColumn": 4,
-                    "startOffset": 3640,
-                    "endColumn": 85,
-                    "endOffset": 3721
+                    "startOffset": 3637,
+                    "endColumn": 63,
+                    "endOffset": 3696
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 44,
                         "startColumn": 4,
-                        "startOffset": 3640,
-                        "endColumn": 85,
-                        "endOffset": 3721
+                        "startOffset": 3637,
+                        "endColumn": 63,
+                        "endOffset": 3696
                     }
                 }
             },
@@ -823,18 +823,18 @@
                 "to": {
                     "startLine": 45,
                     "startColumn": 4,
-                    "startOffset": 3726,
-                    "endColumn": 88,
-                    "endOffset": 3810
+                    "startOffset": 3701,
+                    "endColumn": 89,
+                    "endOffset": 3786
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 45,
                         "startColumn": 4,
-                        "startOffset": 3726,
-                        "endColumn": 88,
-                        "endOffset": 3810
+                        "startOffset": 3701,
+                        "endColumn": 89,
+                        "endOffset": 3786
                     }
                 }
             },
@@ -842,18 +842,18 @@
                 "to": {
                     "startLine": 46,
                     "startColumn": 4,
-                    "startOffset": 3815,
-                    "endColumn": 67,
-                    "endOffset": 3878
+                    "startOffset": 3791,
+                    "endColumn": 85,
+                    "endOffset": 3872
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 46,
                         "startColumn": 4,
-                        "startOffset": 3815,
-                        "endColumn": 67,
-                        "endOffset": 3878
+                        "startOffset": 3791,
+                        "endColumn": 85,
+                        "endOffset": 3872
                     }
                 }
             },
@@ -861,18 +861,18 @@
                 "to": {
                     "startLine": 47,
                     "startColumn": 4,
-                    "startOffset": 3883,
-                    "endColumn": 101,
-                    "endOffset": 3980
+                    "startOffset": 3877,
+                    "endColumn": 88,
+                    "endOffset": 3961
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 47,
                         "startColumn": 4,
-                        "startOffset": 3883,
-                        "endColumn": 101,
-                        "endOffset": 3980
+                        "startOffset": 3877,
+                        "endColumn": 88,
+                        "endOffset": 3961
                     }
                 }
             },
@@ -880,18 +880,18 @@
                 "to": {
                     "startLine": 48,
                     "startColumn": 4,
-                    "startOffset": 3985,
-                    "endColumn": 61,
-                    "endOffset": 4042
+                    "startOffset": 3966,
+                    "endColumn": 70,
+                    "endOffset": 4032
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 48,
                         "startColumn": 4,
-                        "startOffset": 3985,
-                        "endColumn": 61,
-                        "endOffset": 4042
+                        "startOffset": 3966,
+                        "endColumn": 70,
+                        "endOffset": 4032
                     }
                 }
             },
@@ -899,18 +899,18 @@
                 "to": {
                     "startLine": 49,
                     "startColumn": 4,
-                    "startOffset": 4047,
-                    "endColumn": 87,
-                    "endOffset": 4130
+                    "startOffset": 4037,
+                    "endColumn": 132,
+                    "endOffset": 4165
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 49,
                         "startColumn": 4,
-                        "startOffset": 4047,
-                        "endColumn": 87,
-                        "endOffset": 4130
+                        "startOffset": 4037,
+                        "endColumn": 132,
+                        "endOffset": 4165
                     }
                 }
             },
@@ -918,18 +918,18 @@
                 "to": {
                     "startLine": 50,
                     "startColumn": 4,
-                    "startOffset": 4135,
-                    "endColumn": 73,
-                    "endOffset": 4204
+                    "startOffset": 4170,
+                    "endColumn": 67,
+                    "endOffset": 4233
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 50,
                         "startColumn": 4,
-                        "startOffset": 4135,
-                        "endColumn": 73,
-                        "endOffset": 4204
+                        "startOffset": 4170,
+                        "endColumn": 67,
+                        "endOffset": 4233
                     }
                 }
             },
@@ -937,18 +937,18 @@
                 "to": {
                     "startLine": 51,
                     "startColumn": 4,
-                    "startOffset": 4209,
-                    "endColumn": 94,
-                    "endOffset": 4299
+                    "startOffset": 4238,
+                    "endColumn": 101,
+                    "endOffset": 4335
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 51,
                         "startColumn": 4,
-                        "startOffset": 4209,
-                        "endColumn": 94,
-                        "endOffset": 4299
+                        "startOffset": 4238,
+                        "endColumn": 101,
+                        "endOffset": 4335
                     }
                 }
             },
@@ -956,18 +956,18 @@
                 "to": {
                     "startLine": 52,
                     "startColumn": 4,
-                    "startOffset": 4304,
-                    "endColumn": 76,
-                    "endOffset": 4376
+                    "startOffset": 4340,
+                    "endColumn": 79,
+                    "endOffset": 4415
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 52,
                         "startColumn": 4,
-                        "startOffset": 4304,
-                        "endColumn": 76,
-                        "endOffset": 4376
+                        "startOffset": 4340,
+                        "endColumn": 79,
+                        "endOffset": 4415
                     }
                 }
             },
@@ -975,18 +975,18 @@
                 "to": {
                     "startLine": 53,
                     "startColumn": 4,
-                    "startOffset": 4381,
-                    "endColumn": 100,
-                    "endOffset": 4477
+                    "startOffset": 4420,
+                    "endColumn": 82,
+                    "endOffset": 4498
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 53,
                         "startColumn": 4,
-                        "startOffset": 4381,
-                        "endColumn": 100,
-                        "endOffset": 4477
+                        "startOffset": 4420,
+                        "endColumn": 82,
+                        "endOffset": 4498
                     }
                 }
             },
@@ -994,18 +994,18 @@
                 "to": {
                     "startLine": 54,
                     "startColumn": 4,
-                    "startOffset": 4482,
-                    "endColumn": 63,
-                    "endOffset": 4541
+                    "startOffset": 4503,
+                    "endColumn": 61,
+                    "endOffset": 4560
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 54,
                         "startColumn": 4,
-                        "startOffset": 4482,
-                        "endColumn": 63,
-                        "endOffset": 4541
+                        "startOffset": 4503,
+                        "endColumn": 61,
+                        "endOffset": 4560
                     }
                 }
             },
@@ -1013,18 +1013,18 @@
                 "to": {
                     "startLine": 55,
                     "startColumn": 4,
-                    "startOffset": 4546,
-                    "endColumn": 89,
-                    "endOffset": 4631
+                    "startOffset": 4565,
+                    "endColumn": 87,
+                    "endOffset": 4648
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 55,
                         "startColumn": 4,
-                        "startOffset": 4546,
-                        "endColumn": 89,
-                        "endOffset": 4631
+                        "startOffset": 4565,
+                        "endColumn": 87,
+                        "endOffset": 4648
                     }
                 }
             },
@@ -1032,18 +1032,18 @@
                 "to": {
                     "startLine": 56,
                     "startColumn": 4,
-                    "startOffset": 4636,
+                    "startOffset": 4653,
                     "endColumn": 73,
-                    "endOffset": 4705
+                    "endOffset": 4722
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 56,
                         "startColumn": 4,
-                        "startOffset": 4636,
+                        "startOffset": 4653,
                         "endColumn": 73,
-                        "endOffset": 4705
+                        "endOffset": 4722
                     }
                 }
             },
@@ -1051,18 +1051,18 @@
                 "to": {
                     "startLine": 57,
                     "startColumn": 4,
-                    "startOffset": 4710,
-                    "endColumn": 95,
-                    "endOffset": 4801
+                    "startOffset": 4727,
+                    "endColumn": 94,
+                    "endOffset": 4817
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 57,
                         "startColumn": 4,
-                        "startOffset": 4710,
-                        "endColumn": 95,
-                        "endOffset": 4801
+                        "startOffset": 4727,
+                        "endColumn": 94,
+                        "endOffset": 4817
                     }
                 }
             },
@@ -1070,18 +1070,18 @@
                 "to": {
                     "startLine": 58,
                     "startColumn": 4,
-                    "startOffset": 4806,
-                    "endColumn": 68,
-                    "endOffset": 4870
+                    "startOffset": 4822,
+                    "endColumn": 76,
+                    "endOffset": 4894
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 58,
                         "startColumn": 4,
-                        "startOffset": 4806,
-                        "endColumn": 68,
-                        "endOffset": 4870
+                        "startOffset": 4822,
+                        "endColumn": 76,
+                        "endOffset": 4894
                     }
                 }
             },
@@ -1089,18 +1089,18 @@
                 "to": {
                     "startLine": 59,
                     "startColumn": 4,
-                    "startOffset": 4875,
-                    "endColumn": 80,
-                    "endOffset": 4951
+                    "startOffset": 4899,
+                    "endColumn": 100,
+                    "endOffset": 4995
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 59,
                         "startColumn": 4,
-                        "startOffset": 4875,
-                        "endColumn": 80,
-                        "endOffset": 4951
+                        "startOffset": 4899,
+                        "endColumn": 100,
+                        "endOffset": 4995
                     }
                 }
             },
@@ -1108,18 +1108,18 @@
                 "to": {
                     "startLine": 60,
                     "startColumn": 4,
-                    "startOffset": 4956,
-                    "endColumn": 78,
-                    "endOffset": 5030
+                    "startOffset": 5000,
+                    "endColumn": 63,
+                    "endOffset": 5059
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 60,
                         "startColumn": 4,
-                        "startOffset": 4956,
-                        "endColumn": 78,
-                        "endOffset": 5030
+                        "startOffset": 5000,
+                        "endColumn": 63,
+                        "endOffset": 5059
                     }
                 }
             },
@@ -1127,18 +1127,18 @@
                 "to": {
                     "startLine": 61,
                     "startColumn": 4,
-                    "startOffset": 5035,
-                    "endColumn": 87,
-                    "endOffset": 5118
+                    "startOffset": 5064,
+                    "endColumn": 89,
+                    "endOffset": 5149
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 61,
                         "startColumn": 4,
-                        "startOffset": 5035,
-                        "endColumn": 87,
-                        "endOffset": 5118
+                        "startOffset": 5064,
+                        "endColumn": 89,
+                        "endOffset": 5149
                     }
                 }
             },
@@ -1146,18 +1146,18 @@
                 "to": {
                     "startLine": 62,
                     "startColumn": 4,
-                    "startOffset": 5123,
-                    "endColumn": 70,
-                    "endOffset": 5189
+                    "startOffset": 5154,
+                    "endColumn": 73,
+                    "endOffset": 5223
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 62,
                         "startColumn": 4,
-                        "startOffset": 5123,
-                        "endColumn": 70,
-                        "endOffset": 5189
+                        "startOffset": 5154,
+                        "endColumn": 73,
+                        "endOffset": 5223
                     }
                 }
             },
@@ -1165,18 +1165,18 @@
                 "to": {
                     "startLine": 63,
                     "startColumn": 4,
-                    "startOffset": 5194,
-                    "endColumn": 103,
-                    "endOffset": 5293
+                    "startOffset": 5228,
+                    "endColumn": 95,
+                    "endOffset": 5319
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 63,
                         "startColumn": 4,
-                        "startOffset": 5194,
-                        "endColumn": 103,
-                        "endOffset": 5293
+                        "startOffset": 5228,
+                        "endColumn": 95,
+                        "endOffset": 5319
                     }
                 }
             },
@@ -1184,18 +1184,18 @@
                 "to": {
                     "startLine": 64,
                     "startColumn": 4,
-                    "startOffset": 5298,
-                    "endColumn": 80,
-                    "endOffset": 5374
+                    "startOffset": 5324,
+                    "endColumn": 68,
+                    "endOffset": 5388
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 64,
                         "startColumn": 4,
-                        "startOffset": 5298,
-                        "endColumn": 80,
-                        "endOffset": 5374
+                        "startOffset": 5324,
+                        "endColumn": 68,
+                        "endOffset": 5388
                     }
                 }
             },
@@ -1203,18 +1203,18 @@
                 "to": {
                     "startLine": 65,
                     "startColumn": 4,
-                    "startOffset": 5379,
-                    "endColumn": 99,
-                    "endOffset": 5474
+                    "startOffset": 5393,
+                    "endColumn": 80,
+                    "endOffset": 5469
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 65,
                         "startColumn": 4,
-                        "startOffset": 5379,
-                        "endColumn": 99,
-                        "endOffset": 5474
+                        "startOffset": 5393,
+                        "endColumn": 80,
+                        "endOffset": 5469
                     }
                 }
             },
@@ -1222,18 +1222,18 @@
                 "to": {
                     "startLine": 66,
                     "startColumn": 4,
-                    "startOffset": 5479,
-                    "endColumn": 71,
-                    "endOffset": 5546
+                    "startOffset": 5474,
+                    "endColumn": 78,
+                    "endOffset": 5548
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 66,
                         "startColumn": 4,
-                        "startOffset": 5479,
-                        "endColumn": 71,
-                        "endOffset": 5546
+                        "startOffset": 5474,
+                        "endColumn": 78,
+                        "endOffset": 5548
                     }
                 }
             },
@@ -1241,18 +1241,18 @@
                 "to": {
                     "startLine": 67,
                     "startColumn": 4,
-                    "startOffset": 5551,
-                    "endColumn": 94,
-                    "endOffset": 5641
+                    "startOffset": 5553,
+                    "endColumn": 87,
+                    "endOffset": 5636
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 67,
                         "startColumn": 4,
-                        "startOffset": 5551,
-                        "endColumn": 94,
-                        "endOffset": 5641
+                        "startOffset": 5553,
+                        "endColumn": 87,
+                        "endOffset": 5636
                     }
                 }
             },
@@ -1260,18 +1260,18 @@
                 "to": {
                     "startLine": 68,
                     "startColumn": 4,
-                    "startOffset": 5646,
-                    "endColumn": 75,
-                    "endOffset": 5717
+                    "startOffset": 5641,
+                    "endColumn": 70,
+                    "endOffset": 5707
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 68,
                         "startColumn": 4,
-                        "startOffset": 5646,
-                        "endColumn": 75,
-                        "endOffset": 5717
+                        "startOffset": 5641,
+                        "endColumn": 70,
+                        "endOffset": 5707
                     }
                 }
             },
@@ -1279,18 +1279,18 @@
                 "to": {
                     "startLine": 69,
                     "startColumn": 4,
-                    "startOffset": 5722,
-                    "endColumn": 80,
-                    "endOffset": 5798
+                    "startOffset": 5712,
+                    "endColumn": 103,
+                    "endOffset": 5811
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 69,
                         "startColumn": 4,
-                        "startOffset": 5722,
-                        "endColumn": 80,
-                        "endOffset": 5798
+                        "startOffset": 5712,
+                        "endColumn": 103,
+                        "endOffset": 5811
                     }
                 }
             },
@@ -1298,18 +1298,18 @@
                 "to": {
                     "startLine": 70,
                     "startColumn": 4,
-                    "startOffset": 5803,
-                    "endColumn": 57,
-                    "endOffset": 5856
+                    "startOffset": 5816,
+                    "endColumn": 80,
+                    "endOffset": 5892
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 70,
                         "startColumn": 4,
-                        "startOffset": 5803,
-                        "endColumn": 57,
-                        "endOffset": 5856
+                        "startOffset": 5816,
+                        "endColumn": 80,
+                        "endOffset": 5892
                     }
                 }
             },
@@ -1317,18 +1317,18 @@
                 "to": {
                     "startLine": 71,
                     "startColumn": 4,
-                    "startOffset": 5861,
-                    "endColumn": 72,
-                    "endOffset": 5929
+                    "startOffset": 5897,
+                    "endColumn": 99,
+                    "endOffset": 5992
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 71,
                         "startColumn": 4,
-                        "startOffset": 5861,
-                        "endColumn": 72,
-                        "endOffset": 5929
+                        "startOffset": 5897,
+                        "endColumn": 99,
+                        "endOffset": 5992
                     }
                 }
             },
@@ -1336,18 +1336,18 @@
                 "to": {
                     "startLine": 72,
                     "startColumn": 4,
-                    "startOffset": 5934,
-                    "endColumn": 77,
-                    "endOffset": 6007
+                    "startOffset": 5997,
+                    "endColumn": 71,
+                    "endOffset": 6064
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 72,
                         "startColumn": 4,
-                        "startOffset": 5934,
-                        "endColumn": 77,
-                        "endOffset": 6007
+                        "startOffset": 5997,
+                        "endColumn": 71,
+                        "endOffset": 6064
                     }
                 }
             },
@@ -1355,18 +1355,18 @@
                 "to": {
                     "startLine": 73,
                     "startColumn": 4,
-                    "startOffset": 6012,
-                    "endColumn": 84,
-                    "endOffset": 6092
+                    "startOffset": 6069,
+                    "endColumn": 94,
+                    "endOffset": 6159
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 73,
                         "startColumn": 4,
-                        "startOffset": 6012,
-                        "endColumn": 84,
-                        "endOffset": 6092
+                        "startOffset": 6069,
+                        "endColumn": 94,
+                        "endOffset": 6159
                     }
                 }
             },
@@ -1374,18 +1374,18 @@
                 "to": {
                     "startLine": 74,
                     "startColumn": 4,
-                    "startOffset": 6097,
-                    "endColumn": 77,
-                    "endOffset": 6170
+                    "startOffset": 6164,
+                    "endColumn": 81,
+                    "endOffset": 6241
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 74,
                         "startColumn": 4,
-                        "startOffset": 6097,
-                        "endColumn": 77,
-                        "endOffset": 6170
+                        "startOffset": 6164,
+                        "endColumn": 81,
+                        "endOffset": 6241
                     }
                 }
             },
@@ -1393,18 +1393,18 @@
                 "to": {
                     "startLine": 75,
                     "startColumn": 4,
-                    "startOffset": 6175,
-                    "endColumn": 97,
-                    "endOffset": 6268
+                    "startOffset": 6246,
+                    "endColumn": 92,
+                    "endOffset": 6334
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 75,
                         "startColumn": 4,
-                        "startOffset": 6175,
-                        "endColumn": 97,
-                        "endOffset": 6268
+                        "startOffset": 6246,
+                        "endColumn": 92,
+                        "endOffset": 6334
                     }
                 }
             },
@@ -1412,18 +1412,18 @@
                 "to": {
                     "startLine": 76,
                     "startColumn": 4,
-                    "startOffset": 6273,
-                    "endColumn": 97,
-                    "endOffset": 6366
+                    "startOffset": 6339,
+                    "endColumn": 68,
+                    "endOffset": 6403
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 76,
                         "startColumn": 4,
-                        "startOffset": 6273,
-                        "endColumn": 97,
-                        "endOffset": 6366
+                        "startOffset": 6339,
+                        "endColumn": 68,
+                        "endOffset": 6403
                     }
                 }
             },
@@ -1431,18 +1431,18 @@
                 "to": {
                     "startLine": 77,
                     "startColumn": 4,
-                    "startOffset": 6371,
-                    "endColumn": 92,
-                    "endOffset": 6459
+                    "startOffset": 6408,
+                    "endColumn": 79,
+                    "endOffset": 6483
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 77,
                         "startColumn": 4,
-                        "startOffset": 6371,
-                        "endColumn": 92,
-                        "endOffset": 6459
+                        "startOffset": 6408,
+                        "endColumn": 79,
+                        "endOffset": 6483
                     }
                 }
             },
@@ -1450,18 +1450,18 @@
                 "to": {
                     "startLine": 78,
                     "startColumn": 4,
-                    "startOffset": 6464,
-                    "endColumn": 84,
-                    "endOffset": 6544
+                    "startOffset": 6488,
+                    "endColumn": 75,
+                    "endOffset": 6559
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 78,
                         "startColumn": 4,
-                        "startOffset": 6464,
-                        "endColumn": 84,
-                        "endOffset": 6544
+                        "startOffset": 6488,
+                        "endColumn": 75,
+                        "endOffset": 6559
                     }
                 }
             },
@@ -1469,18 +1469,18 @@
                 "to": {
                     "startLine": 79,
                     "startColumn": 4,
-                    "startOffset": 6549,
-                    "endColumn": 84,
-                    "endOffset": 6629
+                    "startOffset": 6564,
+                    "endColumn": 80,
+                    "endOffset": 6640
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 79,
                         "startColumn": 4,
-                        "startOffset": 6549,
-                        "endColumn": 84,
-                        "endOffset": 6629
+                        "startOffset": 6564,
+                        "endColumn": 80,
+                        "endOffset": 6640
                     }
                 }
             },
@@ -1488,18 +1488,18 @@
                 "to": {
                     "startLine": 80,
                     "startColumn": 4,
-                    "startOffset": 6634,
-                    "endColumn": 97,
-                    "endOffset": 6727
+                    "startOffset": 6645,
+                    "endColumn": 89,
+                    "endOffset": 6730
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 80,
                         "startColumn": 4,
-                        "startOffset": 6634,
-                        "endColumn": 97,
-                        "endOffset": 6727
+                        "startOffset": 6645,
+                        "endColumn": 89,
+                        "endOffset": 6730
                     }
                 }
             },
@@ -1507,18 +1507,18 @@
                 "to": {
                     "startLine": 81,
                     "startColumn": 4,
-                    "startOffset": 6732,
-                    "endColumn": 119,
-                    "endOffset": 6847
+                    "startOffset": 6735,
+                    "endColumn": 89,
+                    "endOffset": 6820
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 81,
                         "startColumn": 4,
-                        "startOffset": 6732,
-                        "endColumn": 119,
-                        "endOffset": 6847
+                        "startOffset": 6735,
+                        "endColumn": 89,
+                        "endOffset": 6820
                     }
                 }
             },
@@ -1526,18 +1526,18 @@
                 "to": {
                     "startLine": 82,
                     "startColumn": 4,
-                    "startOffset": 6852,
-                    "endColumn": 105,
-                    "endOffset": 6953
+                    "startOffset": 6825,
+                    "endColumn": 57,
+                    "endOffset": 6878
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 82,
                         "startColumn": 4,
-                        "startOffset": 6852,
-                        "endColumn": 105,
-                        "endOffset": 6953
+                        "startOffset": 6825,
+                        "endColumn": 57,
+                        "endOffset": 6878
                     }
                 }
             },
@@ -1545,18 +1545,18 @@
                 "to": {
                     "startLine": 83,
                     "startColumn": 4,
-                    "startOffset": 6958,
-                    "endColumn": 86,
-                    "endOffset": 7040
+                    "startOffset": 6883,
+                    "endColumn": 72,
+                    "endOffset": 6951
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 83,
                         "startColumn": 4,
-                        "startOffset": 6958,
-                        "endColumn": 86,
-                        "endOffset": 7040
+                        "startOffset": 6883,
+                        "endColumn": 72,
+                        "endOffset": 6951
                     }
                 }
             },
@@ -1564,18 +1564,18 @@
                 "to": {
                     "startLine": 84,
                     "startColumn": 4,
-                    "startOffset": 7045,
-                    "endColumn": 89,
-                    "endOffset": 7130
+                    "startOffset": 6956,
+                    "endColumn": 77,
+                    "endOffset": 7029
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 84,
                         "startColumn": 4,
-                        "startOffset": 7045,
-                        "endColumn": 89,
-                        "endOffset": 7130
+                        "startOffset": 6956,
+                        "endColumn": 77,
+                        "endOffset": 7029
                     }
                 }
             },
@@ -1583,18 +1583,18 @@
                 "to": {
                     "startLine": 85,
                     "startColumn": 4,
-                    "startOffset": 7135,
-                    "endColumn": 76,
-                    "endOffset": 7207
+                    "startOffset": 7034,
+                    "endColumn": 84,
+                    "endOffset": 7114
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 85,
                         "startColumn": 4,
-                        "startOffset": 7135,
-                        "endColumn": 76,
-                        "endOffset": 7207
+                        "startOffset": 7034,
+                        "endColumn": 84,
+                        "endOffset": 7114
                     }
                 }
             },
@@ -1602,18 +1602,18 @@
                 "to": {
                     "startLine": 86,
                     "startColumn": 4,
-                    "startOffset": 7212,
-                    "endColumn": 78,
-                    "endOffset": 7286
+                    "startOffset": 7119,
+                    "endColumn": 77,
+                    "endOffset": 7192
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 86,
                         "startColumn": 4,
-                        "startOffset": 7212,
-                        "endColumn": 78,
-                        "endOffset": 7286
+                        "startOffset": 7119,
+                        "endColumn": 77,
+                        "endOffset": 7192
                     }
                 }
             },
@@ -1621,18 +1621,18 @@
                 "to": {
                     "startLine": 87,
                     "startColumn": 4,
-                    "startOffset": 7291,
-                    "endColumn": 90,
-                    "endOffset": 7377
+                    "startOffset": 7197,
+                    "endColumn": 97,
+                    "endOffset": 7290
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 87,
                         "startColumn": 4,
-                        "startOffset": 7291,
-                        "endColumn": 90,
-                        "endOffset": 7377
+                        "startOffset": 7197,
+                        "endColumn": 97,
+                        "endOffset": 7290
                     }
                 }
             },
@@ -1640,18 +1640,18 @@
                 "to": {
                     "startLine": 88,
                     "startColumn": 4,
-                    "startOffset": 7382,
-                    "endColumn": 100,
-                    "endOffset": 7478
+                    "startOffset": 7295,
+                    "endColumn": 97,
+                    "endOffset": 7388
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 88,
                         "startColumn": 4,
-                        "startOffset": 7382,
-                        "endColumn": 100,
-                        "endOffset": 7478
+                        "startOffset": 7295,
+                        "endColumn": 97,
+                        "endOffset": 7388
                     }
                 }
             },
@@ -1659,18 +1659,18 @@
                 "to": {
                     "startLine": 89,
                     "startColumn": 4,
-                    "startOffset": 7483,
-                    "endColumn": 105,
-                    "endOffset": 7584
+                    "startOffset": 7393,
+                    "endColumn": 92,
+                    "endOffset": 7481
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 89,
                         "startColumn": 4,
-                        "startOffset": 7483,
-                        "endColumn": 105,
-                        "endOffset": 7584
+                        "startOffset": 7393,
+                        "endColumn": 92,
+                        "endOffset": 7481
                     }
                 }
             },
@@ -1678,18 +1678,18 @@
                 "to": {
                     "startLine": 90,
                     "startColumn": 4,
-                    "startOffset": 7589,
-                    "endColumn": 113,
-                    "endOffset": 7698
+                    "startOffset": 7486,
+                    "endColumn": 84,
+                    "endOffset": 7566
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 90,
                         "startColumn": 4,
-                        "startOffset": 7589,
-                        "endColumn": 113,
-                        "endOffset": 7698
+                        "startOffset": 7486,
+                        "endColumn": 84,
+                        "endOffset": 7566
                     }
                 }
             },
@@ -1697,18 +1697,18 @@
                 "to": {
                     "startLine": 91,
                     "startColumn": 4,
-                    "startOffset": 7703,
-                    "endColumn": 110,
-                    "endOffset": 7809
+                    "startOffset": 7571,
+                    "endColumn": 84,
+                    "endOffset": 7651
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 91,
                         "startColumn": 4,
-                        "startOffset": 7703,
-                        "endColumn": 110,
-                        "endOffset": 7809
+                        "startOffset": 7571,
+                        "endColumn": 84,
+                        "endOffset": 7651
                     }
                 }
             },
@@ -1716,18 +1716,18 @@
                 "to": {
                     "startLine": 92,
                     "startColumn": 4,
-                    "startOffset": 7814,
-                    "endColumn": 93,
-                    "endOffset": 7903
+                    "startOffset": 7656,
+                    "endColumn": 97,
+                    "endOffset": 7749
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 92,
                         "startColumn": 4,
-                        "startOffset": 7814,
-                        "endColumn": 93,
-                        "endOffset": 7903
+                        "startOffset": 7656,
+                        "endColumn": 97,
+                        "endOffset": 7749
                     }
                 }
             },
@@ -1735,18 +1735,18 @@
                 "to": {
                     "startLine": 93,
                     "startColumn": 4,
-                    "startOffset": 7908,
-                    "endColumn": 104,
-                    "endOffset": 8008
+                    "startOffset": 7754,
+                    "endColumn": 119,
+                    "endOffset": 7869
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 93,
                         "startColumn": 4,
-                        "startOffset": 7908,
-                        "endColumn": 104,
-                        "endOffset": 8008
+                        "startOffset": 7754,
+                        "endColumn": 119,
+                        "endOffset": 7869
                     }
                 }
             },
@@ -1754,18 +1754,18 @@
                 "to": {
                     "startLine": 94,
                     "startColumn": 4,
-                    "startOffset": 8013,
-                    "endColumn": 95,
-                    "endOffset": 8104
+                    "startOffset": 7874,
+                    "endColumn": 105,
+                    "endOffset": 7975
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 94,
                         "startColumn": 4,
-                        "startOffset": 8013,
-                        "endColumn": 95,
-                        "endOffset": 8104
+                        "startOffset": 7874,
+                        "endColumn": 105,
+                        "endOffset": 7975
                     }
                 }
             },
@@ -1773,18 +1773,18 @@
                 "to": {
                     "startLine": 95,
                     "startColumn": 4,
-                    "startOffset": 8109,
-                    "endColumn": 81,
-                    "endOffset": 8186
+                    "startOffset": 7980,
+                    "endColumn": 86,
+                    "endOffset": 8062
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 95,
                         "startColumn": 4,
-                        "startOffset": 8109,
-                        "endColumn": 81,
-                        "endOffset": 8186
+                        "startOffset": 7980,
+                        "endColumn": 86,
+                        "endOffset": 8062
                     }
                 }
             },
@@ -1792,18 +1792,18 @@
                 "to": {
                     "startLine": 96,
                     "startColumn": 4,
-                    "startOffset": 8191,
-                    "endColumn": 93,
-                    "endOffset": 8280
+                    "startOffset": 8067,
+                    "endColumn": 89,
+                    "endOffset": 8152
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 96,
                         "startColumn": 4,
-                        "startOffset": 8191,
-                        "endColumn": 93,
-                        "endOffset": 8280
+                        "startOffset": 8067,
+                        "endColumn": 89,
+                        "endOffset": 8152
                     }
                 }
             },
@@ -1811,18 +1811,18 @@
                 "to": {
                     "startLine": 97,
                     "startColumn": 4,
-                    "startOffset": 8285,
-                    "endColumn": 104,
-                    "endOffset": 8385
+                    "startOffset": 8157,
+                    "endColumn": 76,
+                    "endOffset": 8229
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 97,
                         "startColumn": 4,
-                        "startOffset": 8285,
-                        "endColumn": 104,
-                        "endOffset": 8385
+                        "startOffset": 8157,
+                        "endColumn": 76,
+                        "endOffset": 8229
                     }
                 }
             },
@@ -1830,18 +1830,18 @@
                 "to": {
                     "startLine": 98,
                     "startColumn": 4,
-                    "startOffset": 8390,
-                    "endColumn": 109,
-                    "endOffset": 8495
+                    "startOffset": 8234,
+                    "endColumn": 78,
+                    "endOffset": 8308
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 98,
                         "startColumn": 4,
-                        "startOffset": 8390,
-                        "endColumn": 109,
-                        "endOffset": 8495
+                        "startOffset": 8234,
+                        "endColumn": 78,
+                        "endOffset": 8308
                     }
                 }
             },
@@ -1849,18 +1849,18 @@
                 "to": {
                     "startLine": 99,
                     "startColumn": 4,
-                    "startOffset": 8500,
-                    "endColumn": 87,
-                    "endOffset": 8583
+                    "startOffset": 8313,
+                    "endColumn": 90,
+                    "endOffset": 8399
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 99,
                         "startColumn": 4,
-                        "startOffset": 8500,
-                        "endColumn": 87,
-                        "endOffset": 8583
+                        "startOffset": 8313,
+                        "endColumn": 90,
+                        "endOffset": 8399
                     }
                 }
             },
@@ -1868,18 +1868,18 @@
                 "to": {
                     "startLine": 100,
                     "startColumn": 4,
-                    "startOffset": 8588,
-                    "endColumn": 93,
-                    "endOffset": 8677
+                    "startOffset": 8404,
+                    "endColumn": 100,
+                    "endOffset": 8500
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 100,
                         "startColumn": 4,
-                        "startOffset": 8588,
-                        "endColumn": 93,
-                        "endOffset": 8677
+                        "startOffset": 8404,
+                        "endColumn": 100,
+                        "endOffset": 8500
                     }
                 }
             },
@@ -1887,18 +1887,18 @@
                 "to": {
                     "startLine": 101,
                     "startColumn": 4,
-                    "startOffset": 8682,
-                    "endColumn": 83,
-                    "endOffset": 8761
+                    "startOffset": 8505,
+                    "endColumn": 105,
+                    "endOffset": 8606
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 101,
                         "startColumn": 4,
-                        "startOffset": 8682,
-                        "endColumn": 83,
-                        "endOffset": 8761
+                        "startOffset": 8505,
+                        "endColumn": 105,
+                        "endOffset": 8606
                     }
                 }
             },
@@ -1906,18 +1906,18 @@
                 "to": {
                     "startLine": 102,
                     "startColumn": 4,
-                    "startOffset": 8766,
-                    "endColumn": 98,
-                    "endOffset": 8860
+                    "startOffset": 8611,
+                    "endColumn": 113,
+                    "endOffset": 8720
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 102,
                         "startColumn": 4,
-                        "startOffset": 8766,
-                        "endColumn": 98,
-                        "endOffset": 8860
+                        "startOffset": 8611,
+                        "endColumn": 113,
+                        "endOffset": 8720
                     }
                 }
             },
@@ -1925,18 +1925,18 @@
                 "to": {
                     "startLine": 103,
                     "startColumn": 4,
-                    "startOffset": 8865,
-                    "endColumn": 82,
-                    "endOffset": 8943
+                    "startOffset": 8725,
+                    "endColumn": 110,
+                    "endOffset": 8831
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 103,
                         "startColumn": 4,
-                        "startOffset": 8865,
-                        "endColumn": 82,
-                        "endOffset": 8943
+                        "startOffset": 8725,
+                        "endColumn": 110,
+                        "endOffset": 8831
                     }
                 }
             },
@@ -1944,18 +1944,18 @@
                 "to": {
                     "startLine": 104,
                     "startColumn": 4,
-                    "startOffset": 8948,
-                    "endColumn": 109,
-                    "endOffset": 9053
+                    "startOffset": 8836,
+                    "endColumn": 93,
+                    "endOffset": 8925
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 104,
                         "startColumn": 4,
-                        "startOffset": 8948,
-                        "endColumn": 109,
-                        "endOffset": 9053
+                        "startOffset": 8836,
+                        "endColumn": 93,
+                        "endOffset": 8925
                     }
                 }
             },
@@ -1963,18 +1963,18 @@
                 "to": {
                     "startLine": 105,
                     "startColumn": 4,
-                    "startOffset": 9058,
-                    "endColumn": 111,
-                    "endOffset": 9165
+                    "startOffset": 8930,
+                    "endColumn": 104,
+                    "endOffset": 9030
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 105,
                         "startColumn": 4,
-                        "startOffset": 9058,
-                        "endColumn": 111,
-                        "endOffset": 9165
+                        "startOffset": 8930,
+                        "endColumn": 104,
+                        "endOffset": 9030
                     }
                 }
             },
@@ -1982,18 +1982,18 @@
                 "to": {
                     "startLine": 106,
                     "startColumn": 4,
-                    "startOffset": 9170,
-                    "endColumn": 74,
-                    "endOffset": 9240
+                    "startOffset": 9035,
+                    "endColumn": 95,
+                    "endOffset": 9126
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 106,
                         "startColumn": 4,
-                        "startOffset": 9170,
-                        "endColumn": 74,
-                        "endOffset": 9240
+                        "startOffset": 9035,
+                        "endColumn": 95,
+                        "endOffset": 9126
                     }
                 }
             },
@@ -2001,18 +2001,18 @@
                 "to": {
                     "startLine": 107,
                     "startColumn": 4,
-                    "startOffset": 9245,
-                    "endColumn": 99,
-                    "endOffset": 9340
+                    "startOffset": 9131,
+                    "endColumn": 81,
+                    "endOffset": 9208
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 107,
                         "startColumn": 4,
-                        "startOffset": 9245,
-                        "endColumn": 99,
-                        "endOffset": 9340
+                        "startOffset": 9131,
+                        "endColumn": 81,
+                        "endOffset": 9208
                     }
                 }
             },
@@ -2020,18 +2020,18 @@
                 "to": {
                     "startLine": 108,
                     "startColumn": 4,
-                    "startOffset": 9345,
-                    "endColumn": 102,
-                    "endOffset": 9443
+                    "startOffset": 9213,
+                    "endColumn": 93,
+                    "endOffset": 9302
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 108,
                         "startColumn": 4,
-                        "startOffset": 9345,
-                        "endColumn": 102,
-                        "endOffset": 9443
+                        "startOffset": 9213,
+                        "endColumn": 93,
+                        "endOffset": 9302
                     }
                 }
             },
@@ -2039,18 +2039,18 @@
                 "to": {
                     "startLine": 109,
                     "startColumn": 4,
-                    "startOffset": 9448,
-                    "endColumn": 79,
-                    "endOffset": 9523
+                    "startOffset": 9307,
+                    "endColumn": 104,
+                    "endOffset": 9407
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 109,
                         "startColumn": 4,
-                        "startOffset": 9448,
-                        "endColumn": 79,
-                        "endOffset": 9523
+                        "startOffset": 9307,
+                        "endColumn": 104,
+                        "endOffset": 9407
                     }
                 }
             },
@@ -2058,18 +2058,18 @@
                 "to": {
                     "startLine": 110,
                     "startColumn": 4,
-                    "startOffset": 9528,
-                    "endColumn": 77,
-                    "endOffset": 9601
+                    "startOffset": 9412,
+                    "endColumn": 109,
+                    "endOffset": 9517
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 110,
                         "startColumn": 4,
-                        "startOffset": 9528,
-                        "endColumn": 77,
-                        "endOffset": 9601
+                        "startOffset": 9412,
+                        "endColumn": 109,
+                        "endOffset": 9517
                     }
                 }
             },
@@ -2077,18 +2077,18 @@
                 "to": {
                     "startLine": 111,
                     "startColumn": 4,
-                    "startOffset": 9606,
-                    "endColumn": 78,
-                    "endOffset": 9680
+                    "startOffset": 9522,
+                    "endColumn": 87,
+                    "endOffset": 9605
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 111,
                         "startColumn": 4,
-                        "startOffset": 9606,
-                        "endColumn": 78,
-                        "endOffset": 9680
+                        "startOffset": 9522,
+                        "endColumn": 87,
+                        "endOffset": 9605
                     }
                 }
             },
@@ -2096,18 +2096,18 @@
                 "to": {
                     "startLine": 112,
                     "startColumn": 4,
-                    "startOffset": 9685,
-                    "endColumn": 91,
-                    "endOffset": 9772
+                    "startOffset": 9610,
+                    "endColumn": 93,
+                    "endOffset": 9699
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 112,
                         "startColumn": 4,
-                        "startOffset": 9685,
-                        "endColumn": 91,
-                        "endOffset": 9772
+                        "startOffset": 9610,
+                        "endColumn": 93,
+                        "endOffset": 9699
                     }
                 }
             },
@@ -2115,18 +2115,18 @@
                 "to": {
                     "startLine": 113,
                     "startColumn": 4,
-                    "startOffset": 9777,
-                    "endColumn": 84,
-                    "endOffset": 9857
+                    "startOffset": 9704,
+                    "endColumn": 83,
+                    "endOffset": 9783
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 113,
                         "startColumn": 4,
-                        "startOffset": 9777,
-                        "endColumn": 84,
-                        "endOffset": 9857
+                        "startOffset": 9704,
+                        "endColumn": 83,
+                        "endOffset": 9783
                     }
                 }
             },
@@ -2134,18 +2134,18 @@
                 "to": {
                     "startLine": 114,
                     "startColumn": 4,
-                    "startOffset": 9862,
-                    "endColumn": 99,
-                    "endOffset": 9957
+                    "startOffset": 9788,
+                    "endColumn": 98,
+                    "endOffset": 9882
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 114,
                         "startColumn": 4,
-                        "startOffset": 9862,
-                        "endColumn": 99,
-                        "endOffset": 9957
+                        "startOffset": 9788,
+                        "endColumn": 98,
+                        "endOffset": 9882
                     }
                 }
             },
@@ -2153,18 +2153,18 @@
                 "to": {
                     "startLine": 115,
                     "startColumn": 4,
-                    "startOffset": 9962,
-                    "endColumn": 101,
-                    "endOffset": 10059
+                    "startOffset": 9887,
+                    "endColumn": 82,
+                    "endOffset": 9965
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 115,
                         "startColumn": 4,
-                        "startOffset": 9962,
-                        "endColumn": 101,
-                        "endOffset": 10059
+                        "startOffset": 9887,
+                        "endColumn": 82,
+                        "endOffset": 9965
                     }
                 }
             },
@@ -2172,18 +2172,18 @@
                 "to": {
                     "startLine": 116,
                     "startColumn": 4,
-                    "startOffset": 10064,
-                    "endColumn": 96,
-                    "endOffset": 10156
+                    "startOffset": 9970,
+                    "endColumn": 109,
+                    "endOffset": 10075
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 116,
                         "startColumn": 4,
-                        "startOffset": 10064,
-                        "endColumn": 96,
-                        "endOffset": 10156
+                        "startOffset": 9970,
+                        "endColumn": 109,
+                        "endOffset": 10075
                     }
                 }
             },
@@ -2191,18 +2191,18 @@
                 "to": {
                     "startLine": 117,
                     "startColumn": 4,
-                    "startOffset": 10161,
-                    "endColumn": 100,
-                    "endOffset": 10257
+                    "startOffset": 10080,
+                    "endColumn": 111,
+                    "endOffset": 10187
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 117,
                         "startColumn": 4,
-                        "startOffset": 10161,
-                        "endColumn": 100,
-                        "endOffset": 10257
+                        "startOffset": 10080,
+                        "endColumn": 111,
+                        "endOffset": 10187
                     }
                 }
             },
@@ -2210,18 +2210,18 @@
                 "to": {
                     "startLine": 118,
                     "startColumn": 4,
-                    "startOffset": 10262,
-                    "endColumn": 95,
-                    "endOffset": 10353
+                    "startOffset": 10192,
+                    "endColumn": 74,
+                    "endOffset": 10262
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 118,
                         "startColumn": 4,
-                        "startOffset": 10262,
-                        "endColumn": 95,
-                        "endOffset": 10353
+                        "startOffset": 10192,
+                        "endColumn": 74,
+                        "endOffset": 10262
                     }
                 }
             },
@@ -2229,18 +2229,18 @@
                 "to": {
                     "startLine": 119,
                     "startColumn": 4,
-                    "startOffset": 10358,
+                    "startOffset": 10267,
                     "endColumn": 99,
-                    "endOffset": 10453
+                    "endOffset": 10362
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 119,
                         "startColumn": 4,
-                        "startOffset": 10358,
+                        "startOffset": 10267,
                         "endColumn": 99,
-                        "endOffset": 10453
+                        "endOffset": 10362
                     }
                 }
             },
@@ -2248,18 +2248,18 @@
                 "to": {
                     "startLine": 120,
                     "startColumn": 4,
-                    "startOffset": 10458,
-                    "endColumn": 94,
-                    "endOffset": 10548
+                    "startOffset": 10367,
+                    "endColumn": 102,
+                    "endOffset": 10465
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 120,
                         "startColumn": 4,
-                        "startOffset": 10458,
-                        "endColumn": 94,
-                        "endOffset": 10548
+                        "startOffset": 10367,
+                        "endColumn": 102,
+                        "endOffset": 10465
                     }
                 }
             },
@@ -2267,18 +2267,18 @@
                 "to": {
                     "startLine": 121,
                     "startColumn": 4,
-                    "startOffset": 10553,
-                    "endColumn": 89,
-                    "endOffset": 10638
+                    "startOffset": 10470,
+                    "endColumn": 79,
+                    "endOffset": 10545
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 121,
                         "startColumn": 4,
-                        "startOffset": 10553,
-                        "endColumn": 89,
-                        "endOffset": 10638
+                        "startOffset": 10470,
+                        "endColumn": 79,
+                        "endOffset": 10545
                     }
                 }
             },
@@ -2286,18 +2286,18 @@
                 "to": {
                     "startLine": 122,
                     "startColumn": 4,
-                    "startOffset": 10643,
-                    "endColumn": 107,
-                    "endOffset": 10746
+                    "startOffset": 10550,
+                    "endColumn": 77,
+                    "endOffset": 10623
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 122,
                         "startColumn": 4,
-                        "startOffset": 10643,
-                        "endColumn": 107,
-                        "endOffset": 10746
+                        "startOffset": 10550,
+                        "endColumn": 77,
+                        "endOffset": 10623
                     }
                 }
             },
@@ -2305,18 +2305,18 @@
                 "to": {
                     "startLine": 123,
                     "startColumn": 4,
-                    "startOffset": 10751,
-                    "endColumn": 109,
-                    "endOffset": 10856
+                    "startOffset": 10628,
+                    "endColumn": 78,
+                    "endOffset": 10702
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 123,
                         "startColumn": 4,
-                        "startOffset": 10751,
-                        "endColumn": 109,
-                        "endOffset": 10856
+                        "startOffset": 10628,
+                        "endColumn": 78,
+                        "endOffset": 10702
                     }
                 }
             },
@@ -2324,18 +2324,18 @@
                 "to": {
                     "startLine": 124,
                     "startColumn": 4,
-                    "startOffset": 10861,
-                    "endColumn": 95,
-                    "endOffset": 10952
+                    "startOffset": 10707,
+                    "endColumn": 91,
+                    "endOffset": 10794
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 124,
                         "startColumn": 4,
-                        "startOffset": 10861,
-                        "endColumn": 95,
-                        "endOffset": 10952
+                        "startOffset": 10707,
+                        "endColumn": 91,
+                        "endOffset": 10794
                     }
                 }
             },
@@ -2343,18 +2343,18 @@
                 "to": {
                     "startLine": 125,
                     "startColumn": 4,
-                    "startOffset": 10957,
+                    "startOffset": 10799,
                     "endColumn": 84,
-                    "endOffset": 11037
+                    "endOffset": 10879
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 125,
                         "startColumn": 4,
-                        "startOffset": 10957,
+                        "startOffset": 10799,
                         "endColumn": 84,
-                        "endOffset": 11037
+                        "endOffset": 10879
                     }
                 }
             },
@@ -2362,18 +2362,18 @@
                 "to": {
                     "startLine": 126,
                     "startColumn": 4,
-                    "startOffset": 11042,
-                    "endColumn": 76,
-                    "endOffset": 11114
+                    "startOffset": 10884,
+                    "endColumn": 99,
+                    "endOffset": 10979
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 126,
                         "startColumn": 4,
-                        "startOffset": 11042,
-                        "endColumn": 76,
-                        "endOffset": 11114
+                        "startOffset": 10884,
+                        "endColumn": 99,
+                        "endOffset": 10979
                     }
                 }
             },
@@ -2381,18 +2381,18 @@
                 "to": {
                     "startLine": 127,
                     "startColumn": 4,
-                    "startOffset": 11119,
-                    "endColumn": 92,
-                    "endOffset": 11207
+                    "startOffset": 10984,
+                    "endColumn": 101,
+                    "endOffset": 11081
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 127,
                         "startColumn": 4,
-                        "startOffset": 11119,
-                        "endColumn": 92,
-                        "endOffset": 11207
+                        "startOffset": 10984,
+                        "endColumn": 101,
+                        "endOffset": 11081
                     }
                 }
             },
@@ -2400,18 +2400,18 @@
                 "to": {
                     "startLine": 128,
                     "startColumn": 4,
-                    "startOffset": 11212,
-                    "endColumn": 73,
-                    "endOffset": 11281
+                    "startOffset": 11086,
+                    "endColumn": 96,
+                    "endOffset": 11178
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 128,
                         "startColumn": 4,
-                        "startOffset": 11212,
-                        "endColumn": 73,
-                        "endOffset": 11281
+                        "startOffset": 11086,
+                        "endColumn": 96,
+                        "endOffset": 11178
                     }
                 }
             },
@@ -2419,18 +2419,18 @@
                 "to": {
                     "startLine": 129,
                     "startColumn": 4,
-                    "startOffset": 11286,
-                    "endColumn": 79,
-                    "endOffset": 11361
+                    "startOffset": 11183,
+                    "endColumn": 100,
+                    "endOffset": 11279
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 129,
                         "startColumn": 4,
-                        "startOffset": 11286,
-                        "endColumn": 79,
-                        "endOffset": 11361
+                        "startOffset": 11183,
+                        "endColumn": 100,
+                        "endOffset": 11279
                     }
                 }
             },
@@ -2438,18 +2438,18 @@
                 "to": {
                     "startLine": 130,
                     "startColumn": 4,
-                    "startOffset": 11366,
-                    "endColumn": 78,
-                    "endOffset": 11440
+                    "startOffset": 11284,
+                    "endColumn": 95,
+                    "endOffset": 11375
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 130,
                         "startColumn": 4,
-                        "startOffset": 11366,
-                        "endColumn": 78,
-                        "endOffset": 11440
+                        "startOffset": 11284,
+                        "endColumn": 95,
+                        "endOffset": 11375
                     }
                 }
             },
@@ -2457,18 +2457,18 @@
                 "to": {
                     "startLine": 131,
                     "startColumn": 4,
-                    "startOffset": 11445,
-                    "endColumn": 88,
-                    "endOffset": 11529
+                    "startOffset": 11380,
+                    "endColumn": 99,
+                    "endOffset": 11475
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 131,
                         "startColumn": 4,
-                        "startOffset": 11445,
-                        "endColumn": 88,
-                        "endOffset": 11529
+                        "startOffset": 11380,
+                        "endColumn": 99,
+                        "endOffset": 11475
                     }
                 }
             },
@@ -2476,18 +2476,18 @@
                 "to": {
                     "startLine": 132,
                     "startColumn": 4,
-                    "startOffset": 11534,
-                    "endColumn": 79,
-                    "endOffset": 11609
+                    "startOffset": 11480,
+                    "endColumn": 94,
+                    "endOffset": 11570
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 132,
                         "startColumn": 4,
-                        "startOffset": 11534,
-                        "endColumn": 79,
-                        "endOffset": 11609
+                        "startOffset": 11480,
+                        "endColumn": 94,
+                        "endOffset": 11570
                     }
                 }
             },
@@ -2495,18 +2495,18 @@
                 "to": {
                     "startLine": 133,
                     "startColumn": 4,
-                    "startOffset": 11614,
-                    "endColumn": 98,
-                    "endOffset": 11708
+                    "startOffset": 11575,
+                    "endColumn": 89,
+                    "endOffset": 11660
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 133,
                         "startColumn": 4,
-                        "startOffset": 11614,
-                        "endColumn": 98,
-                        "endOffset": 11708
+                        "startOffset": 11575,
+                        "endColumn": 89,
+                        "endOffset": 11660
                     }
                 }
             },
@@ -2514,18 +2514,18 @@
                 "to": {
                     "startLine": 134,
                     "startColumn": 4,
-                    "startOffset": 11713,
-                    "endColumn": 80,
-                    "endOffset": 11789
+                    "startOffset": 11665,
+                    "endColumn": 107,
+                    "endOffset": 11768
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 134,
                         "startColumn": 4,
-                        "startOffset": 11713,
-                        "endColumn": 80,
-                        "endOffset": 11789
+                        "startOffset": 11665,
+                        "endColumn": 107,
+                        "endOffset": 11768
                     }
                 }
             },
@@ -2533,18 +2533,18 @@
                 "to": {
                     "startLine": 135,
                     "startColumn": 4,
-                    "startOffset": 11794,
-                    "endColumn": 90,
-                    "endOffset": 11880
+                    "startOffset": 11773,
+                    "endColumn": 109,
+                    "endOffset": 11878
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 135,
                         "startColumn": 4,
-                        "startOffset": 11794,
-                        "endColumn": 90,
-                        "endOffset": 11880
+                        "startOffset": 11773,
+                        "endColumn": 109,
+                        "endOffset": 11878
                     }
                 }
             },
@@ -2552,18 +2552,18 @@
                 "to": {
                     "startLine": 136,
                     "startColumn": 4,
-                    "startOffset": 11885,
-                    "endColumn": 72,
-                    "endOffset": 11953
+                    "startOffset": 11883,
+                    "endColumn": 95,
+                    "endOffset": 11974
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 136,
                         "startColumn": 4,
-                        "startOffset": 11885,
-                        "endColumn": 72,
-                        "endOffset": 11953
+                        "startOffset": 11883,
+                        "endColumn": 95,
+                        "endOffset": 11974
                     }
                 }
             },
@@ -2571,18 +2571,18 @@
                 "to": {
                     "startLine": 137,
                     "startColumn": 4,
-                    "startOffset": 11958,
-                    "endColumn": 88,
-                    "endOffset": 12042
+                    "startOffset": 11979,
+                    "endColumn": 84,
+                    "endOffset": 12059
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 137,
                         "startColumn": 4,
-                        "startOffset": 11958,
-                        "endColumn": 88,
-                        "endOffset": 12042
+                        "startOffset": 11979,
+                        "endColumn": 84,
+                        "endOffset": 12059
                     }
                 }
             },
@@ -2590,18 +2590,18 @@
                 "to": {
                     "startLine": 138,
                     "startColumn": 4,
-                    "startOffset": 12047,
-                    "endColumn": 87,
-                    "endOffset": 12130
+                    "startOffset": 12064,
+                    "endColumn": 76,
+                    "endOffset": 12136
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 138,
                         "startColumn": 4,
-                        "startOffset": 12047,
-                        "endColumn": 87,
-                        "endOffset": 12130
+                        "startOffset": 12064,
+                        "endColumn": 76,
+                        "endOffset": 12136
                     }
                 }
             },
@@ -2609,18 +2609,18 @@
                 "to": {
                     "startLine": 139,
                     "startColumn": 4,
-                    "startOffset": 12135,
-                    "endColumn": 86,
-                    "endOffset": 12217
+                    "startOffset": 12141,
+                    "endColumn": 92,
+                    "endOffset": 12229
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 139,
                         "startColumn": 4,
-                        "startOffset": 12135,
-                        "endColumn": 86,
-                        "endOffset": 12217
+                        "startOffset": 12141,
+                        "endColumn": 92,
+                        "endOffset": 12229
                     }
                 }
             },
@@ -2628,18 +2628,18 @@
                 "to": {
                     "startLine": 140,
                     "startColumn": 4,
-                    "startOffset": 12222,
-                    "endColumn": 78,
-                    "endOffset": 12296
+                    "startOffset": 12234,
+                    "endColumn": 73,
+                    "endOffset": 12303
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 140,
                         "startColumn": 4,
-                        "startOffset": 12222,
-                        "endColumn": 78,
-                        "endOffset": 12296
+                        "startOffset": 12234,
+                        "endColumn": 73,
+                        "endOffset": 12303
                     }
                 }
             },
@@ -2647,18 +2647,18 @@
                 "to": {
                     "startLine": 141,
                     "startColumn": 4,
-                    "startOffset": 12301,
-                    "endColumn": 81,
-                    "endOffset": 12378
+                    "startOffset": 12308,
+                    "endColumn": 79,
+                    "endOffset": 12383
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 141,
                         "startColumn": 4,
-                        "startOffset": 12301,
-                        "endColumn": 81,
-                        "endOffset": 12378
+                        "startOffset": 12308,
+                        "endColumn": 79,
+                        "endOffset": 12383
                     }
                 }
             },
@@ -2666,18 +2666,18 @@
                 "to": {
                     "startLine": 142,
                     "startColumn": 4,
-                    "startOffset": 12383,
-                    "endColumn": 98,
-                    "endOffset": 12477
+                    "startOffset": 12388,
+                    "endColumn": 78,
+                    "endOffset": 12462
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 142,
                         "startColumn": 4,
-                        "startOffset": 12383,
-                        "endColumn": 98,
-                        "endOffset": 12477
+                        "startOffset": 12388,
+                        "endColumn": 78,
+                        "endOffset": 12462
                     }
                 }
             },
@@ -2685,18 +2685,18 @@
                 "to": {
                     "startLine": 143,
                     "startColumn": 4,
-                    "startOffset": 12482,
-                    "endColumn": 92,
-                    "endOffset": 12570
+                    "startOffset": 12467,
+                    "endColumn": 88,
+                    "endOffset": 12551
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 143,
                         "startColumn": 4,
-                        "startOffset": 12482,
-                        "endColumn": 92,
-                        "endOffset": 12570
+                        "startOffset": 12467,
+                        "endColumn": 88,
+                        "endOffset": 12551
                     }
                 }
             },
@@ -2704,18 +2704,18 @@
                 "to": {
                     "startLine": 144,
                     "startColumn": 4,
-                    "startOffset": 12575,
-                    "endColumn": 90,
-                    "endOffset": 12661
+                    "startOffset": 12556,
+                    "endColumn": 79,
+                    "endOffset": 12631
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 144,
                         "startColumn": 4,
-                        "startOffset": 12575,
-                        "endColumn": 90,
-                        "endOffset": 12661
+                        "startOffset": 12556,
+                        "endColumn": 79,
+                        "endOffset": 12631
                     }
                 }
             },
@@ -2723,18 +2723,18 @@
                 "to": {
                     "startLine": 145,
                     "startColumn": 4,
-                    "startOffset": 12666,
+                    "startOffset": 12636,
                     "endColumn": 98,
-                    "endOffset": 12760
+                    "endOffset": 12730
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 145,
                         "startColumn": 4,
-                        "startOffset": 12666,
+                        "startOffset": 12636,
                         "endColumn": 98,
-                        "endOffset": 12760
+                        "endOffset": 12730
                     }
                 }
             },
@@ -2742,18 +2742,18 @@
                 "to": {
                     "startLine": 146,
                     "startColumn": 4,
-                    "startOffset": 12765,
-                    "endColumn": 72,
-                    "endOffset": 12833
+                    "startOffset": 12735,
+                    "endColumn": 80,
+                    "endOffset": 12811
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 146,
                         "startColumn": 4,
-                        "startOffset": 12765,
-                        "endColumn": 72,
-                        "endOffset": 12833
+                        "startOffset": 12735,
+                        "endColumn": 80,
+                        "endOffset": 12811
                     }
                 }
             },
@@ -2761,18 +2761,18 @@
                 "to": {
                     "startLine": 147,
                     "startColumn": 4,
-                    "startOffset": 12838,
-                    "endColumn": 86,
-                    "endOffset": 12920
+                    "startOffset": 12816,
+                    "endColumn": 90,
+                    "endOffset": 12902
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 147,
                         "startColumn": 4,
-                        "startOffset": 12838,
-                        "endColumn": 86,
-                        "endOffset": 12920
+                        "startOffset": 12816,
+                        "endColumn": 90,
+                        "endOffset": 12902
                     }
                 }
             },
@@ -2780,18 +2780,18 @@
                 "to": {
                     "startLine": 148,
                     "startColumn": 4,
-                    "startOffset": 12925,
-                    "endColumn": 69,
-                    "endOffset": 12990
+                    "startOffset": 12907,
+                    "endColumn": 72,
+                    "endOffset": 12975
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 148,
                         "startColumn": 4,
-                        "startOffset": 12925,
-                        "endColumn": 69,
-                        "endOffset": 12990
+                        "startOffset": 12907,
+                        "endColumn": 72,
+                        "endOffset": 12975
                     }
                 }
             },
@@ -2799,18 +2799,18 @@
                 "to": {
                     "startLine": 149,
                     "startColumn": 4,
-                    "startOffset": 12995,
+                    "startOffset": 12980,
                     "endColumn": 88,
-                    "endOffset": 13079
+                    "endOffset": 13064
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 149,
                         "startColumn": 4,
-                        "startOffset": 12995,
+                        "startOffset": 12980,
                         "endColumn": 88,
-                        "endOffset": 13079
+                        "endOffset": 13064
                     }
                 }
             },
@@ -2818,18 +2818,18 @@
                 "to": {
                     "startLine": 150,
                     "startColumn": 4,
-                    "startOffset": 13084,
-                    "endColumn": 70,
-                    "endOffset": 13150
+                    "startOffset": 13069,
+                    "endColumn": 87,
+                    "endOffset": 13152
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 150,
                         "startColumn": 4,
-                        "startOffset": 13084,
-                        "endColumn": 70,
-                        "endOffset": 13150
+                        "startOffset": 13069,
+                        "endColumn": 87,
+                        "endOffset": 13152
                     }
                 }
             },
@@ -2837,18 +2837,18 @@
                 "to": {
                     "startLine": 151,
                     "startColumn": 4,
-                    "startOffset": 13155,
-                    "endColumn": 124,
-                    "endOffset": 13275
+                    "startOffset": 13157,
+                    "endColumn": 86,
+                    "endOffset": 13239
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 151,
                         "startColumn": 4,
-                        "startOffset": 13155,
-                        "endColumn": 124,
-                        "endOffset": 13275
+                        "startOffset": 13157,
+                        "endColumn": 86,
+                        "endOffset": 13239
                     }
                 }
             },
@@ -2856,18 +2856,18 @@
                 "to": {
                     "startLine": 152,
                     "startColumn": 4,
-                    "startOffset": 13280,
-                    "endColumn": 71,
-                    "endOffset": 13347
+                    "startOffset": 13244,
+                    "endColumn": 78,
+                    "endOffset": 13318
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 152,
                         "startColumn": 4,
-                        "startOffset": 13280,
-                        "endColumn": 71,
-                        "endOffset": 13347
+                        "startOffset": 13244,
+                        "endColumn": 78,
+                        "endOffset": 13318
                     }
                 }
             },
@@ -2875,18 +2875,18 @@
                 "to": {
                     "startLine": 153,
                     "startColumn": 4,
-                    "startOffset": 13352,
-                    "endColumn": 84,
-                    "endOffset": 13432
+                    "startOffset": 13323,
+                    "endColumn": 81,
+                    "endOffset": 13400
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 153,
                         "startColumn": 4,
-                        "startOffset": 13352,
-                        "endColumn": 84,
-                        "endOffset": 13432
+                        "startOffset": 13323,
+                        "endColumn": 81,
+                        "endOffset": 13400
                     }
                 }
             },
@@ -2894,18 +2894,18 @@
                 "to": {
                     "startLine": 154,
                     "startColumn": 4,
-                    "startOffset": 13437,
-                    "endColumn": 69,
-                    "endOffset": 13502
+                    "startOffset": 13405,
+                    "endColumn": 98,
+                    "endOffset": 13499
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 154,
                         "startColumn": 4,
-                        "startOffset": 13437,
-                        "endColumn": 69,
-                        "endOffset": 13502
+                        "startOffset": 13405,
+                        "endColumn": 98,
+                        "endOffset": 13499
                     }
                 }
             },
@@ -2913,18 +2913,18 @@
                 "to": {
                     "startLine": 155,
                     "startColumn": 4,
-                    "startOffset": 13507,
-                    "endColumn": 83,
-                    "endOffset": 13586
+                    "startOffset": 13504,
+                    "endColumn": 92,
+                    "endOffset": 13592
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 155,
                         "startColumn": 4,
-                        "startOffset": 13507,
-                        "endColumn": 83,
-                        "endOffset": 13586
+                        "startOffset": 13504,
+                        "endColumn": 92,
+                        "endOffset": 13592
                     }
                 }
             },
@@ -2932,18 +2932,18 @@
                 "to": {
                     "startLine": 156,
                     "startColumn": 4,
-                    "startOffset": 13591,
-                    "endColumn": 67,
-                    "endOffset": 13654
+                    "startOffset": 13597,
+                    "endColumn": 90,
+                    "endOffset": 13683
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 156,
                         "startColumn": 4,
-                        "startOffset": 13591,
-                        "endColumn": 67,
-                        "endOffset": 13654
+                        "startOffset": 13597,
+                        "endColumn": 90,
+                        "endOffset": 13683
                     }
                 }
             },
@@ -2951,18 +2951,18 @@
                 "to": {
                     "startLine": 157,
                     "startColumn": 4,
-                    "startOffset": 13659,
-                    "endColumn": 82,
-                    "endOffset": 13737
+                    "startOffset": 13688,
+                    "endColumn": 98,
+                    "endOffset": 13782
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 157,
                         "startColumn": 4,
-                        "startOffset": 13659,
-                        "endColumn": 82,
-                        "endOffset": 13737
+                        "startOffset": 13688,
+                        "endColumn": 98,
+                        "endOffset": 13782
                     }
                 }
             },
@@ -2970,18 +2970,18 @@
                 "to": {
                     "startLine": 158,
                     "startColumn": 4,
-                    "startOffset": 13742,
-                    "endColumn": 66,
-                    "endOffset": 13804
+                    "startOffset": 13787,
+                    "endColumn": 72,
+                    "endOffset": 13855
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 158,
                         "startColumn": 4,
-                        "startOffset": 13742,
-                        "endColumn": 66,
-                        "endOffset": 13804
+                        "startOffset": 13787,
+                        "endColumn": 72,
+                        "endOffset": 13855
                     }
                 }
             },
@@ -2989,18 +2989,18 @@
                 "to": {
                     "startLine": 159,
                     "startColumn": 4,
-                    "startOffset": 13809,
-                    "endColumn": 82,
-                    "endOffset": 13887
+                    "startOffset": 13860,
+                    "endColumn": 86,
+                    "endOffset": 13942
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 159,
                         "startColumn": 4,
-                        "startOffset": 13809,
-                        "endColumn": 82,
-                        "endOffset": 13887
+                        "startOffset": 13860,
+                        "endColumn": 86,
+                        "endOffset": 13942
                     }
                 }
             },
@@ -3008,18 +3008,18 @@
                 "to": {
                     "startLine": 160,
                     "startColumn": 4,
-                    "startOffset": 13892,
-                    "endColumn": 66,
-                    "endOffset": 13954
+                    "startOffset": 13947,
+                    "endColumn": 68,
+                    "endOffset": 14011
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 160,
                         "startColumn": 4,
-                        "startOffset": 13892,
-                        "endColumn": 66,
-                        "endOffset": 13954
+                        "startOffset": 13947,
+                        "endColumn": 68,
+                        "endOffset": 14011
                     }
                 }
             },
@@ -3027,18 +3027,18 @@
                 "to": {
                     "startLine": 161,
                     "startColumn": 4,
-                    "startOffset": 13959,
-                    "endColumn": 85,
-                    "endOffset": 14040
+                    "startOffset": 14016,
+                    "endColumn": 69,
+                    "endOffset": 14081
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 161,
                         "startColumn": 4,
-                        "startOffset": 13959,
-                        "endColumn": 85,
-                        "endOffset": 14040
+                        "startOffset": 14016,
+                        "endColumn": 69,
+                        "endOffset": 14081
                     }
                 }
             },
@@ -3046,18 +3046,18 @@
                 "to": {
                     "startLine": 162,
                     "startColumn": 4,
-                    "startOffset": 14045,
-                    "endColumn": 62,
-                    "endOffset": 14103
+                    "startOffset": 14086,
+                    "endColumn": 88,
+                    "endOffset": 14170
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 162,
                         "startColumn": 4,
-                        "startOffset": 14045,
-                        "endColumn": 62,
-                        "endOffset": 14103
+                        "startOffset": 14086,
+                        "endColumn": 88,
+                        "endOffset": 14170
                     }
                 }
             },
@@ -3065,18 +3065,18 @@
                 "to": {
                     "startLine": 163,
                     "startColumn": 4,
-                    "startOffset": 14108,
-                    "endColumn": 79,
-                    "endOffset": 14183
+                    "startOffset": 14175,
+                    "endColumn": 70,
+                    "endOffset": 14241
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 163,
                         "startColumn": 4,
-                        "startOffset": 14108,
-                        "endColumn": 79,
-                        "endOffset": 14183
+                        "startOffset": 14175,
+                        "endColumn": 70,
+                        "endOffset": 14241
                     }
                 }
             },
@@ -3084,18 +3084,18 @@
                 "to": {
                     "startLine": 164,
                     "startColumn": 4,
-                    "startOffset": 14188,
-                    "endColumn": 60,
-                    "endOffset": 14244
+                    "startOffset": 14246,
+                    "endColumn": 124,
+                    "endOffset": 14366
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 164,
                         "startColumn": 4,
-                        "startOffset": 14188,
-                        "endColumn": 60,
-                        "endOffset": 14244
+                        "startOffset": 14246,
+                        "endColumn": 124,
+                        "endOffset": 14366
                     }
                 }
             },
@@ -3103,18 +3103,18 @@
                 "to": {
                     "startLine": 165,
                     "startColumn": 4,
-                    "startOffset": 14249,
-                    "endColumn": 78,
-                    "endOffset": 14323
+                    "startOffset": 14371,
+                    "endColumn": 71,
+                    "endOffset": 14438
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 165,
                         "startColumn": 4,
-                        "startOffset": 14249,
-                        "endColumn": 78,
-                        "endOffset": 14323
+                        "startOffset": 14371,
+                        "endColumn": 71,
+                        "endOffset": 14438
                     }
                 }
             },
@@ -3122,18 +3122,18 @@
                 "to": {
                     "startLine": 166,
                     "startColumn": 4,
-                    "startOffset": 14328,
-                    "endColumn": 60,
-                    "endOffset": 14384
+                    "startOffset": 14443,
+                    "endColumn": 84,
+                    "endOffset": 14523
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 166,
                         "startColumn": 4,
-                        "startOffset": 14328,
-                        "endColumn": 60,
-                        "endOffset": 14384
+                        "startOffset": 14443,
+                        "endColumn": 84,
+                        "endOffset": 14523
                     }
                 }
             },
@@ -3141,18 +3141,18 @@
                 "to": {
                     "startLine": 167,
                     "startColumn": 4,
-                    "startOffset": 14389,
-                    "endColumn": 66,
-                    "endOffset": 14451
+                    "startOffset": 14528,
+                    "endColumn": 69,
+                    "endOffset": 14593
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 167,
                         "startColumn": 4,
-                        "startOffset": 14389,
-                        "endColumn": 66,
-                        "endOffset": 14451
+                        "startOffset": 14528,
+                        "endColumn": 69,
+                        "endOffset": 14593
                     }
                 }
             },
@@ -3160,18 +3160,18 @@
                 "to": {
                     "startLine": 168,
                     "startColumn": 4,
-                    "startOffset": 14456,
-                    "endColumn": 69,
-                    "endOffset": 14521
+                    "startOffset": 14598,
+                    "endColumn": 83,
+                    "endOffset": 14677
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 168,
                         "startColumn": 4,
-                        "startOffset": 14456,
-                        "endColumn": 69,
-                        "endOffset": 14521
+                        "startOffset": 14598,
+                        "endColumn": 83,
+                        "endOffset": 14677
                     }
                 }
             },
@@ -3179,18 +3179,18 @@
                 "to": {
                     "startLine": 169,
                     "startColumn": 4,
-                    "startOffset": 14526,
-                    "endColumn": 103,
-                    "endOffset": 14625
+                    "startOffset": 14682,
+                    "endColumn": 67,
+                    "endOffset": 14745
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 169,
                         "startColumn": 4,
-                        "startOffset": 14526,
-                        "endColumn": 103,
-                        "endOffset": 14625
+                        "startOffset": 14682,
+                        "endColumn": 67,
+                        "endOffset": 14745
                     }
                 }
             },
@@ -3198,18 +3198,18 @@
                 "to": {
                     "startLine": 170,
                     "startColumn": 4,
-                    "startOffset": 14630,
-                    "endColumn": 63,
-                    "endOffset": 14689
+                    "startOffset": 14750,
+                    "endColumn": 82,
+                    "endOffset": 14828
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 170,
                         "startColumn": 4,
-                        "startOffset": 14630,
-                        "endColumn": 63,
-                        "endOffset": 14689
+                        "startOffset": 14750,
+                        "endColumn": 82,
+                        "endOffset": 14828
                     }
                 }
             },
@@ -3217,18 +3217,18 @@
                 "to": {
                     "startLine": 171,
                     "startColumn": 4,
-                    "startOffset": 14694,
-                    "endColumn": 83,
-                    "endOffset": 14773
+                    "startOffset": 14833,
+                    "endColumn": 66,
+                    "endOffset": 14895
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 171,
                         "startColumn": 4,
-                        "startOffset": 14694,
-                        "endColumn": 83,
-                        "endOffset": 14773
+                        "startOffset": 14833,
+                        "endColumn": 66,
+                        "endOffset": 14895
                     }
                 }
             },
@@ -3236,18 +3236,18 @@
                 "to": {
                     "startLine": 172,
                     "startColumn": 4,
-                    "startOffset": 14778,
-                    "endColumn": 62,
-                    "endOffset": 14836
+                    "startOffset": 14900,
+                    "endColumn": 82,
+                    "endOffset": 14978
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 172,
                         "startColumn": 4,
-                        "startOffset": 14778,
-                        "endColumn": 62,
-                        "endOffset": 14836
+                        "startOffset": 14900,
+                        "endColumn": 82,
+                        "endOffset": 14978
                     }
                 }
             },
@@ -3255,18 +3255,18 @@
                 "to": {
                     "startLine": 173,
                     "startColumn": 4,
-                    "startOffset": 14841,
-                    "endColumn": 69,
-                    "endOffset": 14906
+                    "startOffset": 14983,
+                    "endColumn": 66,
+                    "endOffset": 15045
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 173,
                         "startColumn": 4,
-                        "startOffset": 14841,
-                        "endColumn": 69,
-                        "endOffset": 14906
+                        "startOffset": 14983,
+                        "endColumn": 66,
+                        "endOffset": 15045
                     }
                 }
             },
@@ -3274,18 +3274,18 @@
                 "to": {
                     "startLine": 174,
                     "startColumn": 4,
-                    "startOffset": 14911,
-                    "endColumn": 65,
-                    "endOffset": 14972
+                    "startOffset": 15050,
+                    "endColumn": 85,
+                    "endOffset": 15131
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 174,
                         "startColumn": 4,
-                        "startOffset": 14911,
-                        "endColumn": 65,
-                        "endOffset": 14972
+                        "startOffset": 15050,
+                        "endColumn": 85,
+                        "endOffset": 15131
                     }
                 }
             },
@@ -3293,18 +3293,18 @@
                 "to": {
                     "startLine": 175,
                     "startColumn": 4,
-                    "startOffset": 14977,
-                    "endColumn": 75,
-                    "endOffset": 15048
+                    "startOffset": 15136,
+                    "endColumn": 62,
+                    "endOffset": 15194
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 175,
                         "startColumn": 4,
-                        "startOffset": 14977,
-                        "endColumn": 75,
-                        "endOffset": 15048
+                        "startOffset": 15136,
+                        "endColumn": 62,
+                        "endOffset": 15194
                     }
                 }
             },
@@ -3312,18 +3312,18 @@
                 "to": {
                     "startLine": 176,
                     "startColumn": 4,
-                    "startOffset": 15053,
-                    "endColumn": 69,
-                    "endOffset": 15118
+                    "startOffset": 15199,
+                    "endColumn": 79,
+                    "endOffset": 15274
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 176,
                         "startColumn": 4,
-                        "startOffset": 15053,
-                        "endColumn": 69,
-                        "endOffset": 15118
+                        "startOffset": 15199,
+                        "endColumn": 79,
+                        "endOffset": 15274
                     }
                 }
             },
@@ -3331,18 +3331,18 @@
                 "to": {
                     "startLine": 177,
                     "startColumn": 4,
-                    "startOffset": 15123,
-                    "endColumn": 86,
-                    "endOffset": 15205
+                    "startOffset": 15279,
+                    "endColumn": 60,
+                    "endOffset": 15335
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 177,
                         "startColumn": 4,
-                        "startOffset": 15123,
-                        "endColumn": 86,
-                        "endOffset": 15205
+                        "startOffset": 15279,
+                        "endColumn": 60,
+                        "endOffset": 15335
                     }
                 }
             },
@@ -3350,18 +3350,18 @@
                 "to": {
                     "startLine": 178,
                     "startColumn": 4,
-                    "startOffset": 15210,
-                    "endColumn": 91,
-                    "endOffset": 15297
+                    "startOffset": 15340,
+                    "endColumn": 78,
+                    "endOffset": 15414
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 178,
                         "startColumn": 4,
-                        "startOffset": 15210,
-                        "endColumn": 91,
-                        "endOffset": 15297
+                        "startOffset": 15340,
+                        "endColumn": 78,
+                        "endOffset": 15414
                     }
                 }
             },
@@ -3369,18 +3369,18 @@
                 "to": {
                     "startLine": 179,
                     "startColumn": 4,
-                    "startOffset": 15302,
-                    "endColumn": 109,
-                    "endOffset": 15407
+                    "startOffset": 15419,
+                    "endColumn": 60,
+                    "endOffset": 15475
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 179,
                         "startColumn": 4,
-                        "startOffset": 15302,
-                        "endColumn": 109,
-                        "endOffset": 15407
+                        "startOffset": 15419,
+                        "endColumn": 60,
+                        "endOffset": 15475
                     }
                 }
             },
@@ -3388,18 +3388,18 @@
                 "to": {
                     "startLine": 180,
                     "startColumn": 4,
-                    "startOffset": 15412,
-                    "endColumn": 73,
-                    "endOffset": 15481
+                    "startOffset": 15480,
+                    "endColumn": 66,
+                    "endOffset": 15542
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 180,
                         "startColumn": 4,
-                        "startOffset": 15412,
-                        "endColumn": 73,
-                        "endOffset": 15481
+                        "startOffset": 15480,
+                        "endColumn": 66,
+                        "endOffset": 15542
                     }
                 }
             },
@@ -3407,18 +3407,18 @@
                 "to": {
                     "startLine": 181,
                     "startColumn": 4,
-                    "startOffset": 15486,
-                    "endColumn": 93,
-                    "endOffset": 15575
+                    "startOffset": 15547,
+                    "endColumn": 69,
+                    "endOffset": 15612
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 181,
                         "startColumn": 4,
-                        "startOffset": 15486,
-                        "endColumn": 93,
-                        "endOffset": 15575
+                        "startOffset": 15547,
+                        "endColumn": 69,
+                        "endOffset": 15612
                     }
                 }
             },
@@ -3426,18 +3426,18 @@
                 "to": {
                     "startLine": 182,
                     "startColumn": 4,
-                    "startOffset": 15580,
-                    "endColumn": 88,
-                    "endOffset": 15664
+                    "startOffset": 15617,
+                    "endColumn": 103,
+                    "endOffset": 15716
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 182,
                         "startColumn": 4,
-                        "startOffset": 15580,
-                        "endColumn": 88,
-                        "endOffset": 15664
+                        "startOffset": 15617,
+                        "endColumn": 103,
+                        "endOffset": 15716
                     }
                 }
             },
@@ -3445,18 +3445,18 @@
                 "to": {
                     "startLine": 183,
                     "startColumn": 4,
-                    "startOffset": 15669,
-                    "endColumn": 69,
-                    "endOffset": 15734
+                    "startOffset": 15721,
+                    "endColumn": 63,
+                    "endOffset": 15780
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 183,
                         "startColumn": 4,
-                        "startOffset": 15669,
-                        "endColumn": 69,
-                        "endOffset": 15734
+                        "startOffset": 15721,
+                        "endColumn": 63,
+                        "endOffset": 15780
                     }
                 }
             },
@@ -3464,18 +3464,18 @@
                 "to": {
                     "startLine": 184,
                     "startColumn": 4,
-                    "startOffset": 15739,
-                    "endColumn": 76,
-                    "endOffset": 15811
+                    "startOffset": 15785,
+                    "endColumn": 83,
+                    "endOffset": 15864
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 184,
                         "startColumn": 4,
-                        "startOffset": 15739,
-                        "endColumn": 76,
-                        "endOffset": 15811
+                        "startOffset": 15785,
+                        "endColumn": 83,
+                        "endOffset": 15864
                     }
                 }
             },
@@ -3483,18 +3483,18 @@
                 "to": {
                     "startLine": 185,
                     "startColumn": 4,
-                    "startOffset": 15816,
-                    "endColumn": 77,
-                    "endOffset": 15889
+                    "startOffset": 15869,
+                    "endColumn": 62,
+                    "endOffset": 15927
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 185,
                         "startColumn": 4,
-                        "startOffset": 15816,
-                        "endColumn": 77,
-                        "endOffset": 15889
+                        "startOffset": 15869,
+                        "endColumn": 62,
+                        "endOffset": 15927
                     }
                 }
             },
@@ -3502,18 +3502,18 @@
                 "to": {
                     "startLine": 186,
                     "startColumn": 4,
-                    "startOffset": 15894,
-                    "endColumn": 77,
-                    "endOffset": 15967
+                    "startOffset": 15932,
+                    "endColumn": 69,
+                    "endOffset": 15997
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 186,
                         "startColumn": 4,
-                        "startOffset": 15894,
-                        "endColumn": 77,
-                        "endOffset": 15967
+                        "startOffset": 15932,
+                        "endColumn": 69,
+                        "endOffset": 15997
                     }
                 }
             },
@@ -3521,18 +3521,18 @@
                 "to": {
                     "startLine": 187,
                     "startColumn": 4,
-                    "startOffset": 15972,
-                    "endColumn": 91,
-                    "endOffset": 16059
+                    "startOffset": 16002,
+                    "endColumn": 65,
+                    "endOffset": 16063
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 187,
                         "startColumn": 4,
-                        "startOffset": 15972,
-                        "endColumn": 91,
-                        "endOffset": 16059
+                        "startOffset": 16002,
+                        "endColumn": 65,
+                        "endOffset": 16063
                     }
                 }
             },
@@ -3540,18 +3540,18 @@
                 "to": {
                     "startLine": 188,
                     "startColumn": 4,
-                    "startOffset": 16064,
-                    "endColumn": 91,
-                    "endOffset": 16151
+                    "startOffset": 16068,
+                    "endColumn": 75,
+                    "endOffset": 16139
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 188,
                         "startColumn": 4,
-                        "startOffset": 16064,
-                        "endColumn": 91,
-                        "endOffset": 16151
+                        "startOffset": 16068,
+                        "endColumn": 75,
+                        "endOffset": 16139
                     }
                 }
             },
@@ -3559,18 +3559,18 @@
                 "to": {
                     "startLine": 189,
                     "startColumn": 4,
-                    "startOffset": 16156,
-                    "endColumn": 85,
-                    "endOffset": 16237
+                    "startOffset": 16144,
+                    "endColumn": 69,
+                    "endOffset": 16209
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 189,
                         "startColumn": 4,
-                        "startOffset": 16156,
-                        "endColumn": 85,
-                        "endOffset": 16237
+                        "startOffset": 16144,
+                        "endColumn": 69,
+                        "endOffset": 16209
                     }
                 }
             },
@@ -3578,18 +3578,18 @@
                 "to": {
                     "startLine": 190,
                     "startColumn": 4,
-                    "startOffset": 16242,
-                    "endColumn": 80,
-                    "endOffset": 16318
+                    "startOffset": 16214,
+                    "endColumn": 86,
+                    "endOffset": 16296
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 190,
                         "startColumn": 4,
-                        "startOffset": 16242,
-                        "endColumn": 80,
-                        "endOffset": 16318
+                        "startOffset": 16214,
+                        "endColumn": 86,
+                        "endOffset": 16296
                     }
                 }
             },
@@ -3597,18 +3597,18 @@
                 "to": {
                     "startLine": 191,
                     "startColumn": 4,
-                    "startOffset": 16323,
-                    "endColumn": 81,
-                    "endOffset": 16400
+                    "startOffset": 16301,
+                    "endColumn": 91,
+                    "endOffset": 16388
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 191,
                         "startColumn": 4,
-                        "startOffset": 16323,
-                        "endColumn": 81,
-                        "endOffset": 16400
+                        "startOffset": 16301,
+                        "endColumn": 91,
+                        "endOffset": 16388
                     }
                 }
             },
@@ -3616,18 +3616,18 @@
                 "to": {
                     "startLine": 192,
                     "startColumn": 4,
-                    "startOffset": 16405,
-                    "endColumn": 81,
-                    "endOffset": 16482
+                    "startOffset": 16393,
+                    "endColumn": 109,
+                    "endOffset": 16498
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 192,
                         "startColumn": 4,
-                        "startOffset": 16405,
-                        "endColumn": 81,
-                        "endOffset": 16482
+                        "startOffset": 16393,
+                        "endColumn": 109,
+                        "endOffset": 16498
                     }
                 }
             },
@@ -3635,18 +3635,18 @@
                 "to": {
                     "startLine": 193,
                     "startColumn": 4,
-                    "startOffset": 16487,
-                    "endColumn": 82,
-                    "endOffset": 16565
+                    "startOffset": 16503,
+                    "endColumn": 73,
+                    "endOffset": 16572
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 193,
                         "startColumn": 4,
-                        "startOffset": 16487,
-                        "endColumn": 82,
-                        "endOffset": 16565
+                        "startOffset": 16503,
+                        "endColumn": 73,
+                        "endOffset": 16572
                     }
                 }
             },
@@ -3654,18 +3654,18 @@
                 "to": {
                     "startLine": 194,
                     "startColumn": 4,
-                    "startOffset": 16570,
-                    "endColumn": 65,
-                    "endOffset": 16631
+                    "startOffset": 16577,
+                    "endColumn": 93,
+                    "endOffset": 16666
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 194,
                         "startColumn": 4,
-                        "startOffset": 16570,
-                        "endColumn": 65,
-                        "endOffset": 16631
+                        "startOffset": 16577,
+                        "endColumn": 93,
+                        "endOffset": 16666
                     }
                 }
             },
@@ -3673,18 +3673,265 @@
                 "to": {
                     "startLine": 195,
                     "startColumn": 4,
-                    "startOffset": 16636,
-                    "endColumn": 91,
-                    "endOffset": 16723
+                    "startOffset": 16671,
+                    "endColumn": 88,
+                    "endOffset": 16755
                 },
                 "from": {
                     "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
                     "position": {
                         "startLine": 195,
                         "startColumn": 4,
-                        "startOffset": 16636,
+                        "startOffset": 16671,
+                        "endColumn": 88,
+                        "endOffset": 16755
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 196,
+                    "startColumn": 4,
+                    "startOffset": 16760,
+                    "endColumn": 69,
+                    "endOffset": 16825
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 196,
+                        "startColumn": 4,
+                        "startOffset": 16760,
+                        "endColumn": 69,
+                        "endOffset": 16825
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 197,
+                    "startColumn": 4,
+                    "startOffset": 16830,
+                    "endColumn": 76,
+                    "endOffset": 16902
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 197,
+                        "startColumn": 4,
+                        "startOffset": 16830,
+                        "endColumn": 76,
+                        "endOffset": 16902
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 198,
+                    "startColumn": 4,
+                    "startOffset": 16907,
+                    "endColumn": 77,
+                    "endOffset": 16980
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 198,
+                        "startColumn": 4,
+                        "startOffset": 16907,
+                        "endColumn": 77,
+                        "endOffset": 16980
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 199,
+                    "startColumn": 4,
+                    "startOffset": 16985,
+                    "endColumn": 77,
+                    "endOffset": 17058
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 199,
+                        "startColumn": 4,
+                        "startOffset": 16985,
+                        "endColumn": 77,
+                        "endOffset": 17058
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 200,
+                    "startColumn": 4,
+                    "startOffset": 17063,
+                    "endColumn": 91,
+                    "endOffset": 17150
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 200,
+                        "startColumn": 4,
+                        "startOffset": 17063,
                         "endColumn": 91,
-                        "endOffset": 16723
+                        "endOffset": 17150
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 201,
+                    "startColumn": 4,
+                    "startOffset": 17155,
+                    "endColumn": 91,
+                    "endOffset": 17242
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 201,
+                        "startColumn": 4,
+                        "startOffset": 17155,
+                        "endColumn": 91,
+                        "endOffset": 17242
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 202,
+                    "startColumn": 4,
+                    "startOffset": 17247,
+                    "endColumn": 85,
+                    "endOffset": 17328
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 202,
+                        "startColumn": 4,
+                        "startOffset": 17247,
+                        "endColumn": 85,
+                        "endOffset": 17328
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 203,
+                    "startColumn": 4,
+                    "startOffset": 17333,
+                    "endColumn": 80,
+                    "endOffset": 17409
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 203,
+                        "startColumn": 4,
+                        "startOffset": 17333,
+                        "endColumn": 80,
+                        "endOffset": 17409
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 204,
+                    "startColumn": 4,
+                    "startOffset": 17414,
+                    "endColumn": 81,
+                    "endOffset": 17491
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 204,
+                        "startColumn": 4,
+                        "startOffset": 17414,
+                        "endColumn": 81,
+                        "endOffset": 17491
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 205,
+                    "startColumn": 4,
+                    "startOffset": 17496,
+                    "endColumn": 81,
+                    "endOffset": 17573
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 205,
+                        "startColumn": 4,
+                        "startOffset": 17496,
+                        "endColumn": 81,
+                        "endOffset": 17573
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 206,
+                    "startColumn": 4,
+                    "startOffset": 17578,
+                    "endColumn": 82,
+                    "endOffset": 17656
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 206,
+                        "startColumn": 4,
+                        "startOffset": 17578,
+                        "endColumn": 82,
+                        "endOffset": 17656
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 207,
+                    "startColumn": 4,
+                    "startOffset": 17661,
+                    "endColumn": 65,
+                    "endOffset": 17722
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 207,
+                        "startColumn": 4,
+                        "startOffset": 17661,
+                        "endColumn": 65,
+                        "endOffset": 17722
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 208,
+                    "startColumn": 4,
+                    "startOffset": 17727,
+                    "endColumn": 91,
+                    "endOffset": 17814
+                },
+                "from": {
+                    "file": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/values-zh-rCN/values-zh-rCN.xml",
+                    "position": {
+                        "startLine": 208,
+                        "startColumn": 4,
+                        "startOffset": 17727,
+                        "endColumn": 91,
+                        "endOffset": 17814
                     }
                 }
             }

@@ -34,6 +34,8 @@
     <string name="dji_check_fc_accelerate_solution">解决方案：请重启飞行器，如果多次启动均失败，请联系售后服务</string>
     <string name="dji_check_fc_aircraft_stationary_reason">检测到飞行器可能在晃动</string>
     <string name="dji_check_fc_aircraft_stationary_solution">解决方案：请静止飞行器，若问题依然存在，请联系售后服务</string>
+    <string name="dji_check_fc_aircraft_warming_up_reason">飞行器系统预热中</string>
+    <string name="dji_check_fc_aircraft_warming_up_solution">请等待</string>
     <string name="dji_check_fc_atti_angle_error_reason">飞行器姿态角过大</string>
     <string name="dji_check_fc_atti_angle_error_solution">解决方案：请将飞行器水平放置并重启飞行器，如果多次启动均异常，请联系售后服务</string>
     <string name="dji_check_fc_barometer_data_error_reason">气压计数据异常</string>
@@ -44,8 +46,12 @@
     <string name="dji_check_fc_barometer_solution">解决方案：请重启飞行器，如果多次启动均失败，请联系售后服务</string>
     <string name="dji_check_fc_calibrate_version_mismatch_reason">需重新进行IMU校准</string>
     <string name="dji_check_fc_calibrate_version_mismatch_solution">解决方案：请校准IMU</string>
+    <string name="dji_check_fc_compass_abnormal_reason">指南针异常</string>
+    <string name="dji_check_fc_compass_abnormal_solution">解决方案：1. 检查飞行器周围是否有钢铁、磁铁等物质，如某些包含钢材的地面和墙壁。远离干扰源后再起飞；2. 起飞前请先校准指南针。</string>
     <string name="dji_check_fc_compass_error_reason">指南针异常</string>
     <string name="dji_check_fc_compass_error_solution">解决方案：1.移动至其他地方，重启飞行器；2.若问题依然存在，请校准指南针</string>
+    <string name="dji_check_fc_compass_need_restart_reason">指南针错误，需要重启</string>
+    <string name="dji_check_fc_compass_need_restart_solution">解决方案：请重启飞行器</string>
     <string name="dji_check_fc_compass_reason">指南针错误</string>
     <string name="dji_check_fc_compass_solution">解决方案：请重启飞行器，如果多次启动均失败，请联系售后服务</string>
     <string name="dji_check_fc_data_record_error_reason">数据记录仪异常</string>
@@ -66,8 +72,14 @@
     <string name="dji_check_fc_imu_direction_param_erro_solution">解决方案：硬件故障，需要返厂维修，请联系售后服务</string>
     <string name="dji_check_fc_imu_init_error_reason">IMU初始化失败</string>
     <string name="dji_check_fc_imu_init_error_solution">解决方案：请重启飞行器，如果多次启动均失败，请联系售后服务</string>
+    <string name="dji_check_fc_imu_install_direction_error_reason">IMU错误</string>
+    <string name="dji_check_fc_imu_install_direction_error_solution">解决方案：检查IMU安装方向</string>
+    <string name="dji_check_fc_imu_interfered_reason">IMU异常</string>
+    <string name="dji_check_fc_imu_interfered_solution">解决方案：请远离地面磁场干扰</string>
     <string name="dji_check_fc_need_imu_calibrate_reason">未进行IMU校准</string>
     <string name="dji_check_fc_need_imu_calibrate_solution">解决方案：请校准IMU</string>
+    <string name="dji_check_fc_plain_propeller_on_plateau_solution">高原上请不要使用平原桨。</string>
+    <string name="dji_check_fc_plateau_propeller_on_plain_solution">平原上请不要使用高原桨。</string>
     <string name="dji_check_fc_system_normal">正常</string>
     <string name="dji_check_fc_system_unknow_error">未知错误，错误码:%d</string>
     <string name="dji_check_fc_takeoff_failed_GPS_disconnect">GPS未连接</string>
@@ -146,6 +158,7 @@
     <string name="dji_check_fc_takeoff_failed_unknown_error">未知错误 (code: %d)，无法起飞，请联系售后人员</string>
     <string name="dji_check_fc_takeoff_failed_upgrading">系统正在升级</string>
     <string name="dji_check_fc_takeoff_failed_version_mismatch">版本不匹配，请检查固件版本</string>
+    <string name="dji_check_fc_wrong_propeller_reason">桨叶异常</string>
     <string name="dji_check_gimbal_gyroscope_reason">云台陀螺仪错误</string>
     <string name="dji_check_gimbal_gyroscope_solution">解决方案：硬件故障，需要返厂维修，请联系售后服务</string>
     <string name="dji_check_gimbal_mc_conn_reason">云台无法与飞行器通信</string>

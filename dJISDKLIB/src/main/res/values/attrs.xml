@@ -9,7 +9,7 @@
             <enum name="bold" value="3"></enum>
         </attr>
     </declare-styleable>
-
+    
     <declare-styleable name="DJIDeviceType">
         <attr name="djiDeviceType">
             <enum name="phone" value="0"></enum>

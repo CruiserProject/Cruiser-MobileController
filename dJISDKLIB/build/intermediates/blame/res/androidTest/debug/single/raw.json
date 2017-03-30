@@ -124,6 +124,14 @@
         "source": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/raw/iframe_1080x720_gd600.h264"
     },
     {
+        "merged": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/res/merged/androidTest/debug/raw/iframe_1440x1088_wm620.h264",
+        "source": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/raw/iframe_1440x1088_wm620.h264"
+    },
+    {
+        "merged": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/res/merged/androidTest/debug/raw/arrow_v02.3ds",
+        "source": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/raw/arrow_v02.3ds"
+    },
+    {
         "merged": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/res/merged/androidTest/debug/raw/dock.ogg",
         "source": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/raw/dock.ogg"
     },
