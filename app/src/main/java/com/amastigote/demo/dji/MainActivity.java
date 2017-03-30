@@ -1,51 +1,47 @@
 package com.amastigote.demo.dji;
 
+import android.Manifest;
 import android.app.Activity;
 import android.graphics.SurfaceTexture;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.TextureView;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ToggleButton;
 
 import com.amastigote.demo.dji.UIComponentUtil.SimpleAlertDialog;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleDialogButton;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleProgressDialog;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
-import dji.common.util.DJICommonCallbacks;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
-import dji.sdk.missionmanager.DJICustomMission;
-import dji.sdk.missionmanager.DJIMission;
-import dji.sdk.missionmanager.DJIMissionManager;
-import dji.sdk.missionmanager.missionstep.DJIGoHomeStep;
-import dji.sdk.missionmanager.missionstep.DJIMissionStep;
-import dji.sdk.missionmanager.missionstep.DJITakeoffStep;
+import dji.sdk.mission.MissionControl;
+import dji.sdk.mission.timeline.actions.GoHomeAction;
+import dji.sdk.mission.timeline.actions.TakeOffAction;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 public class MainActivity extends Activity
-        implements TextureView.SurfaceTextureListener,
-        DJIMissionManager.MissionProgressStatusCallback,
-        DJICommonCallbacks.DJICompletionCallback {
+        implements TextureView.SurfaceTextureListener {
     private static BaseProduct baseProduct;
 
     /*
         UI components
      */
-
     private Button takeOffButton;
     private Button landButton;
+    private Button captureButton;
+    private ToggleButton recordToggleButton;
     private SimpleProgressDialog startUpInfoDialog;
     private TextureView videoTextureView;
 
-    private List<DJIMissionStep> djiMissionStepList = new ArrayList<>();
+    private MissionControl missionControl;
     private DJICodecManager djiCodecManager;
-    private DJIMissionManager missionManager;
     private DJISDKManager.SDKManagerCallback sdkManagerCallback
             = new DJISDKManager.SDKManagerCallback() {
         @Override
@@ -71,6 +67,8 @@ public class MainActivity extends Activity
 //                baseProduct.setDJIBaseProductListener(...);
                 startUpInfoDialog.dismiss();
 
+                initMissionControl();
+
                 SimpleAlertDialog.show(
                         MainActivity.this,
                         false,
@@ -79,20 +77,7 @@ public class MainActivity extends Activity
                         new SimpleDialogButton("ok", null)
                 );
 
-                initMissionManager();
-
                 try {
-//                    if (baseProduct.getModel() != Model.UNKNOWN_AIRCRAFT)
-//                        baseProduct.getCamera().video
-//                                setVideo((videoBuffer, size) -> {
-//                            if (djiCodecManager != null)
-//                                djiCodecManager.sendDataToDecoder(videoBuffer, size);
-//                        });
-//                    else
-//                        baseProduct.getAirLink().getLightbridgeLink().setDJIOnReceivedVideoCallback((videoBuffer, size) -> {
-//                            if (djiCodecManager != null)
-//                                djiCodecManager.sendDataToDecoder(videoBuffer, size);
-//                        });
                     VideoFeeder.getInstance()
                             .getVideoFeeds().get(0)
                             .setCallback((videoBuffer, size) -> {
@@ -105,7 +90,7 @@ public class MainActivity extends Activity
                             false,
                             "Exception",
                             e.toString(),
-                            new SimpleDialogButton("quit", (x, y) -> System.exit(0))
+                            new SimpleDialogButton("ok", null)
                     );
                 }
             }
@@ -118,75 +103,51 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.VIBRATE,
+                            Manifest.permission.INTERNET, Manifest.permission.ACCESS_WIFI_STATE,
+                            Manifest.permission.WAKE_LOCK, Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.CHANGE_WIFI_STATE, Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS,
+                            Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.SYSTEM_ALERT_WINDOW,
+                            Manifest.permission.READ_PHONE_STATE,
+                    }
+                    , 1);
+        }
+
         takeOffButton = (Button) findViewById(R.id.takeoff_btn);
         landButton = (Button) findViewById(R.id.land_btn);
+        captureButton = (Button) findViewById(R.id.capture_btn);
+        recordToggleButton = (ToggleButton) findViewById(R.id.record_tgbtn);
 
         takeOffButton.setOnClickListener((view -> {
-            djiMissionStepList.clear();
-            djiMissionStepList.add(new DJITakeoffStep(this));
-            DJICustomMission customMission = new DJICustomMission(djiMissionStepList);
-            DJIMission.DJIMissionProgressHandler progressHandler = ((type, progress) -> {
-            });
-
-            missionManager.prepareMission(customMission, progressHandler, djiError -> {
-                if (djiError != null) {
-                    SimpleAlertDialog.show(
-                            MainActivity.this,
-                            false,
-                            "Mission Preparation Error",
-                            djiError.getDescription(),
-                            new SimpleDialogButton("ok", null)
-                    );
-                } else {
-                    missionManager.startMissionExecution(djiError2 -> {
-                        if (djiError2 != null) {
-                            SimpleAlertDialog.show(
-                                    MainActivity.this,
-                                    false,
-                                    "Mission Execution Error",
-                                    djiError2.getDescription(),
-                                    new SimpleDialogButton("ok", null)
-                            );
-                        }
-                    });
-                }
-            });
-
-
+            //todo check whether there are any timeline elements in the timeline
+//            missionControl.scheduleElement(new TakeOffAction());
+            missionControl.startElement(new TakeOffAction());
         }));
 
         landButton.setOnClickListener((view -> {
-            djiMissionStepList.clear();
-            djiMissionStepList.add(new DJIGoHomeStep(this));
-            DJICustomMission customMission = new DJICustomMission(djiMissionStepList);
-            DJIMission.DJIMissionProgressHandler progressHandler = ((type, progress) -> {
-            });
-
-            missionManager.prepareMission(customMission, progressHandler, djiError -> {
-                if (djiError != null) {
-                    SimpleAlertDialog.show(
-                            MainActivity.this,
-                            false,
-                            "Mission Preparation Error",
-                            djiError.getDescription(),
-                            new SimpleDialogButton("ok", null)
-                    );
-                } else {
-                    missionManager.startMissionExecution(djiError2 -> {
-                        if (djiError2 != null) {
-                            SimpleAlertDialog.show(
-                                    MainActivity.this,
-                                    false,
-                                    "Mission Execution Error",
-                                    djiError2.getDescription(),
-                                    new SimpleDialogButton("ok", null)
-                            );
-                        }
-                    });
-                }
-            });
+            //todo check whether there are any timeline elements in the timeline
+            missionControl.startElement(new GoHomeAction());
 
         }));
+
+        captureButton.setOnClickListener((view -> {
+            baseProduct.getCamera()
+                    .setShootPhotoMode(SettingsDefinitions.ShootPhotoMode.SINGLE, null);
+            baseProduct.getCamera()
+                    .startShootPhoto(null);
+        }));
+
+        recordToggleButton.setOnClickListener((view -> {
+            if (recordToggleButton.isChecked()) {
+                baseProduct.getCamera().startRecordVideo(null);
+            } else {
+                baseProduct.getCamera().stopRecordVideo(null);
+            }
+        }));
+
         videoTextureView = (TextureView) findViewById(R.id.texture_view);
         videoTextureView.setSurfaceTextureListener(this);
 
@@ -197,17 +158,8 @@ public class MainActivity extends Activity
     }
 
     /*
-        initialize missionManager;
-    */
-
-    public void initMissionManager() {
-        missionManager = baseProduct.getMissionManager();
-    }
-
-    /*
         implements TextureView.SurfaceTextureListener
      */
-
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         if (djiCodecManager == null)
@@ -233,17 +185,8 @@ public class MainActivity extends Activity
 
     }
 
-    /*
-        implements DJIMissionManager.MissionProgressStatusCallback
-     */
-
-    @Override
-    public void missionProgressStatus(DJIMission.DJIMissionProgressStatus djiMissionProgressStatus) {
-
-    }
-
-    @Override
-    public void onResult(DJIError djiError) {
-
+    public void initMissionControl() {
+        missionControl = MissionControl.getInstance();
+//        missionControl = DJISDKManager.getInstance().getMissionControl();
     }
 }
