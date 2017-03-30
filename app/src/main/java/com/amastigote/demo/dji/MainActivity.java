@@ -16,9 +16,9 @@ import java.util.List;
 
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
-import dji.common.product.Model;
 import dji.common.util.DJICommonCallbacks;
-import dji.sdk.base.DJIBaseProduct;
+import dji.sdk.base.BaseProduct;
+import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.missionmanager.DJICustomMission;
 import dji.sdk.missionmanager.DJIMission;
@@ -32,7 +32,7 @@ public class MainActivity extends Activity
         implements TextureView.SurfaceTextureListener,
         DJIMissionManager.MissionProgressStatusCallback,
         DJICommonCallbacks.DJICompletionCallback {
-    private static DJIBaseProduct djiBaseProduct;
+    private static BaseProduct baseProduct;
 
     /*
         UI components
@@ -46,10 +46,10 @@ public class MainActivity extends Activity
     private List<DJIMissionStep> djiMissionStepList = new ArrayList<>();
     private DJICodecManager djiCodecManager;
     private DJIMissionManager missionManager;
-    private DJISDKManager.DJISDKManagerCallback djisdkManagerCallback
-            = new DJISDKManager.DJISDKManagerCallback() {
+    private DJISDKManager.SDKManagerCallback sdkManagerCallback
+            = new DJISDKManager.SDKManagerCallback() {
         @Override
-        public void onGetRegisteredResult(DJIError djiError) {
+        public void onRegister(DJIError djiError) {
             if (djiError.toString().equals(DJISDKError.REGISTRATION_SUCCESS.toString())) {
                 startUpInfoDialog.switchMessage("Waiting for aircraft");
                 DJISDKManager.getInstance().startConnectionToProduct();
@@ -65,33 +65,40 @@ public class MainActivity extends Activity
         }
 
         @Override
-        public void onProductChanged(DJIBaseProduct previousProd, DJIBaseProduct presentProd) {
-            djiBaseProduct = presentProd;
-            if (djiBaseProduct != null && djiBaseProduct.isConnected()) {
-//                djiBaseProduct.setDJIBaseProductListener(...);
+        public void onProductChange(BaseProduct previousProd, BaseProduct presentProd) {
+            baseProduct = presentProd;
+            if (baseProduct != null && baseProduct.isConnected()) {
+//                baseProduct.setDJIBaseProductListener(...);
                 startUpInfoDialog.dismiss();
 
                 SimpleAlertDialog.show(
                         MainActivity.this,
                         false,
                         "Product Connected",
-                        "Present product is " + djiBaseProduct.getModel().getDisplayName(),
+                        "Present product is " + baseProduct.getModel().getDisplayName(),
                         new SimpleDialogButton("ok", null)
                 );
 
                 initMissionManager();
 
                 try {
-                    if (djiBaseProduct.getModel() != Model.UnknownAircraft)
-                        djiBaseProduct.getCamera().setDJICameraReceivedVideoDataCallback((videoBuffer, size) -> {
-                            if (djiCodecManager != null)
-                                djiCodecManager.sendDataToDecoder(videoBuffer, size);
-                        });
-                    else
-                        djiBaseProduct.getAirLink().getLBAirLink().setDJIOnReceivedVideoCallback((videoBuffer, size) -> {
-                            if (djiCodecManager != null)
-                                djiCodecManager.sendDataToDecoder(videoBuffer, size);
-                        });
+//                    if (baseProduct.getModel() != Model.UNKNOWN_AIRCRAFT)
+//                        baseProduct.getCamera().video
+//                                setVideo((videoBuffer, size) -> {
+//                            if (djiCodecManager != null)
+//                                djiCodecManager.sendDataToDecoder(videoBuffer, size);
+//                        });
+//                    else
+//                        baseProduct.getAirLink().getLightbridgeLink().setDJIOnReceivedVideoCallback((videoBuffer, size) -> {
+//                            if (djiCodecManager != null)
+//                                djiCodecManager.sendDataToDecoder(videoBuffer, size);
+//                        });
+                    VideoFeeder.getInstance()
+                            .getVideoFeeds().get(0)
+                            .setCallback((videoBuffer, size) -> {
+                                if (djiCodecManager != null)
+                                    djiCodecManager.sendDataToDecoder(videoBuffer, size);
+                            });
                 } catch (Exception e) {
                     SimpleAlertDialog.show(
                             MainActivity.this,
@@ -186,7 +193,7 @@ public class MainActivity extends Activity
         startUpInfoDialog = new SimpleProgressDialog(this, "Validating API key");
 
         startUpInfoDialog.show();
-        DJISDKManager.getInstance().initSDKManager(this, djisdkManagerCallback);
+        DJISDKManager.getInstance().registerApp(this, sdkManagerCallback);
     }
 
     /*
@@ -194,7 +201,7 @@ public class MainActivity extends Activity
     */
 
     public void initMissionManager() {
-        missionManager = djiBaseProduct.getMissionManager();
+        missionManager = baseProduct.getMissionManager();
     }
 
     /*
