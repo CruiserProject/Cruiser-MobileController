@@ -98,13 +98,7 @@ public class MainActivity extends Activity
                                     djiCodecManager.sendDataToDecoder(videoBuffer, size);
                             });
                 } catch (Exception e) {
-                    SimpleAlertDialog.show(
-                            MainActivity.this,
-                            false,
-                            "Exception",
-                            e.toString(),
-                            new SimpleDialogButton("ok", null)
-                    );
+                    SimpleAlertDialog.showException(MainActivity.this, e);
                 }
             }
         }
@@ -184,16 +178,32 @@ public class MainActivity extends Activity
 
         captureButton.setOnClickListener((view -> {
             baseProduct.getCamera()
-                    .setShootPhotoMode(SettingsDefinitions.ShootPhotoMode.SINGLE, null);
+                    .setShootPhotoMode(SettingsDefinitions.ShootPhotoMode.SINGLE, e -> {
+                        if (e != null) {
+                            SimpleAlertDialog.showDJIError(this, e);
+                        }
+                    });
             baseProduct.getCamera()
-                    .startShootPhoto(null);
+                    .startShootPhoto(e -> {
+                        if (e != null) {
+                            SimpleAlertDialog.showDJIError(this, e);
+                        }
+                    });
         }));
 
         recordToggleButton.setOnClickListener((view -> {
             if (recordToggleButton.isChecked()) {
-                baseProduct.getCamera().startRecordVideo(null);
+                baseProduct.getCamera().startRecordVideo(e -> {
+                    if (e != null) {
+                        SimpleAlertDialog.showDJIError(this, e);
+                    }
+                });
             } else {
-                baseProduct.getCamera().stopRecordVideo(null);
+                baseProduct.getCamera().stopRecordVideo(e -> {
+                    if (e != null) {
+                        SimpleAlertDialog.showDJIError(this, e);
+                    }
+                });
             }
         }));
 
