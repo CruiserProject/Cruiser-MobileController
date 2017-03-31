@@ -13,26 +13,53 @@
         android:foregroundGravity="center"/>
 
     <LinearLayout
-        android:gravity="center_horizontal"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center_horizontal">
+
         <Button
-            android:layout_weight="1"
-            android:text="capture"
+            android:id="@+id/takeoff_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-        <!--<Button-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TAKE OFF" />
+
+        <Button
+            android:id="@+id/land_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="LAND" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal">
+
+        <Button
+            android:layout_gravity="bottom"
+            android:id="@+id/capture_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="capture" />
         <ToggleButton
-            android:layout_weight="1"
-            android:text="record"
+            android:layout_gravity="bottom"
+            android:id="@+id/record_tgbtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textOff="record"
+            android:textOn="stop record" />
+        <com.baidu.mapapi.map.MapView
+            android:clickable="true"
+            android:id="@+id/mapView_baidu"
+            android:layout_width="140dp"
+            android:layout_height="100dp"/>
     </LinearLayout>
 
 </RelativeLayout>
