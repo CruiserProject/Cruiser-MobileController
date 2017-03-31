@@ -19,6 +19,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -38,10 +41,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
         <meta-data
             android:name="com.dji.sdk.API_KEY"
             android:value="20ce3360c24b4bc9dbb01349" />
         <!--20ce3360c24b4bc9dbb01349-->
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="pslIh5FoWscBQsxzjXGcYXXfgHqA1H9E" />
+        <!--pslIh5FoWscBQsxzjXGcYXXfgHqA1H9E-->
 
         <service android:name="dji.sdk.sdkmanager.DJIGlobalService" />
 

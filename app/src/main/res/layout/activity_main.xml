@@ -56,9 +56,10 @@
             android:textOff="record"
             android:textOn="stop record" />
         <com.baidu.mapapi.map.MapView
+            android:clickable="true"
             android:id="@+id/mapView_baidu"
-            android:layout_width="120dp"
-            android:layout_height="80dp"/>
+            android:layout_width="140dp"
+            android:layout_height="100dp"/>
     </LinearLayout>
 
 </RelativeLayout>
