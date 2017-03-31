@@ -152,7 +152,7 @@ public class MainActivity extends Activity
         uiSettings.setCompassEnabled(false);
         uiSettings.setAllGesturesEnabled(false);
 
-        // zoom the map 5 times to ensure it is lar enough
+        // zoom the map 4 times to ensure it is large enough
         for (int i = 0; i < 4; i++)
             baiduMap.setMapStatus(MapStatusUpdateFactory.zoomIn());
 
@@ -160,7 +160,8 @@ public class MainActivity extends Activity
                 MyLocationConfiguration.LocationMode.FOLLOWING,
                 true,
                 null));
-        // todo: display a larger map on tapping the mini map
+
+        // todo: switch front view between camera and map
         mapView.setOnClickListener((view) -> {
         });
 
