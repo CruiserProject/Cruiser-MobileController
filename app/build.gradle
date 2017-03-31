@@ -34,4 +34,5 @@ dependencies {
     compile project(':dJISDKLIB')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:26.0.0-alpha1'
+    compile files('libs/BaiduLBS_Android.jar')
 }

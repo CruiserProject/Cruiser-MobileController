@@ -41,18 +41,24 @@
         android:gravity="center_horizontal">
 
         <Button
+            android:layout_gravity="bottom"
             android:id="@+id/capture_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="capture" />
         <ToggleButton
+            android:layout_gravity="bottom"
             android:id="@+id/record_tgbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textOff="record"
             android:textOn="stop record" />
+        <com.baidu.mapapi.map.MapView
+            android:id="@+id/mapView_baidu"
+            android:layout_width="120dp"
+            android:layout_height="80dp"/>
     </LinearLayout>
 
 </RelativeLayout>
