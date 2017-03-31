@@ -1,6 +1,10 @@
 [
     {
-        "merged": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/res/merged/androidTest/debug/xml/accessory_filter.xml",
-        "source": "/home/hwding/Work/DJi/dJISDKLIB/build/intermediates/bundles/debug/res/xml/accessory_filter.xml"
+        "merged": "D:\\home\\hwding\\Work\\DJi\\dJISDKLIB\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\accessory_filter.xml",
+        "source": "D:\\home\\hwding\\Work\\DJi\\dJISDKLIB\\build\\intermediates\\bundles\\debug\\res\\xml\\accessory_filter.xml"
+    },
+    {
+        "merged": "D:\\GITHUB_repos\\DJiMobileControllerDevel\\dJISDKLIB\\build\\intermediates\\res\\merged\\androidTest\\debug\\xml\\accessory_filter.xml",
+        "source": "D:\\GITHUB_repos\\DJiMobileControllerDevel\\dJISDKLIB\\build\\intermediates\\bundles\\debug\\res\\xml\\accessory_filter.xml"
     }
 ]
