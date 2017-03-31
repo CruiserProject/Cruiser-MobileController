@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.view.TextureView;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -26,7 +24,6 @@ import com.baidu.mapapi.map.UiSettings;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
-import dji.common.flightcontroller.FlightControllerState;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
@@ -122,7 +119,7 @@ public class MainActivity extends Activity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            ActivityCompat.requestPermissions(this,
+            this.requestPermissions(
                     new String[]{
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             Manifest.permission.VIBRATE,
@@ -244,12 +241,9 @@ public class MainActivity extends Activity
 
     public void initFlightController() {
         flightController = ((Aircraft) baseProduct).getFlightController();
-        flightController.setStateCallback(new FlightControllerState.Callback() {
-            @Override
-            public void onUpdate(@NonNull FlightControllerState flightControllerState) {
-                MyLocationData locData = new MyLocationData.Builder().latitude(flightControllerState.getAircraftLocation().getLatitude()).longitude(flightControllerState.getAircraftLocation().getLongitude()).build();
-                baiduMap.setMyLocationData(locData);
-            }
+        flightController.setStateCallback(flightControllerState -> {
+            MyLocationData locData = new MyLocationData.Builder().latitude(flightControllerState.getAircraftLocation().getLatitude()).longitude(flightControllerState.getAircraftLocation().getLongitude()).build();
+            baiduMap.setMyLocationData(locData);
         });
     }
 }
