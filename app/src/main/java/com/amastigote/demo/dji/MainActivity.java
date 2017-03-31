@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.TextureView;
 import android.view.WindowManager;
@@ -19,17 +20,21 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.UiSettings;
 
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
+import dji.common.flightcontroller.FlightControllerState;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
+import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.mission.MissionControl;
 import dji.sdk.mission.timeline.actions.GoHomeAction;
 import dji.sdk.mission.timeline.actions.TakeOffAction;
+import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 public class MainActivity extends Activity
@@ -47,6 +52,9 @@ public class MainActivity extends Activity
     private TextureView videoTextureView;
     private MapView mapView;
 
+    private BaiduMap baiduMap;
+
+    private FlightController flightController;
     private MissionControl missionControl;
     private DJICodecManager djiCodecManager;
     private DJISDKManager.SDKManagerCallback sdkManagerCallback
@@ -75,6 +83,7 @@ public class MainActivity extends Activity
                 startUpInfoDialog.dismiss();
 
                 initMissionControl();
+                initFlightController();
 
                 SimpleAlertDialog.show(
                         MainActivity.this,
@@ -106,6 +115,7 @@ public class MainActivity extends Activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
@@ -127,6 +137,8 @@ public class MainActivity extends Activity
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.SYSTEM_ALERT_WINDOW,
                             Manifest.permission.READ_PHONE_STATE,
+                            Manifest.permission.WRITE_SETTINGS,
+                            Manifest.permission.GET_TASKS
                     }
                     , 1);
         }
@@ -138,11 +150,13 @@ public class MainActivity extends Activity
         captureButton = (Button) findViewById(R.id.capture_btn);
         recordToggleButton = (ToggleButton) findViewById(R.id.record_tgbtn);
 
-        BaiduMap baiduMap = mapView.getMap();
+        baiduMap = mapView.getMap();
         baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         mapView.showZoomControls(false);
         mapView.showScaleControl(false);
-        baiduMap.setMyLocationEnabled(false);
+        baiduMap.setMyLocationEnabled(true);
+
+
         UiSettings uiSettings = baiduMap.getUiSettings();
         uiSettings.setCompassEnabled(false);
         uiSettings.setAllGesturesEnabled(false);
@@ -226,5 +240,16 @@ public class MainActivity extends Activity
     public void initMissionControl() {
         missionControl = MissionControl.getInstance();
 //        missionControl = DJISDKManager.getInstance().getMissionControl();
+    }
+
+    public void initFlightController() {
+        flightController = ((Aircraft) baseProduct).getFlightController();
+        flightController.setStateCallback(new FlightControllerState.Callback() {
+            @Override
+            public void onUpdate(@NonNull FlightControllerState flightControllerState) {
+                MyLocationData locData = new MyLocationData.Builder().latitude(flightControllerState.getAircraftLocation().getLatitude()).longitude(flightControllerState.getAircraftLocation().getLongitude()).build();
+                baiduMap.setMyLocationData(locData);
+            }
+        });
     }
 }
