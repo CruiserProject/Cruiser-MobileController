@@ -1,6 +1,5 @@
 language: android
 jdk:
   - oraclejdk8
-android:
-  components:
-    - build-tools-23.0.1
+before_script:
+  - echo '\n8933bad161af4178b1185d1a37fbf41ea5269c55' >> /usr/local/android-sdk/licenses/android-sdk-license
