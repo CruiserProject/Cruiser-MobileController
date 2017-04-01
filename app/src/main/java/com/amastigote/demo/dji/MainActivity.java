@@ -19,18 +19,23 @@ import com.amastigote.demo.dji.UIComponentUtil.SimpleDialogButton;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleProgressDialog;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.UiSettings;
+import com.baidu.mapapi.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
+import dji.common.mission.waypoint.Waypoint;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
@@ -66,6 +71,8 @@ public class MainActivity extends Activity
     private Button mapPanelStopButton;
     private Set<Button> mapPanelButtonSet;
     private BaiduMap baiduMap;
+
+    private List<Waypoint> waypointList = new ArrayList<>();
 
     private FlightController flightController;
     private MissionControl missionControl;
@@ -298,6 +305,17 @@ public class MainActivity extends Activity
         if (!isMapPanelFocused) {
             mapViewPanel.setOnClickListener(null);
             videoTextureView.setOnClickListener((view) -> switchMapPanelFocus());
+            baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    waypointList.add(new Waypoint(latLng.latitude, latLng.longitude, 50F));
+                }
+
+                @Override
+                public boolean onMapPoiClick(MapPoi mapPoi) {
+                    return false;
+                }
+            });
             relativeLayoutMain.removeView(videoTextureView);
             linearLayoutForMapView.removeView(mapViewPanel);
             relativeLayoutMain.addView(mapViewPanel);
