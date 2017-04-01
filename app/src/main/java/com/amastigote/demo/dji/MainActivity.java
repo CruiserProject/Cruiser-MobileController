@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
 
 import com.amastigote.demo.dji.UIComponentUtil.SimpleAlertDialog;
@@ -52,6 +53,7 @@ public class MainActivity extends Activity
     private Button captureButton;
     private ToggleButton recordToggleButton;
     private SimpleProgressDialog startUpInfoDialog;
+    private RelativeLayout relativeLayoutMain;
     private TextureView videoTextureView;
 
     private MapView mapView;
@@ -150,6 +152,7 @@ public class MainActivity extends Activity
 
         linearLayoutForMapView = (LinearLayout) findViewById(R.id.ll_for_map);
         mapViewPanel = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, linearLayoutForMapView);
+        mapViewPanel.setOnClickListener((view) -> switchMapPanelFocus());
         mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
         mapPanelCancelButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_cancel);
         mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
@@ -231,7 +234,14 @@ public class MainActivity extends Activity
             }
         }));
 
-        videoTextureView = (TextureView) findViewById(R.id.texture_view);
+        relativeLayoutMain = (RelativeLayout) findViewById(R.id.rl_main);
+        videoTextureView = new TextureView(this);
+        videoTextureView.setLayoutParams(
+                new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT)
+        );
+        relativeLayoutMain.addView(videoTextureView);
         videoTextureView.setSurfaceTextureListener(this);
 
         startUpInfoDialog = new SimpleProgressDialog(this, "Validating API key");
@@ -296,5 +306,6 @@ public class MainActivity extends Activity
             // todo: switch to mini
             mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.GONE));
         }
+        isMapPanelFocused = !isMapPanelFocused;
     }
 }
