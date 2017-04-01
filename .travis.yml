@@ -2,4 +2,5 @@ language: android
 jdk:
   - oraclejdk8
 before_script:
+  - touch /usr/local/android-sdk/licenses/android-sdk-license
   - echo '\n8933bad161af4178b1185d1a37fbf41ea5269c55' >> /usr/local/android-sdk/licenses/android-sdk-license
