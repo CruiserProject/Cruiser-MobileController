@@ -35,31 +35,33 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center_horizontal">
 
         <Button
-            android:layout_gravity="bottom"
             android:id="@+id/capture_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:text="capture" />
         <ToggleButton
-            android:layout_gravity="bottom"
             android:id="@+id/record_tgbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:textOff="record"
             android:textOn="stop record" />
-        <com.baidu.mapapi.map.MapView
-            android:clickable="true"
-            android:id="@+id/mapView_baidu"
+
+        <LinearLayout
+            android:id="@+id/ll_for_map"
             android:layout_width="140dp"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp"
+            android:orientation="horizontal" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -57,7 +57,7 @@
         <!--disable for compatibility issue-->
         <!--<service android:name="dji.internal.geofeature.flyforbid.FlyforbidUpdateService" />-->
 
-        <service android:name="dji.sdk.sdkmanager.GeoSyncFileService" />
+        <!--<service android:name="dji.sdk.sdkmanager.GeoSyncFileService" />-->
 
         <activity
             android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
@@ -72,9 +72,9 @@
         </activity>
 
         <activity
-            android:theme="@style/Theme.Design.NoActionBar"
             android:name=".MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

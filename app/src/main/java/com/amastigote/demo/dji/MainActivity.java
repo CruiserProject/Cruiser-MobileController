@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.TextureView;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ToggleButton;
 
 import com.amastigote.demo.dji.UIComponentUtil.SimpleAlertDialog;
@@ -20,6 +23,9 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.UiSettings;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
@@ -47,8 +53,16 @@ public class MainActivity extends Activity
     private ToggleButton recordToggleButton;
     private SimpleProgressDialog startUpInfoDialog;
     private TextureView videoTextureView;
-    private MapView mapView;
 
+    private MapView mapView;
+    private LinearLayout linearLayoutForMapView;
+    private LinearLayout mapViewPanel;
+    private boolean isMapPanelFocused;
+    private Button mapPanelCancelButton;
+    private Button mapPanelUndoButton;
+    private Button mapPanelStartButton;
+    private Button mapPanelStopButton;
+    private Set<Button> mapPanelButtonSet;
     private BaiduMap baiduMap;
 
     private FlightController flightController;
@@ -134,7 +148,21 @@ public class MainActivity extends Activity
                     , 1);
         }
 
-        mapView = (MapView) findViewById(R.id.mapView_baidu);
+        linearLayoutForMapView = (LinearLayout) findViewById(R.id.ll_for_map);
+        mapViewPanel = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, linearLayoutForMapView);
+        mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
+        mapPanelCancelButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_cancel);
+        mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
+        mapPanelStartButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_start);
+        mapPanelStopButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_stop);
+        mapPanelButtonSet = new HashSet<Button>() {{
+            add(mapPanelCancelButton);
+            add(mapPanelUndoButton);
+            add(mapPanelStartButton);
+            add(mapPanelStopButton);
+        }};
+
+        isMapPanelFocused = false;
 
         takeOffButton = (Button) findViewById(R.id.takeoff_btn);
         landButton = (Button) findViewById(R.id.land_btn);
@@ -146,7 +174,6 @@ public class MainActivity extends Activity
         mapView.showZoomControls(false);
         mapView.showScaleControl(false);
         baiduMap.setMyLocationEnabled(true);
-
 
         UiSettings uiSettings = baiduMap.getUiSettings();
         uiSettings.setCompassEnabled(false);
@@ -160,10 +187,6 @@ public class MainActivity extends Activity
                 MyLocationConfiguration.LocationMode.FOLLOWING,
                 true,
                 null));
-
-        // todo: switch front view between camera and map
-        mapView.setOnClickListener((view) -> {
-        });
 
         takeOffButton.setOnClickListener((view -> {
             // todo check whether there are any timeline elements in the timeline
@@ -256,5 +279,15 @@ public class MainActivity extends Activity
             MyLocationData locData = new MyLocationData.Builder().latitude(flightControllerState.getAircraftLocation().getLatitude()).longitude(flightControllerState.getAircraftLocation().getLongitude()).build();
             baiduMap.setMyLocationData(locData);
         });
+    }
+
+    private void switchMapPanelFocus() {
+        if (!isMapPanelFocused) {
+            // todo: switch to front
+            mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.VISIBLE));
+        } else {
+            // todo: switch to mini
+            mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.GONE));
+        }
     }
 }
