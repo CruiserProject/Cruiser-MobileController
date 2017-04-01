@@ -276,16 +276,23 @@ public class MainActivity extends Activity
     public void initFlightController() {
         flightController = ((Aircraft) baseProduct).getFlightController();
         flightController.setStateCallback(flightControllerState -> {
-            MyLocationData locData = new MyLocationData.Builder().latitude(flightControllerState.getAircraftLocation().getLatitude()).longitude(flightControllerState.getAircraftLocation().getLongitude()).build();
+            MyLocationData locData = new MyLocationData.Builder()
+                    .latitude(flightControllerState.getAircraftLocation().getLatitude())
+                    .longitude(flightControllerState.getAircraftLocation().getLongitude())
+                    .build();
             baiduMap.setMyLocationData(locData);
         });
     }
 
     private void switchMapPanelFocus() {
         if (!isMapPanelFocused) {
+            mapViewPanel.setOnClickListener(null);
+            videoTextureView.setOnClickListener((view) -> switchMapPanelFocus());
             // todo: switch to front
             mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.VISIBLE));
         } else {
+            videoTextureView.setOnClickListener(null);
+            mapViewPanel.setOnClickListener((view) -> switchMapPanelFocus());
             // todo: switch to mini
             mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.GONE));
         }
