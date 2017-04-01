@@ -6,5 +6,6 @@ android:
     - platform-tools
     - android-25
     - extra-google-android-support
+    - extra-android-m2repository
 jdk:
   - oraclejdk8

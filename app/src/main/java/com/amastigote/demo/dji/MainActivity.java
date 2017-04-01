@@ -298,12 +298,18 @@ public class MainActivity extends Activity
         if (!isMapPanelFocused) {
             mapViewPanel.setOnClickListener(null);
             videoTextureView.setOnClickListener((view) -> switchMapPanelFocus());
-            // todo: switch to front
+            relativeLayoutMain.removeView(videoTextureView);
+            linearLayoutForMapView.removeView(mapViewPanel);
+            relativeLayoutMain.addView(mapViewPanel);
+            linearLayoutForMapView.addView(videoTextureView);
             mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.VISIBLE));
         } else {
             videoTextureView.setOnClickListener(null);
             mapViewPanel.setOnClickListener((view) -> switchMapPanelFocus());
-            // todo: switch to mini
+            relativeLayoutMain.removeView(mapViewPanel);
+            linearLayoutForMapView.removeView(videoTextureView);
+            relativeLayoutMain.addView(videoTextureView);
+            linearLayoutForMapView.addView(mapViewPanel);
             mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.GONE));
         }
         isMapPanelFocused = !isMapPanelFocused;
