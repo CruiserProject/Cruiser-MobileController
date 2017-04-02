@@ -19,13 +19,12 @@ import com.amastigote.demo.dji.UIComponentUtil.SimpleDialogButton;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleProgressDialog;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.UiSettings;
-import com.baidu.mapapi.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,6 +55,7 @@ public class MainActivity extends Activity
     private Button takeOffButton;
     private Button landButton;
     private Button captureButton;
+    private Button switchButton;
     private ToggleButton recordToggleButton;
     private SimpleProgressDialog startUpInfoDialog;
     private RelativeLayout relativeLayoutMain;
@@ -63,9 +63,8 @@ public class MainActivity extends Activity
 
     private MapView mapView;
     private LinearLayout linearLayoutForMapView;
-    private LinearLayout mapViewPanel;
+    private RelativeLayout mapViewPanel;
     private boolean isMapPanelFocused;
-    private Button mapPanelCancelButton;
     private Button mapPanelUndoButton;
     private Button mapPanelStartButton;
     private Button mapPanelStopButton;
@@ -158,23 +157,33 @@ public class MainActivity extends Activity
         }
 
         linearLayoutForMapView = (LinearLayout) findViewById(R.id.ll_for_map);
-        mapViewPanel = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, linearLayoutForMapView);
+        mapViewPanel = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, null);
+        linearLayoutForMapView.addView(mapViewPanel);
         mapViewPanel.setOnClickListener((view) -> switchMapPanelFocus());
         mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
-        mapPanelCancelButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_cancel);
         mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
         mapPanelStartButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_start);
         mapPanelStopButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_stop);
         mapPanelButtonSet = new HashSet<Button>() {{
-            add(mapPanelCancelButton);
             add(mapPanelUndoButton);
             add(mapPanelStartButton);
             add(mapPanelStopButton);
         }};
 
+        mapPanelUndoButton.setOnClickListener(view -> {
+            waypointList.clear();
+            baiduMap.clear();
+        });
+        mapPanelStartButton.setOnClickListener(view -> {
+            if (!waypointList.isEmpty()) {
+                executeWayPointMission(waypointList);
+            }
+        });
+
         isMapPanelFocused = false;
 
         takeOffButton = (Button) findViewById(R.id.takeoff_btn);
+        switchButton = (Button) findViewById(R.id.btn_switch);
         landButton = (Button) findViewById(R.id.land_btn);
         captureButton = (Button) findViewById(R.id.capture_btn);
         recordToggleButton = (ToggleButton) findViewById(R.id.record_tgbtn);
@@ -198,6 +207,8 @@ public class MainActivity extends Activity
                 true,
                 null));
 
+        switchButton.setOnClickListener(e -> switchMapPanelFocus());
+
         takeOffButton.setOnClickListener((view -> {
             // todo check whether there are any timeline elements in the timeline
 //            missionControl.scheduleElement(new TakeOffAction());
@@ -211,25 +222,37 @@ public class MainActivity extends Activity
         }));
 
         captureButton.setOnClickListener((view -> {
-            baseProduct.getCamera()
-                    .setShootPhotoMode(SettingsDefinitions.ShootPhotoMode.SINGLE, e -> {
-                        if (e != null) {
-                            SimpleAlertDialog.showDJIError(this, e);
-                        }
-                    });
-            baseProduct.getCamera()
-                    .startShootPhoto(e -> {
-                        if (e != null) {
-                            SimpleAlertDialog.showDJIError(this, e);
-                        }
-                    });
+            baseProduct.getCamera().setMode(SettingsDefinitions.CameraMode.SHOOT_PHOTO, e -> {
+                if (e != null) {
+                    SimpleAlertDialog.showDJIError(this, e);
+                } else {
+                    baseProduct.getCamera()
+                            .setShootPhotoMode(SettingsDefinitions.ShootPhotoMode.SINGLE, error -> {
+                                if (error != null) {
+                                    SimpleAlertDialog.showDJIError(this, error);
+                                }
+                            });
+                    baseProduct.getCamera()
+                            .startShootPhoto(error -> {
+                                if (error != null) {
+                                    SimpleAlertDialog.showDJIError(this, error);
+                                }
+                            });
+                }
+            });
         }));
 
         recordToggleButton.setOnClickListener((view -> {
             if (recordToggleButton.isChecked()) {
-                baseProduct.getCamera().startRecordVideo(e -> {
+                baseProduct.getCamera().setMode(SettingsDefinitions.CameraMode.RECORD_VIDEO, e -> {
                     if (e != null) {
                         SimpleAlertDialog.showDJIError(this, e);
+                    } else {
+                        baseProduct.getCamera().startRecordVideo(error -> {
+                            if (error != null) {
+                                SimpleAlertDialog.showDJIError(this, error);
+                            }
+                        });
                     }
                 });
             } else {
@@ -243,11 +266,13 @@ public class MainActivity extends Activity
 
         relativeLayoutMain = (RelativeLayout) findViewById(R.id.rl_main);
         videoTextureView = new TextureView(this);
+        videoTextureView.setClickable(true);
         videoTextureView.setLayoutParams(
                 new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.MATCH_PARENT,
                         RelativeLayout.LayoutParams.MATCH_PARENT)
         );
+        videoTextureView.setElevation(0);
         relativeLayoutMain.addView(videoTextureView);
         videoTextureView.setSurfaceTextureListener(this);
 
@@ -303,18 +328,9 @@ public class MainActivity extends Activity
 
     private void switchMapPanelFocus() {
         if (!isMapPanelFocused) {
-            mapViewPanel.setOnClickListener(null);
-            videoTextureView.setOnClickListener((view) -> switchMapPanelFocus());
-            baiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
-                @Override
-                public void onMapClick(LatLng latLng) {
-                    waypointList.add(new Waypoint(latLng.latitude, latLng.longitude, 50F));
-                }
-
-                @Override
-                public boolean onMapPoiClick(MapPoi mapPoi) {
-                    return false;
-                }
+            baiduMap.setOnMapLongClickListener(latLng -> {
+                waypointList.add(new Waypoint(latLng.latitude, latLng.longitude, 50F));
+                baiduMap.addOverlay(new MarkerOptions().position(latLng).title("POINT TEST").animateType(MarkerOptions.MarkerAnimateType.grow).flat(true));
             });
             relativeLayoutMain.removeView(videoTextureView);
             linearLayoutForMapView.removeView(mapViewPanel);
@@ -322,8 +338,9 @@ public class MainActivity extends Activity
             linearLayoutForMapView.addView(videoTextureView);
             mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.VISIBLE));
         } else {
-            videoTextureView.setOnClickListener(null);
-            mapViewPanel.setOnClickListener((view) -> switchMapPanelFocus());
+            waypointList.clear();
+            baiduMap.clear();
+            baiduMap.setOnMapLongClickListener(null);
             relativeLayoutMain.removeView(mapViewPanel);
             linearLayoutForMapView.removeView(videoTextureView);
             relativeLayoutMain.addView(videoTextureView);
@@ -331,5 +348,8 @@ public class MainActivity extends Activity
             mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.GONE));
         }
         isMapPanelFocused = !isMapPanelFocused;
+    }
+
+    private void executeWayPointMission(List<Waypoint> wayPointList) {
     }
 }

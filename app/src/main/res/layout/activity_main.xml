@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:elevation="1dp"
         android:gravity="center_horizontal">
 
         <Button
@@ -26,6 +27,13 @@
             android:layout_weight="1"
             android:text="LAND" />
 
+        <Button
+            android:id="@+id/btn_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="switch" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -33,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:elevation="1dp"
         android:gravity="center_horizontal">
 
         <Button
