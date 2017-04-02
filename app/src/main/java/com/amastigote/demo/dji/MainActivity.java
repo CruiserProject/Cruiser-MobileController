@@ -217,6 +217,7 @@ public class MainActivity extends Activity
         UiSettings uiSettings = baiduMap.getUiSettings();
         uiSettings.setCompassEnabled(false);
         uiSettings.setAllGesturesEnabled(false);
+        uiSettings.setZoomGesturesEnabled(true);
 
         // zoom the map 4 times to ensure it is large enough :)
         for (int i = 0; i < 4; i++)
@@ -395,16 +396,16 @@ public class MainActivity extends Activity
                         }
                     });
                 });
+
+                new AlertDialog.Builder(this)
+                        .setTitle("Configure Flight Assistant")
+                        .setCancelable(false)
+                        .setPositiveButton("ok", null)
+                        .setView(dialog_content)
+                        .show();
             } else {
                 SimpleAlertDialog.showException(this, new Exception("No flight assistant available!"));
             }
-
-            new AlertDialog.Builder(this)
-                    .setTitle("Configure Flight Assistant")
-                    .setCancelable(false)
-                    .setPositiveButton("ok", null)
-                    .setView(dialog_content)
-                    .show();
         });
 
         captureButton.setOnClickListener((view -> baseProduct.getCamera().setMode(
@@ -522,7 +523,8 @@ public class MainActivity extends Activity
             linearLayoutForMapView.removeView(mapViewPanel);
             relativeLayoutMain.addView(mapViewPanel);
             linearLayoutForMapView.addView(videoTextureView);
-            mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.VISIBLE));
+            for (View v : mapPanelButtonSet)
+                v.setVisibility(View.VISIBLE);
         } else {
             waypointList.clear();
             baiduMap.clear();
@@ -531,7 +533,8 @@ public class MainActivity extends Activity
             linearLayoutForMapView.removeView(videoTextureView);
             relativeLayoutMain.addView(videoTextureView);
             linearLayoutForMapView.addView(mapViewPanel);
-            mapPanelButtonSet.parallelStream().forEach(e -> e.setVisibility(View.GONE));
+            for (View v : mapPanelButtonSet)
+                v.setVisibility(View.GONE);
         }
         isMapPanelFocused = !isMapPanelFocused;
     }
