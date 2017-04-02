@@ -550,7 +550,6 @@ public class MainActivity extends Activity
 
     public void initMissionControl() {
         missionControl = MissionControl.getInstance();
-//        missionControl = DJISDKManager.getInstance().getMissionControl();
     }
 
     public void initFlightController() {
@@ -620,9 +619,5 @@ public class MainActivity extends Activity
             });
 
         }
-
-
-
-
     }
 }
