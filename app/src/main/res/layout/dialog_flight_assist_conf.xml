@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <Switch
+        android:id="@+id/sw_ca"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CollisionAvoidance" />
+
+    <Switch
+        android:id="@+id/sw_ua"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="UpwardsAvoidance" />
+
+    <Switch
+        android:id="@+id/sw_aoa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ActiveObstacleAvoidance" />
+
+    <Switch
+        android:id="@+id/sw_vap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="VisionAssistedPositioning" />
+
+    <Switch
+        android:id="@+id/sw_pl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="PrecisionLanding" />
+
+    <Switch
+        android:id="@+id/sw_lp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LandingProtection" />
+</LinearLayout>

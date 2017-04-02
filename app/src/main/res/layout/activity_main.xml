@@ -34,6 +34,12 @@
             android:layout_weight="1"
             android:text="switch" />
 
+        <Button
+            android:id="@+id/btn_flight_assist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="flight assist" />
     </LinearLayout>
 
     <LinearLayout
