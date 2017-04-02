@@ -255,6 +255,7 @@ public class MainActivity extends Activity
                 fa.getCollisionAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
                     @Override
                     public void onSuccess(Boolean aBoolean) {
+                        switch_ca.setEnabled(true);
                         switch_ca.setChecked(aBoolean);
                     }
 
@@ -266,6 +267,7 @@ public class MainActivity extends Activity
                 fa.getUpwardsAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
                     @Override
                     public void onSuccess(Boolean aBoolean) {
+                        switch_ua.setEnabled(true);
                         switch_ua.setChecked(aBoolean);
                     }
 
@@ -277,6 +279,7 @@ public class MainActivity extends Activity
                 fa.getActiveObstacleAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
                     @Override
                     public void onSuccess(Boolean aBoolean) {
+                        switch_aoa.setEnabled(true);
                         switch_aoa.setChecked(aBoolean);
                     }
 
@@ -288,6 +291,7 @@ public class MainActivity extends Activity
                 fa.getVisionAssistedPositioningEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
                     @Override
                     public void onSuccess(Boolean aBoolean) {
+                        switch_vap.setEnabled(true);
                         switch_vap.setChecked(aBoolean);
                     }
 
@@ -299,6 +303,7 @@ public class MainActivity extends Activity
                 fa.getPrecisionLandingEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
                     @Override
                     public void onSuccess(Boolean aBoolean) {
+                        switch_pl.setEnabled(true);
                         switch_pl.setChecked(aBoolean);
                     }
 
@@ -310,6 +315,7 @@ public class MainActivity extends Activity
                 fa.getLandingProtectionEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
                     @Override
                     public void onSuccess(Boolean aBoolean) {
+                        switch_lp.setEnabled(true);
                         switch_lp.setChecked(aBoolean);
                     }
 
@@ -320,6 +326,78 @@ public class MainActivity extends Activity
                 });
 
                 //todo: set listener for switches
+                switch_ca.setOnCheckedChangeListener((v, b) -> {
+                    v.setEnabled(false);
+                    fa.setCollisionAvoidanceEnabled(b, e -> {
+                        if (e == null)
+                            switch_ca.setEnabled(true);
+                        else {
+                            switch_ca.setEnabled(true);
+                            switch_ca.setChecked(!switch_ca.isChecked());
+                            SimpleAlertDialog.showDJIError(this, e);
+                        }
+                    });
+                });
+                switch_ua.setOnCheckedChangeListener((v, b) -> {
+                    v.setEnabled(false);
+                    fa.setUpwardsAvoidanceEnabled(b, e -> {
+                        if (e == null)
+                            switch_ua.setEnabled(true);
+                        else {
+                            switch_ua.setEnabled(true);
+                            switch_ua.setChecked(!switch_ua.isChecked());
+                            SimpleAlertDialog.showDJIError(this, e);
+                        }
+                    });
+                });
+                switch_aoa.setOnCheckedChangeListener((v, b) -> {
+                    v.setEnabled(false);
+                    fa.setActiveObstacleAvoidanceEnabled(b, e -> {
+                        if (e == null)
+                            switch_aoa.setEnabled(true);
+                        else {
+                            switch_aoa.setEnabled(true);
+                            switch_aoa.setChecked(!switch_aoa.isChecked());
+                            SimpleAlertDialog.showDJIError(this, e);
+                        }
+                    });
+                });
+                switch_vap.setOnCheckedChangeListener((v, b) -> {
+                    v.setEnabled(false);
+                    fa.setVisionAssistedPositioningEnabled(b, e -> {
+                        if (e == null)
+                            switch_vap.setEnabled(true);
+                        else {
+                            switch_vap.setEnabled(true);
+                            switch_vap.setChecked(!switch_vap.isChecked());
+                            SimpleAlertDialog.showDJIError(this, e);
+                        }
+                    });
+                });
+                switch_pl.setOnCheckedChangeListener((v, b) -> {
+                    v.setEnabled(false);
+                    fa.setPrecisionLandingEnabled(b, e -> {
+                        if (e == null)
+                            switch_pl.setEnabled(true);
+                        else {
+                            switch_pl.setEnabled(true);
+                            switch_pl.setChecked(!switch_pl.isChecked());
+                            SimpleAlertDialog.showDJIError(this, e);
+                        }
+                    });
+                });
+                switch_lp.setOnCheckedChangeListener((v, b) -> {
+                    v.setEnabled(false);
+                    fa.setLandingProtectionEnabled(b, e -> {
+                        if (e == null)
+                            switch_lp.setEnabled(true);
+                        else {
+                            switch_lp.setEnabled(true);
+                            switch_lp.setChecked(!switch_lp.isChecked());
+                            SimpleAlertDialog.showDJIError(this, e);
+                        }
+                    });
+                });
             } else {
                 SimpleAlertDialog.showException(this, new Exception("No flight assistant available!"));
             }
