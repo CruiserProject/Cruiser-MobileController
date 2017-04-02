@@ -6,6 +6,9 @@ import android.app.AlertDialog;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -37,6 +40,10 @@ import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.common.mission.waypoint.Waypoint;
+import dji.common.mission.waypoint.WaypointMission;
+import dji.common.mission.waypoint.WaypointMissionDownloadEvent;
+import dji.common.mission.waypoint.WaypointMissionExecutionEvent;
+import dji.common.mission.waypoint.WaypointMissionUploadEvent;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
@@ -47,6 +54,8 @@ import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.mission.MissionControl;
 import dji.sdk.mission.timeline.actions.GoHomeAction;
 import dji.sdk.mission.timeline.actions.TakeOffAction;
+import dji.sdk.mission.waypoint.WaypointMissionOperator;
+import dji.sdk.mission.waypoint.WaypointMissionOperatorListener;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
@@ -79,6 +88,7 @@ public class MainActivity extends Activity
 
     private List<Waypoint> waypointList = new ArrayList<>();
 
+    private WaypointMissionOperatorListener wmoListener;
     private FlightController flightController;
     private MissionControl missionControl;
     private DJICodecManager djiCodecManager;
@@ -207,6 +217,47 @@ public class MainActivity extends Activity
         flightAssistButton = (Button) findViewById(R.id.btn_flight_assist);
         captureButton = (Button) findViewById(R.id.capture_btn);
         recordToggleButton = (ToggleButton) findViewById(R.id.record_tgbtn);
+
+        /*
+        initialize WaypointMissionOperatorListener
+         */
+        wmoListener = new WaypointMissionOperatorListener() {
+            @Override
+            public void onDownloadUpdate(@NonNull WaypointMissionDownloadEvent waypointMissionDownloadEvent) {
+
+            }
+
+            @Override
+            public void onUploadUpdate(@NonNull WaypointMissionUploadEvent waypointMissionUploadEvent) {
+
+            }
+
+            @Override
+            public void onExecutionUpdate(@NonNull WaypointMissionExecutionEvent waypointMissionExecutionEvent) {
+
+            }
+
+            @Override
+            public void onExecutionStart() {
+
+            }
+
+            @Override
+            public void onExecutionFinish(@Nullable DJIError djiError) {
+                if (djiError != null) {
+                    SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                } else {
+                    SimpleAlertDialog.show(
+                            MainActivity.this,
+                            false,
+                            "GoHome Confirmation",
+                            "WayPoint Mission Completed.Go Home Immediately?",
+                            new SimpleDialogButton("ok", (dialogInterface, i) -> {
+                                missionControl.startElement(new GoHomeAction());
+                            }));
+                }
+            }
+        };
 
         baiduMap = mapView.getMap();
         baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
@@ -537,6 +588,38 @@ public class MainActivity extends Activity
     }
 
     private void executeWayPointMission(List<Waypoint> wayPointList) {
+        WaypointMissionOperator waypointMissionOperator = missionControl.getWaypointMissionOperator();
+
+        waypointMissionOperator.addListener(wmoListener);
+
+        WaypointMission.Builder builder = new WaypointMission.Builder();
+        builder.waypointList(wayPointList);
+
+        if (waypointMissionOperator.loadMission(builder.build()) != null) {
+            Log.e("DJIError", "Uploading failed.Retrying");
+            waypointMissionOperator.retryUploadMission(djiError -> {
+                if (djiError != null) {
+                    SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                    Log.e("DJIError", "Uploading still failed");
+                } else {
+                    waypointMissionOperator.startMission(djiError1 -> {
+                        if (djiError1 != null) {
+                            SimpleAlertDialog.showDJIError(MainActivity.this, djiError1);
+                        }
+                    });
+                }
+            });
+        } else {
+            waypointMissionOperator.startMission(djiError -> {
+                if (djiError != null) {
+                    SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                }
+            });
+
+        }
+
+
+
 
     }
 }
