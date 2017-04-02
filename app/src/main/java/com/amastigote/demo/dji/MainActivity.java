@@ -119,7 +119,7 @@ public class MainActivity extends Activity
                 );
 
                 try {
-                    // todo
+                    // todo be aware of components change
                     baseProduct.setBaseProductListener(new BaseProduct.BaseProductListener() {
                         @Override
                         public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent baseComponent, BaseComponent baseComponent1) {
@@ -230,13 +230,10 @@ public class MainActivity extends Activity
         switchButton.setOnClickListener(e -> switchMapPanelFocus());
 
         takeOffButton.setOnClickListener((view -> {
-            // todo check whether there are any timeline elements in the timeline
-//            missionControl.scheduleElement(new TakeOffAction());
             missionControl.startElement(new TakeOffAction());
         }));
 
         landButton.setOnClickListener((view -> {
-            // todo check whether there are any timeline elements in the timeline
             missionControl.startElement(new GoHomeAction());
 
         }));
@@ -249,6 +246,7 @@ public class MainActivity extends Activity
             Switch switch_vap = (Switch) dialog_content.findViewById(R.id.sw_vap);
             Switch switch_pl = (Switch) dialog_content.findViewById(R.id.sw_pl);
             Switch switch_lp = (Switch) dialog_content.findViewById(R.id.sw_lp);
+
             // update switch states
             FlightAssistant fa = flightController.getFlightAssistant();
             if (fa != null) {
@@ -325,7 +323,6 @@ public class MainActivity extends Activity
                     }
                 });
 
-                //todo: set listener for switches
                 switch_ca.setOnCheckedChangeListener((v, b) -> {
                     v.setEnabled(false);
                     fa.setCollisionAvoidanceEnabled(b, e -> {
