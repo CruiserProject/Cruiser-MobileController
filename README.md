@@ -11,7 +11,7 @@ Built on the basis of DJI-SDK, branch information:
   - devel4 -> using SDK v4.x (currently working on)
   
 ### Demand Progress
-  - 设置航点 ✘
+  - 设置航点 ✔
   - 一键起飞 ✔
   - 拍照、摄像 ✔
   - 一键返航 ✔

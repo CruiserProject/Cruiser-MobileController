@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -57,7 +58,7 @@
         <!--disable for compatibility issue-->
         <!--<service android:name="dji.internal.geofeature.flyforbid.FlyforbidUpdateService" />-->
 
-        <service android:name="dji.sdk.sdkmanager.GeoSyncFileService" />
+        <!--<service android:name="dji.sdk.sdkmanager.GeoSyncFileService" />-->
 
         <activity
             android:name="dji.sdk.sdkmanager.DJIAoaControllerActivity"
@@ -72,9 +73,9 @@
         </activity>
 
         <activity
-            android:theme="@style/Theme.Design.NoActionBar"
             android:name=".MainActivity"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.Design.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

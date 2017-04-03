@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.amastigote.demo.dji.MainActivity">
-
-    <TextureView
-        android:id="@+id/texture_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:foregroundGravity="center"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:elevation="1dp"
         android:gravity="center_horizontal">
 
         <Button
@@ -32,34 +27,50 @@
             android:layout_weight="1"
             android:text="LAND" />
 
+        <Button
+            android:id="@+id/btn_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="switch" />
+
+        <Button
+            android:id="@+id/btn_flight_assist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="flight assist" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:elevation="1dp"
         android:gravity="center_horizontal">
 
         <Button
-            android:layout_gravity="bottom"
             android:id="@+id/capture_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:text="capture" />
         <ToggleButton
-            android:layout_gravity="bottom"
             android:id="@+id/record_tgbtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_weight="1"
             android:textOff="record"
             android:textOn="stop record" />
-        <com.baidu.mapapi.map.MapView
-            android:clickable="true"
-            android:id="@+id/mapView_baidu"
+
+        <LinearLayout
+            android:id="@+id/ll_for_map"
             android:layout_width="140dp"
-            android:layout_height="100dp"/>
+            android:layout_height="100dp"
+            android:orientation="horizontal" />
     </LinearLayout>
 
 </RelativeLayout>
