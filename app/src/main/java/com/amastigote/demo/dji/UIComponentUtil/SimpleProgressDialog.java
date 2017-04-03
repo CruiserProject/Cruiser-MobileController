@@ -21,16 +21,31 @@ public class SimpleProgressDialog {
     }
 
     public void show() {
-        progressDialog = ProgressDialog.show(context, null, message);
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = ProgressDialog.show(context, null, message);
+            }
+        });
     }
 
     public void dismiss() {
-        progressDialog.dismiss();
+        if (progressDialog != null)
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                }
+            });
     }
 
-    public void switchMessage(String string) {
+    public void switchMessage(final String string) {
         if (progressDialog != null)
-            ((Activity) context).runOnUiThread(() ->
-                    progressDialog.setMessage(string));
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.setMessage(string);
+                }
+            });
     }
 }

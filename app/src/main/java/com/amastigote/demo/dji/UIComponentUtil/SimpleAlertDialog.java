@@ -1,5 +1,6 @@
 package com.amastigote.demo.dji.UIComponentUtil;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 
@@ -10,20 +11,35 @@ import dji.common.error.DJIError;
  */
 
 public class SimpleAlertDialog {
-    public static void show(Context context, boolean cancelable, String title, String message, SimpleDialogButton button) {
-        new AlertDialog.Builder(context)
-                .setTitle(title)
-                .setMessage(message)
-                .setCancelable(cancelable)
-                .setPositiveButton(button.getText(), button.getOnClickListener())
-                .show();
+    public static void show(final Context context, final boolean cancelable, final String title, final String message, final SimpleDialogButton button) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new AlertDialog.Builder(context)
+                        .setTitle(title)
+                        .setMessage(message)
+                        .setCancelable(cancelable)
+                        .setPositiveButton(button.getText(), button.getOnClickListener())
+                        .show();
+            }
+        });
     }
 
-    public static void showException(Context context, Exception e) {
-        show(context, false, "Exception", e.getMessage(), new SimpleDialogButton("ok", null));
+    public static void showException(final Context context, final Exception e) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                show(context, false, "Exception", e.getMessage(), new SimpleDialogButton("ok", null));
+            }
+        });
     }
 
-    public static void showDJIError(Context context, DJIError djiError) {
-        show(context, false, "DJIError", djiError.getDescription(), new SimpleDialogButton("ok", null));
+    public static void showDJIError(final Context context, final DJIError djiError) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                show(context, false, "DJIError", djiError.getDescription(), new SimpleDialogButton("ok", null));
+            }
+        });
     }
 }

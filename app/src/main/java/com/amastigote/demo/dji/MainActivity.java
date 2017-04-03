@@ -3,17 +3,18 @@ package com.amastigote.demo.dji;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -24,12 +25,14 @@ import com.amastigote.demo.dji.UIComponentUtil.SimpleDialogButton;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleProgressDialog;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.UiSettings;
+import com.baidu.mapapi.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -39,10 +42,15 @@ import java.util.Set;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
+import dji.common.flightcontroller.FlightControllerState;
 import dji.common.mission.waypoint.Waypoint;
 import dji.common.mission.waypoint.WaypointMission;
 import dji.common.mission.waypoint.WaypointMissionDownloadEvent;
 import dji.common.mission.waypoint.WaypointMissionExecutionEvent;
+import dji.common.mission.waypoint.WaypointMissionFinishedAction;
+import dji.common.mission.waypoint.WaypointMissionFlightPathMode;
+import dji.common.mission.waypoint.WaypointMissionGotoWaypointMode;
+import dji.common.mission.waypoint.WaypointMissionHeadingMode;
 import dji.common.mission.waypoint.WaypointMissionUploadEvent;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseComponent;
@@ -86,9 +94,10 @@ public class MainActivity extends Activity
     private Set<Button> mapPanelButtonSet;
     private BaiduMap baiduMap;
 
-    private List<Waypoint> waypointList = new ArrayList<>();
+    private List<Waypoint> wayPointList = new ArrayList<>();
+    private volatile int previousWayPointIndex = 0;
 
-    private WaypointMissionOperatorListener wmoListener;
+    private WaypointMissionOperator waypointMissionOperator;
     private FlightController flightController;
     private MissionControl missionControl;
     private DJICodecManager djiCodecManager;
@@ -105,7 +114,12 @@ public class MainActivity extends Activity
                         false,
                         "API Key Validation Error",
                         "Contact the developers or check your network connection",
-                        new SimpleDialogButton("quit", (x, y) -> System.exit(0))
+                        new SimpleDialogButton("quit", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface x, int y) {
+                                System.exit(0);
+                            }
+                        })
                 );
             }
         }
@@ -114,7 +128,6 @@ public class MainActivity extends Activity
         public void onProductChange(BaseProduct previousProd, BaseProduct presentProd) {
             baseProduct = presentProd;
             if (baseProduct != null && baseProduct.isConnected()) {
-//                baseProduct.setDJIBaseProductListener(...);
                 startUpInfoDialog.dismiss();
 
                 initMissionControl();
@@ -144,9 +157,79 @@ public class MainActivity extends Activity
 
                     VideoFeeder.getInstance()
                             .getVideoFeeds().get(0)
-                            .setCallback((videoBuffer, size) -> {
-                                if (djiCodecManager != null)
-                                    djiCodecManager.sendDataToDecoder(videoBuffer, size);
+                            .setCallback(new VideoFeeder.VideoDataCallback() {
+                                @Override
+                                public void onReceive(byte[] videoBuffer, int size) {
+                                    if (djiCodecManager != null)
+                                        djiCodecManager.sendDataToDecoder(videoBuffer, size);
+                                }
+                            });
+
+                    waypointMissionOperator = missionControl.getWaypointMissionOperator();
+                    waypointMissionOperator.addListener(
+                            new WaypointMissionOperatorListener() {
+                                @Override
+                                public void onDownloadUpdate(@NonNull WaypointMissionDownloadEvent waypointMissionDownloadEvent) {
+
+                                }
+
+                                @Override
+                                public void onUploadUpdate(@NonNull WaypointMissionUploadEvent waypointMissionUploadEvent) {
+                                    if (waypointMissionUploadEvent.getProgress() != null
+                                            && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == waypointMissionUploadEvent.getProgress().totalWaypointCount - 1
+                                            && waypointMissionUploadEvent.getProgress().isSummaryUploaded
+                                            && previousWayPointIndex != waypointMissionUploadEvent.getProgress().uploadedWaypointIndex) {
+                                        previousWayPointIndex = waypointMissionUploadEvent.getProgress().uploadedWaypointIndex;
+                                        SimpleAlertDialog.show(
+                                                MainActivity.this,
+                                                false,
+                                                "Mission Uploaded",
+                                                "Start mission immediately?",
+                                                new SimpleDialogButton("yes", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        waypointMissionOperator.startMission(new CommonCallbacks.CompletionCallback() {
+                                                            @Override
+                                                            public void onResult(DJIError djiError) {
+                                                                if (djiError != null) {
+                                                                    SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }));
+                                    }
+
+                                }
+
+                                @Override
+                                public void onExecutionUpdate(@NonNull WaypointMissionExecutionEvent waypointMissionExecutionEvent) {
+
+                                }
+
+                                @Override
+                                public void onExecutionStart() {
+
+                                }
+
+                                @Override
+                                public void onExecutionFinish(@Nullable DJIError djiError) {
+                                    if (djiError != null) {
+                                        SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                                    } else {
+                                        SimpleAlertDialog.show(
+                                                MainActivity.this,
+                                                false,
+                                                "Go Home Confirmation",
+                                                "Way point mission completed.\nGo home immediately?",
+                                                new SimpleDialogButton("yes", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        missionControl.startElement(new GoHomeAction());
+                                                    }
+                                                }));
+                                    }
+                                }
                             });
                 } catch (Exception e) {
                     SimpleAlertDialog.showException(MainActivity.this, e);
@@ -188,7 +271,12 @@ public class MainActivity extends Activity
         linearLayoutForMapView = (LinearLayout) findViewById(R.id.ll_for_map);
         mapViewPanel = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, null);
         linearLayoutForMapView.addView(mapViewPanel);
-        mapViewPanel.setOnClickListener((view) -> switchMapPanelFocus());
+        mapViewPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.switchMapPanelFocus();
+            }
+        });
         mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
         mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
         mapPanelStartButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_start);
@@ -199,13 +287,19 @@ public class MainActivity extends Activity
             add(mapPanelStopButton);
         }};
 
-        mapPanelUndoButton.setOnClickListener(view -> {
-            waypointList.clear();
-            baiduMap.clear();
+        mapPanelUndoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wayPointList.clear();
+                baiduMap.clear();
+            }
         });
-        mapPanelStartButton.setOnClickListener(view -> {
-            if (!waypointList.isEmpty()) {
-                executeWayPointMission(waypointList);
+        mapPanelStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!wayPointList.isEmpty()) {
+                    MainActivity.this.executeWayPointMission(wayPointList);
+                }
             }
         });
 
@@ -219,48 +313,11 @@ public class MainActivity extends Activity
         recordToggleButton = (ToggleButton) findViewById(R.id.record_tgbtn);
 
         /*
-        initialize WaypointMissionOperatorListener
+            initialize WaypointMissionOperatorListener
          */
-        wmoListener = new WaypointMissionOperatorListener() {
-            @Override
-            public void onDownloadUpdate(@NonNull WaypointMissionDownloadEvent waypointMissionDownloadEvent) {
-
-            }
-
-            @Override
-            public void onUploadUpdate(@NonNull WaypointMissionUploadEvent waypointMissionUploadEvent) {
-
-            }
-
-            @Override
-            public void onExecutionUpdate(@NonNull WaypointMissionExecutionEvent waypointMissionExecutionEvent) {
-
-            }
-
-            @Override
-            public void onExecutionStart() {
-
-            }
-
-            @Override
-            public void onExecutionFinish(@Nullable DJIError djiError) {
-                if (djiError != null) {
-                    SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
-                } else {
-                    SimpleAlertDialog.show(
-                            MainActivity.this,
-                            false,
-                            "GoHome Confirmation",
-                            "WayPoint Mission Completed.Go Home Immediately?",
-                            new SimpleDialogButton("ok", (dialogInterface, i) -> {
-                                missionControl.startElement(new GoHomeAction());
-                            }));
-                }
-            }
-        };
-
         baiduMap = mapView.getMap();
         baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        mapView.setClickable(true);
         mapView.showZoomControls(false);
         mapView.showScaleControl(false);
         baiduMap.setMyLocationEnabled(true);
@@ -270,8 +327,8 @@ public class MainActivity extends Activity
         uiSettings.setAllGesturesEnabled(false);
         uiSettings.setZoomGesturesEnabled(true);
 
-        // zoom the map 4 times to ensure it is large enough :)
-        for (int i = 0; i < 4; i++)
+        // zoom the map 5 times to ensure it is large enough :)
+        for (int i = 0; i < 5; i++)
             baiduMap.setMapStatus(MapStatusUpdateFactory.zoomIn());
 
         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
@@ -279,226 +336,302 @@ public class MainActivity extends Activity
                 true,
                 null));
 
-        switchButton.setOnClickListener(e -> switchMapPanelFocus());
-
-        takeOffButton.setOnClickListener((view -> {
-            missionControl.startElement(new TakeOffAction());
-        }));
-
-        landButton.setOnClickListener((view -> {
-            missionControl.startElement(new GoHomeAction());
-
-        }));
-
-        flightAssistButton.setOnClickListener(view -> {
-            View dialog_content = LayoutInflater.from(this).inflate(R.layout.dialog_flight_assist_conf, null);
-            Switch switch_ca = (Switch) dialog_content.findViewById(R.id.sw_ca);
-            Switch switch_ua = (Switch) dialog_content.findViewById(R.id.sw_ua);
-            Switch switch_aoa = (Switch) dialog_content.findViewById(R.id.sw_aoa);
-            Switch switch_vap = (Switch) dialog_content.findViewById(R.id.sw_vap);
-            Switch switch_pl = (Switch) dialog_content.findViewById(R.id.sw_pl);
-            Switch switch_lp = (Switch) dialog_content.findViewById(R.id.sw_lp);
-
-            // update switch states
-            FlightAssistant fa = flightController.getFlightAssistant();
-            if (fa != null) {
-                fa.getCollisionAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        switch_ca.setEnabled(true);
-                        switch_ca.setChecked(aBoolean);
-                    }
-
-                    @Override
-                    public void onFailure(DJIError djiError) {
-                        switch_ca.setEnabled(false);
-                    }
-                });
-                fa.getUpwardsAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        switch_ua.setEnabled(true);
-                        switch_ua.setChecked(aBoolean);
-                    }
-
-                    @Override
-                    public void onFailure(DJIError djiError) {
-                        switch_ua.setEnabled(false);
-                    }
-                });
-                fa.getActiveObstacleAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        switch_aoa.setEnabled(true);
-                        switch_aoa.setChecked(aBoolean);
-                    }
-
-                    @Override
-                    public void onFailure(DJIError djiError) {
-                        switch_aoa.setEnabled(false);
-                    }
-                });
-                fa.getVisionAssistedPositioningEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        switch_vap.setEnabled(true);
-                        switch_vap.setChecked(aBoolean);
-                    }
-
-                    @Override
-                    public void onFailure(DJIError djiError) {
-                        switch_vap.setEnabled(false);
-                    }
-                });
-                fa.getPrecisionLandingEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        switch_pl.setEnabled(true);
-                        switch_pl.setChecked(aBoolean);
-                    }
-
-                    @Override
-                    public void onFailure(DJIError djiError) {
-                        switch_pl.setEnabled(false);
-                    }
-                });
-                fa.getLandingProtectionEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        switch_lp.setEnabled(true);
-                        switch_lp.setChecked(aBoolean);
-                    }
-
-                    @Override
-                    public void onFailure(DJIError djiError) {
-                        switch_lp.setEnabled(false);
-                    }
-                });
-
-                switch_ca.setOnCheckedChangeListener((v, b) -> {
-                    v.setEnabled(false);
-                    fa.setCollisionAvoidanceEnabled(b, e -> {
-                        if (e == null)
-                            switch_ca.setEnabled(true);
-                        else {
-                            switch_ca.setEnabled(true);
-                            switch_ca.setChecked(!switch_ca.isChecked());
-                            SimpleAlertDialog.showDJIError(this, e);
-                        }
-                    });
-                });
-                switch_ua.setOnCheckedChangeListener((v, b) -> {
-                    v.setEnabled(false);
-                    fa.setUpwardsAvoidanceEnabled(b, e -> {
-                        if (e == null)
-                            switch_ua.setEnabled(true);
-                        else {
-                            switch_ua.setEnabled(true);
-                            switch_ua.setChecked(!switch_ua.isChecked());
-                            SimpleAlertDialog.showDJIError(this, e);
-                        }
-                    });
-                });
-                switch_aoa.setOnCheckedChangeListener((v, b) -> {
-                    v.setEnabled(false);
-                    fa.setActiveObstacleAvoidanceEnabled(b, e -> {
-                        if (e == null)
-                            switch_aoa.setEnabled(true);
-                        else {
-                            switch_aoa.setEnabled(true);
-                            switch_aoa.setChecked(!switch_aoa.isChecked());
-                            SimpleAlertDialog.showDJIError(this, e);
-                        }
-                    });
-                });
-                switch_vap.setOnCheckedChangeListener((v, b) -> {
-                    v.setEnabled(false);
-                    fa.setVisionAssistedPositioningEnabled(b, e -> {
-                        if (e == null)
-                            switch_vap.setEnabled(true);
-                        else {
-                            switch_vap.setEnabled(true);
-                            switch_vap.setChecked(!switch_vap.isChecked());
-                            SimpleAlertDialog.showDJIError(this, e);
-                        }
-                    });
-                });
-                switch_pl.setOnCheckedChangeListener((v, b) -> {
-                    v.setEnabled(false);
-                    fa.setPrecisionLandingEnabled(b, e -> {
-                        if (e == null)
-                            switch_pl.setEnabled(true);
-                        else {
-                            switch_pl.setEnabled(true);
-                            switch_pl.setChecked(!switch_pl.isChecked());
-                            SimpleAlertDialog.showDJIError(this, e);
-                        }
-                    });
-                });
-                switch_lp.setOnCheckedChangeListener((v, b) -> {
-                    v.setEnabled(false);
-                    fa.setLandingProtectionEnabled(b, e -> {
-                        if (e == null)
-                            switch_lp.setEnabled(true);
-                        else {
-                            switch_lp.setEnabled(true);
-                            switch_lp.setChecked(!switch_lp.isChecked());
-                            SimpleAlertDialog.showDJIError(this, e);
-                        }
-                    });
-                });
-
-                new AlertDialog.Builder(this)
-                        .setTitle("Configure Flight Assistant")
-                        .setCancelable(false)
-                        .setPositiveButton("ok", null)
-                        .setView(dialog_content)
-                        .show();
-            } else {
-                SimpleAlertDialog.showException(this, new Exception("No flight assistant available!"));
+        switchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View e) {
+                MainActivity.this.switchMapPanelFocus();
             }
         });
 
-        captureButton.setOnClickListener((view -> baseProduct.getCamera().setMode(
-                SettingsDefinitions.CameraMode.SHOOT_PHOTO,
-                e -> {
-                    if (e != null) {
-                        SimpleAlertDialog.showDJIError(this, e);
-                    } else {
-                        baseProduct.getCamera()
-                                .setShootPhotoMode(SettingsDefinitions.ShootPhotoMode.SINGLE, error -> {
-                                    if (error != null) {
-                                        SimpleAlertDialog.showDJIError(this, error);
-                                    }
-                                });
-                        baseProduct.getCamera()
-                                .startShootPhoto(error -> {
-                                    if (error != null) {
-                                        SimpleAlertDialog.showDJIError(this, error);
-                                    }
-                                });
-                    }
-                })));
+        takeOffButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                missionControl.startElement(new TakeOffAction());
+            }
+        }));
 
-        recordToggleButton.setOnClickListener((view -> {
-            if (recordToggleButton.isChecked()) {
-                baseProduct.getCamera().setMode(SettingsDefinitions.CameraMode.RECORD_VIDEO, e -> {
-                    if (e != null) {
-                        SimpleAlertDialog.showDJIError(this, e);
-                    } else {
-                        baseProduct.getCamera().startRecordVideo(error -> {
-                            if (error != null) {
-                                SimpleAlertDialog.showDJIError(this, error);
+        landButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                missionControl.startElement(new GoHomeAction());
+
+            }
+        }));
+
+        flightAssistButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View dialog_content = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_flight_assist_conf, null);
+                final Switch switch_ca = (Switch) dialog_content.findViewById(R.id.sw_ca);
+                final Switch switch_ua = (Switch) dialog_content.findViewById(R.id.sw_ua);
+                final Switch switch_aoa = (Switch) dialog_content.findViewById(R.id.sw_aoa);
+                final Switch switch_vap = (Switch) dialog_content.findViewById(R.id.sw_vap);
+                final Switch switch_pl = (Switch) dialog_content.findViewById(R.id.sw_pl);
+                final Switch switch_lp = (Switch) dialog_content.findViewById(R.id.sw_lp);
+
+                // update switch states
+                final FlightAssistant fa = flightController.getFlightAssistant();
+                if (fa != null) {
+                    fa.getCollisionAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            switch_ca.setEnabled(true);
+                            switch_ca.setChecked(aBoolean);
+                        }
+
+                        @Override
+                        public void onFailure(DJIError djiError) {
+                            switch_ca.setEnabled(false);
+                        }
+                    });
+                    fa.getUpwardsAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            switch_ua.setEnabled(true);
+                            switch_ua.setChecked(aBoolean);
+                        }
+
+                        @Override
+                        public void onFailure(DJIError djiError) {
+                            switch_ua.setEnabled(false);
+                        }
+                    });
+                    fa.getActiveObstacleAvoidanceEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            switch_aoa.setEnabled(true);
+                            switch_aoa.setChecked(aBoolean);
+                        }
+
+                        @Override
+                        public void onFailure(DJIError djiError) {
+                            switch_aoa.setEnabled(false);
+                        }
+                    });
+                    fa.getVisionAssistedPositioningEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            switch_vap.setEnabled(true);
+                            switch_vap.setChecked(aBoolean);
+                        }
+
+                        @Override
+                        public void onFailure(DJIError djiError) {
+                            switch_vap.setEnabled(false);
+                        }
+                    });
+                    fa.getPrecisionLandingEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            switch_pl.setEnabled(true);
+                            switch_pl.setChecked(aBoolean);
+                        }
+
+                        @Override
+                        public void onFailure(DJIError djiError) {
+                            switch_pl.setEnabled(false);
+                        }
+                    });
+                    fa.getLandingProtectionEnabled(new CommonCallbacks.CompletionCallbackWith<Boolean>() {
+                        @Override
+                        public void onSuccess(Boolean aBoolean) {
+                            switch_lp.setEnabled(true);
+                            switch_lp.setChecked(aBoolean);
+                        }
+
+                        @Override
+                        public void onFailure(DJIError djiError) {
+                            switch_lp.setEnabled(false);
+                        }
+                    });
+
+                    switch_ca.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton v, boolean b) {
+                            v.setEnabled(false);
+                            fa.setCollisionAvoidanceEnabled(b, new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError e) {
+                                    if (e == null)
+                                        switch_ca.setEnabled(true);
+                                    else {
+                                        switch_ca.setEnabled(true);
+                                        switch_ca.setChecked(!switch_ca.isChecked());
+                                        SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    switch_ua.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton v, boolean b) {
+                            v.setEnabled(false);
+                            fa.setUpwardsAvoidanceEnabled(b, new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError e) {
+                                    if (e == null)
+                                        switch_ua.setEnabled(true);
+                                    else {
+                                        switch_ua.setEnabled(true);
+                                        switch_ua.setChecked(!switch_ua.isChecked());
+                                        SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    switch_aoa.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton v, boolean b) {
+                            v.setEnabled(false);
+                            fa.setActiveObstacleAvoidanceEnabled(b, new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError e) {
+                                    if (e == null)
+                                        switch_aoa.setEnabled(true);
+                                    else {
+                                        switch_aoa.setEnabled(true);
+                                        switch_aoa.setChecked(!switch_aoa.isChecked());
+                                        SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    switch_vap.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton v, boolean b) {
+                            v.setEnabled(false);
+                            fa.setVisionAssistedPositioningEnabled(b, new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError e) {
+                                    if (e == null)
+                                        switch_vap.setEnabled(true);
+                                    else {
+                                        switch_vap.setEnabled(true);
+                                        switch_vap.setChecked(!switch_vap.isChecked());
+                                        SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    switch_pl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton v, boolean b) {
+                            v.setEnabled(false);
+                            fa.setPrecisionLandingEnabled(b, new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError e) {
+                                    if (e == null)
+                                        switch_pl.setEnabled(true);
+                                    else {
+                                        switch_pl.setEnabled(true);
+                                        switch_pl.setChecked(!switch_pl.isChecked());
+                                        SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    switch_lp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton v, boolean b) {
+                            v.setEnabled(false);
+                            fa.setLandingProtectionEnabled(b, new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError e) {
+                                    if (e == null)
+                                        switch_lp.setEnabled(true);
+                                    else {
+                                        switch_lp.setEnabled(true);
+                                        switch_lp.setChecked(!switch_lp.isChecked());
+                                        SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Configure Flight Assistant")
+                            .setCancelable(false)
+                            .setPositiveButton("ok", null)
+                            .setView(dialog_content)
+                            .show();
+                } else {
+                    SimpleAlertDialog.showException(MainActivity.this, new Exception("No flight assistant available!"));
+                }
+            }
+        });
+
+        captureButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                baseProduct.getCamera().setMode(
+                        SettingsDefinitions.CameraMode.SHOOT_PHOTO,
+                        new CommonCallbacks.CompletionCallback() {
+                            @Override
+                            public void onResult(DJIError e) {
+                                if (e != null) {
+                                    SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                } else {
+                                    baseProduct.getCamera()
+                                            .setShootPhotoMode(SettingsDefinitions.ShootPhotoMode.SINGLE, new CommonCallbacks.CompletionCallback() {
+                                                @Override
+                                                public void onResult(DJIError error) {
+                                                    if (error != null) {
+                                                        SimpleAlertDialog.showDJIError(MainActivity.this, error);
+                                                    }
+                                                }
+                                            });
+                                    baseProduct.getCamera()
+                                            .startShootPhoto(new CommonCallbacks.CompletionCallback() {
+                                                @Override
+                                                public void onResult(DJIError error) {
+                                                    if (error != null) {
+                                                        SimpleAlertDialog.showDJIError(MainActivity.this, error);
+                                                    }
+                                                }
+                                            });
+                                }
                             }
                         });
-                    }
-                });
-            } else {
-                baseProduct.getCamera().stopRecordVideo(e -> {
-                    if (e != null) {
-                        SimpleAlertDialog.showDJIError(this, e);
-                    }
-                });
+            }
+        }));
+
+        recordToggleButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (recordToggleButton.isChecked()) {
+                    baseProduct.getCamera().setMode(SettingsDefinitions.CameraMode.RECORD_VIDEO, new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(DJIError e) {
+                            if (e != null) {
+                                SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                            } else {
+                                baseProduct.getCamera().startRecordVideo(new CommonCallbacks.CompletionCallback() {
+                                    @Override
+                                    public void onResult(DJIError error) {
+                                        if (error != null) {
+                                            SimpleAlertDialog.showDJIError(MainActivity.this, error);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    baseProduct.getCamera().stopRecordVideo(new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(DJIError e) {
+                            if (e != null) {
+                                SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                            }
+                        }
+                    });
+                }
             }
         }));
 
@@ -554,20 +687,32 @@ public class MainActivity extends Activity
 
     public void initFlightController() {
         flightController = ((Aircraft) baseProduct).getFlightController();
-        flightController.setStateCallback(flightControllerState -> {
-            MyLocationData locData = new MyLocationData.Builder()
-                    .latitude(flightControllerState.getAircraftLocation().getLatitude())
-                    .longitude(flightControllerState.getAircraftLocation().getLongitude())
-                    .build();
-            baiduMap.setMyLocationData(locData);
+        flightController.setStateCallback(new FlightControllerState.Callback() {
+            @Override
+            public void onUpdate(@NonNull FlightControllerState flightControllerState) {
+                MyLocationData locData = new MyLocationData.Builder()
+                        .latitude(flightControllerState.getAircraftLocation().getLatitude())
+                        .longitude(flightControllerState.getAircraftLocation().getLongitude())
+                        .build();
+                baiduMap.setMyLocationData(locData);
+            }
         });
     }
 
     private void switchMapPanelFocus() {
         if (!isMapPanelFocused) {
-            baiduMap.setOnMapLongClickListener(latLng -> {
-                waypointList.add(new Waypoint(latLng.latitude, latLng.longitude, 50F));
-                baiduMap.addOverlay(new MarkerOptions().position(latLng).title("POINT TEST").animateType(MarkerOptions.MarkerAnimateType.grow).flat(true));
+            baiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
+                @Override
+                public void onMapLongClick(LatLng latLng) {
+                    wayPointList.add(new Waypoint(latLng.latitude, latLng.longitude, 50F));
+                    baiduMap.addOverlay(new MarkerOptions()
+                            .position(latLng)
+                            .title("POINT TEST")
+                            .animateType(MarkerOptions.MarkerAnimateType.drop)
+                            .flat(true)
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fun))
+                            .draggable(false));
+                }
             });
             relativeLayoutMain.removeView(videoTextureView);
             linearLayoutForMapView.removeView(mapViewPanel);
@@ -576,7 +721,7 @@ public class MainActivity extends Activity
             for (View v : mapPanelButtonSet)
                 v.setVisibility(View.VISIBLE);
         } else {
-            waypointList.clear();
+            wayPointList.clear();
             baiduMap.clear();
             baiduMap.setOnMapLongClickListener(null);
             relativeLayoutMain.removeView(mapViewPanel);
@@ -586,38 +731,47 @@ public class MainActivity extends Activity
             for (View v : mapPanelButtonSet)
                 v.setVisibility(View.GONE);
         }
+        mapView.onResume();
         isMapPanelFocused = !isMapPanelFocused;
     }
 
     private void executeWayPointMission(List<Waypoint> wayPointList) {
-        WaypointMissionOperator waypointMissionOperator = missionControl.getWaypointMissionOperator();
-
-        waypointMissionOperator.addListener(wmoListener);
-
         WaypointMission.Builder builder = new WaypointMission.Builder();
-        builder.waypointList(wayPointList);
-
-        if (waypointMissionOperator.loadMission(builder.build()) != null) {
-            Log.e("DJIError", "Uploading failed.Retrying");
-            waypointMissionOperator.retryUploadMission(djiError -> {
-                if (djiError != null) {
-                    SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
-                    Log.e("DJIError", "Uploading still failed");
-                } else {
-                    waypointMissionOperator.startMission(djiError1 -> {
-                        if (djiError1 != null) {
-                            SimpleAlertDialog.showDJIError(MainActivity.this, djiError1);
-                        }
-                    });
-                }
-            });
+        DJIError djiParameterError;
+        if ((djiParameterError =
+                builder
+                        .waypointList(wayPointList)
+                        .maxFlightSpeed(3.0F)
+                        .waypointCount(wayPointList.size())
+                        .autoFlightSpeed(2.0F)
+                        .flightPathMode(WaypointMissionFlightPathMode.NORMAL)
+                        .finishedAction(WaypointMissionFinishedAction.NO_ACTION)
+                        .headingMode(WaypointMissionHeadingMode.AUTO)
+                        .gotoFirstWaypointMode(WaypointMissionGotoWaypointMode.SAFELY)
+                        .checkParameters()) != null) {
+            SimpleAlertDialog.showDJIError(this, djiParameterError);
         } else {
-            waypointMissionOperator.startMission(djiError -> {
-                if (djiError != null) {
-                    SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
-                }
-            });
-
+            DJIError djiErrorFirst = waypointMissionOperator.loadMission(builder.build());
+            if (djiErrorFirst != null) {
+                waypointMissionOperator.retryUploadMission(new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError djiError) {
+                        if (djiError != null) {
+                            SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                        }
+                    }
+                });
+            } else {
+                previousWayPointIndex = 0;
+                waypointMissionOperator.uploadMission(new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError djiError) {
+                        if (djiError != null) {
+                            SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                        }
+                    }
+                });
+            }
         }
     }
 }
