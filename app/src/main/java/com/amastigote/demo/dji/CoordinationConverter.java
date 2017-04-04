@@ -18,7 +18,7 @@ public class CoordinationConverter {
 
     public synchronized static LatLng GPS2BD09(LatLng latLng) {
         synchronized (coordinateConverter) {
-            return coordinateConverter.coord(latLng).convert();
+            return coordinateConverter.from(CoordinateConverter.CoordType.GPS).coord(latLng).convert();
         }
     }
 

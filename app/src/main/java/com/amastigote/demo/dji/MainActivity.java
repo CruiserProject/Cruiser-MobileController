@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -714,7 +713,6 @@ public class MainActivity extends Activity
             baiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
-                    Log.e("-=-=BDRAW=-=-", latLng.latitude + " " + latLng.longitude);
                     LatLng latLngGPS84 = CoordinationConverter.BD092GPS84(latLng);
                     wayPointList.add(new Waypoint(
                             latLngGPS84.latitude,
@@ -743,15 +741,6 @@ public class MainActivity extends Activity
                                         )));
                                     }
                                 }));
-                        Log.e("-=-=DBCVT=-=-",
-                                String.valueOf(CoordinationConverter.GPS2BD09(new LatLng(
-                                        wayPointList.get(pointListSize - 2).coordinate.getLatitude(),
-                                        wayPointList.get(pointListSize - 2).coordinate.getLongitude()
-                                )).latitude) + " " +
-                                        CoordinationConverter.GPS2BD09(new LatLng(
-                                                wayPointList.get(pointListSize - 2).coordinate.getLatitude(),
-                                                wayPointList.get(pointListSize - 2).coordinate.getLongitude()
-                                        )).longitude);
                     }
                 }
             });
