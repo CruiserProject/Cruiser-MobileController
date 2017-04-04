@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -31,6 +32,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 
@@ -246,6 +248,8 @@ public class MainActivity extends Activity
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        CoordinationConverter.init();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             this.requestPermissions(
                     new String[]{
@@ -316,7 +320,7 @@ public class MainActivity extends Activity
             initialize WaypointMissionOperatorListener
          */
         baiduMap = mapView.getMap();
-        baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+        baiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
         mapView.setClickable(true);
         mapView.showZoomControls(false);
         mapView.showScaleControl(false);
@@ -354,7 +358,6 @@ public class MainActivity extends Activity
             @Override
             public void onClick(View view) {
                 missionControl.startElement(new GoHomeAction());
-
             }
         }));
 
@@ -690,11 +693,18 @@ public class MainActivity extends Activity
         flightController.setStateCallback(new FlightControllerState.Callback() {
             @Override
             public void onUpdate(@NonNull FlightControllerState flightControllerState) {
-                MyLocationData locData = new MyLocationData.Builder()
-                        .latitude(flightControllerState.getAircraftLocation().getLatitude())
-                        .longitude(flightControllerState.getAircraftLocation().getLongitude())
+                LatLng cvLatLong = CoordinationConverter.GPS2BD09(
+                        new LatLng(
+                                flightControllerState.getAircraftLocation().getLatitude(),
+                                flightControllerState.getAircraftLocation().getLongitude()
+                        )
+                );
+                MyLocationData locationData = new MyLocationData.Builder()
+                        .latitude(cvLatLong.latitude)
+                        .longitude(cvLatLong.longitude)
+                        .direction(flightControllerState.getAircraftHeadDirection())
                         .build();
-                baiduMap.setMyLocationData(locData);
+                baiduMap.setMyLocationData(locationData);
             }
         });
     }
@@ -704,14 +714,45 @@ public class MainActivity extends Activity
             baiduMap.setOnMapLongClickListener(new BaiduMap.OnMapLongClickListener() {
                 @Override
                 public void onMapLongClick(LatLng latLng) {
-                    wayPointList.add(new Waypoint(latLng.latitude, latLng.longitude, 50F));
+                    Log.e("-=-=BDRAW=-=-", latLng.latitude + " " + latLng.longitude);
+                    LatLng latLngGPS84 = CoordinationConverter.BD092GPS84(latLng);
+                    wayPointList.add(new Waypoint(
+                            latLngGPS84.latitude,
+                            latLngGPS84.longitude,
+                            10F)
+                    );
                     baiduMap.addOverlay(new MarkerOptions()
                             .position(latLng)
                             .title("POINT TEST")
-                            .animateType(MarkerOptions.MarkerAnimateType.drop)
-                            .flat(true)
+                            .animateType(MarkerOptions.MarkerAnimateType.grow)
+                            .flat(false)
                             .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fun))
                             .draggable(false));
+                    final int pointListSize = wayPointList.size();
+                    if (pointListSize > 1) {
+                        baiduMap.addOverlay(new PolylineOptions()
+                                .points(new ArrayList<LatLng>() {
+                                    {
+                                        add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                wayPointList.get(pointListSize - 1).coordinate.getLatitude(),
+                                                wayPointList.get(pointListSize - 1).coordinate.getLongitude()
+                                        )));
+                                        add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                wayPointList.get(pointListSize - 2).coordinate.getLatitude(),
+                                                wayPointList.get(pointListSize - 2).coordinate.getLongitude()
+                                        )));
+                                    }
+                                }));
+                        Log.e("-=-=DBCVT=-=-",
+                                String.valueOf(CoordinationConverter.GPS2BD09(new LatLng(
+                                        wayPointList.get(pointListSize - 2).coordinate.getLatitude(),
+                                        wayPointList.get(pointListSize - 2).coordinate.getLongitude()
+                                )).latitude) + " " +
+                                        CoordinationConverter.GPS2BD09(new LatLng(
+                                                wayPointList.get(pointListSize - 2).coordinate.getLatitude(),
+                                                wayPointList.get(pointListSize - 2).coordinate.getLongitude()
+                                        )).longitude);
+                    }
                 }
             });
             relativeLayoutMain.removeView(videoTextureView);
