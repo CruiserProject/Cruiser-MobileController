@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.ToggleButton;
 
+import com.amastigote.demo.dji.CoordinationUtil.CoordinationConverter;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleAlertDialog;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleDialogButton;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleProgressDialog;
@@ -156,15 +157,17 @@ public class MainActivity extends Activity
                         }
                     });
 
-                    VideoFeeder.getInstance()
-                            .getVideoFeeds().get(0)
-                            .setCallback(new VideoFeeder.VideoDataCallback() {
-                                @Override
-                                public void onReceive(byte[] videoBuffer, int size) {
-                                    if (djiCodecManager != null)
-                                        djiCodecManager.sendDataToDecoder(videoBuffer, size);
-                                }
-                            });
+                    if (VideoFeeder.getInstance().getVideoFeeds().size() != 0) {
+                        VideoFeeder.getInstance()
+                                .getVideoFeeds().get(0)
+                                .setCallback(new VideoFeeder.VideoDataCallback() {
+                                    @Override
+                                    public void onReceive(byte[] videoBuffer, int size) {
+                                        if (djiCodecManager != null)
+                                            djiCodecManager.sendDataToDecoder(videoBuffer, size);
+                                    }
+                                });
+                    }
 
                     waypointMissionOperator = missionControl.getWaypointMissionOperator();
                     waypointMissionOperator.addListener(

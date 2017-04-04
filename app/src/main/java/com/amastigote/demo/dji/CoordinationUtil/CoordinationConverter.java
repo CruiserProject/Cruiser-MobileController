@@ -1,4 +1,4 @@
-package com.amastigote.demo.dji;
+package com.amastigote.demo.dji.CoordinationUtil;
 
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.CoordinateConverter;
@@ -10,6 +10,7 @@ import com.baidu.mapapi.utils.CoordinateConverter;
 public class CoordinationConverter {
     private static final CoordinateConverter coordinateConverter = new CoordinateConverter();
     private static final double PI = 3.1415926535897932384626;
+    private static final double XPI = PI * 3000 / 180;
     private static double A = 6378245.0;
     private static double EE = 0.00669342162296594323;
 
@@ -23,7 +24,7 @@ public class CoordinationConverter {
     }
 
     public static LatLng BD092GPS84(LatLng latLng) {
-        return BD092GCJ02(GCJ022GPS84(latLng));
+        return GCJ022GPS84(BD092GCJ02(latLng));
     }
 
     public static void init() {
@@ -32,8 +33,8 @@ public class CoordinationConverter {
 
     public static LatLng BD092GCJ02(LatLng latLng) {
         double x = latLng.longitude - 0.0065, y = latLng.latitude - 0.006;
-        double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * PI);
-        double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * PI);
+        double z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * XPI);
+        double theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * XPI);
         double gg_lon = z * Math.cos(theta);
         double gg_lat = z * Math.sin(theta);
         return new LatLng(gg_lat, gg_lon);
@@ -77,21 +78,11 @@ public class CoordinationConverter {
                 * Math.sqrt(Math.abs(x));
         ret += (20.0 * Math.sin(6.0 * x * PI) + 20.0 * Math.sin(2.0 * x * PI)) * 2.0 / 3.0;
         ret += (20.0 * Math.sin(x * PI) + 40.0 * Math.sin(x / 3.0 * PI)) * 2.0 / 3.0;
-        ret += (150.0 * Math.sin(x / 12.0 * PI) + 300.0 * Math.sin(x / 30.0
-                * PI)) * 2.0 / 3.0;
+        ret += (150.0 * Math.sin(x / 12.0 * PI) + 300.0 * Math.sin(x / 30.0 * PI)) * 2.0 / 3.0;
         return ret;
     }
 
     private static boolean isOutOfChina(double lat, double lon) {
         return lon < 72.004 || lon > 137.8347 || lat < 0.8293 || lat > 55.8271;
-    }
-
-    public static LatLng GCJ022BD09(LatLng latLng) {
-        double x = latLng.longitude, y = latLng.latitude;
-        double z = Math.sqrt(x * x + y * y) + 0.00002 * Math.sin(y * PI);
-        double theta = Math.atan2(y, x) + 0.000003 * Math.cos(x * PI);
-        double bd_lon = z * Math.cos(theta) + 0.0065;
-        double bd_lat = z * Math.sin(theta) + 0.006;
-        return new LatLng(bd_lat, bd_lon);
     }
 }
