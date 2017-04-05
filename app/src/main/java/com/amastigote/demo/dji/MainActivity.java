@@ -269,7 +269,8 @@ public class MainActivity extends Activity
                             Manifest.permission.SYSTEM_ALERT_WINDOW,
                             Manifest.permission.READ_PHONE_STATE,
                             Manifest.permission.WRITE_SETTINGS,
-                            Manifest.permission.GET_TASKS
+                            Manifest.permission.GET_TASKS,
+                            Manifest.permission.CHANGE_CONFIGURATION,
                     }
                     , 1);
         }
