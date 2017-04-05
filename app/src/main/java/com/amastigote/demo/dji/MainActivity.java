@@ -785,8 +785,10 @@ public class MainActivity extends Activity
                         .checkParameters()) != null) {
             SimpleAlertDialog.showDJIError(this, djiParameterError);
         } else {
+            previousWayPointIndex = 0;
             DJIError djiErrorFirst = waypointMissionOperator.loadMission(builder.build());
             if (djiErrorFirst != null) {
+                SimpleAlertDialog.showDJIError(MainActivity.this, djiErrorFirst);
                 waypointMissionOperator.retryUploadMission(new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
@@ -796,7 +798,6 @@ public class MainActivity extends Activity
                     }
                 });
             } else {
-                previousWayPointIndex = 0;
                 waypointMissionOperator.uploadMission(new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
