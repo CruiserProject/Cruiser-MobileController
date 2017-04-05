@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
@@ -72,7 +74,7 @@ import dji.sdk.sdkmanager.DJISDKManager;
 public class MainActivity extends Activity
         implements TextureView.SurfaceTextureListener {
     private static BaseProduct baseProduct;
-
+    private final AtomicInteger atomicInteger = new AtomicInteger();
     /*
         UI components
      */
@@ -85,7 +87,6 @@ public class MainActivity extends Activity
     private SimpleProgressDialog startUpInfoDialog;
     private RelativeLayout relativeLayoutMain;
     private TextureView videoTextureView;
-
     private MapView mapView;
     private LinearLayout linearLayoutForMapView;
     private RelativeLayout mapViewPanel;
@@ -95,9 +96,9 @@ public class MainActivity extends Activity
     private Button mapPanelStopButton;
     private Set<Button> mapPanelButtonSet;
     private BaiduMap baiduMap;
-
     private List<Waypoint> wayPointList = new ArrayList<>();
-    private volatile int previousWayPointIndex = 0;
+    private AtomicInteger previousWayPointIndex = new AtomicInteger();
+    private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
 
     private WaypointMissionOperator waypointMissionOperator;
     private FlightController flightController;
@@ -182,8 +183,8 @@ public class MainActivity extends Activity
                                     if (waypointMissionUploadEvent.getProgress() != null
                                             && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == waypointMissionUploadEvent.getProgress().totalWaypointCount - 1
                                             && waypointMissionUploadEvent.getProgress().isSummaryUploaded
-                                            && previousWayPointIndex != waypointMissionUploadEvent.getProgress().uploadedWaypointIndex) {
-                                        previousWayPointIndex = waypointMissionUploadEvent.getProgress().uploadedWaypointIndex;
+                                            && previousWayPointIndex.get() != waypointMissionUploadEvent.getProgress().uploadedWaypointIndex) {
+                                        previousWayPointIndex.set(waypointMissionUploadEvent.getProgress().uploadedWaypointIndex);
                                         SimpleAlertDialog.show(
                                                 MainActivity.this,
                                                 false,
@@ -223,9 +224,9 @@ public class MainActivity extends Activity
                                     } else {
                                         SimpleAlertDialog.show(
                                                 MainActivity.this,
-                                                false,
-                                                "Go Home Confirmation",
-                                                "Way point mission completed.\nGo home immediately?",
+                                                true,
+                                                "WayPoint Mission " + (isCompletedByStopping.get() ? "Stopped" : "Completed"),
+                                                "Go home immediately?",
                                                 new SimpleDialogButton("yes", new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -309,6 +310,19 @@ public class MainActivity extends Activity
                 }
             }
         });
+        mapPanelStopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isCompletedByStopping.set(true);
+                waypointMissionOperator.stopMission(new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError djiError) {
+                        if (djiError != null)
+                            SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                    }
+                });
+            }
+        });
 
         isMapPanelFocused = false;
 
@@ -323,7 +337,7 @@ public class MainActivity extends Activity
             initialize WaypointMissionOperatorListener
          */
         baiduMap = mapView.getMap();
-        baiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+        baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
         mapView.setClickable(true);
         mapView.showZoomControls(false);
         mapView.showScaleControl(false);
@@ -334,8 +348,8 @@ public class MainActivity extends Activity
         uiSettings.setAllGesturesEnabled(false);
         uiSettings.setZoomGesturesEnabled(true);
 
-        // zoom the map 5 times to ensure it is large enough :)
-        for (int i = 0; i < 5; i++)
+        // zoom the map 6 times to ensure it is large enough :)
+        for (int i = 0; i < 6; i++)
             baiduMap.setMapStatus(MapStatusUpdateFactory.zoomIn());
 
         baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
@@ -607,22 +621,34 @@ public class MainActivity extends Activity
             }
         }));
 
-        recordToggleButton.setOnClickListener((new View.OnClickListener() {
+        recordToggleButton.setOnCheckedChangeListener((new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                if (recordToggleButton.isChecked()) {
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b) {
                     baseProduct.getCamera().setMode(SettingsDefinitions.CameraMode.RECORD_VIDEO, new CommonCallbacks.CompletionCallback() {
                         @Override
                         public void onResult(DJIError e) {
                             if (e != null) {
                                 SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                MainActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        recordToggleButton.setChecked(!recordToggleButton.isChecked());
+                                    }
+                                });
                             } else {
                                 baseProduct.getCamera().startRecordVideo(new CommonCallbacks.CompletionCallback() {
                                     @Override
                                     public void onResult(DJIError error) {
                                         if (error != null) {
                                             SimpleAlertDialog.showDJIError(MainActivity.this, error);
-                                        }
+                                        } else
+                                            MainActivity.this.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    recordToggleButton.setChecked(!recordToggleButton.isChecked());
+                                                }
+                                            });
                                     }
                                 });
                             }
@@ -634,6 +660,12 @@ public class MainActivity extends Activity
                         public void onResult(DJIError e) {
                             if (e != null) {
                                 SimpleAlertDialog.showDJIError(MainActivity.this, e);
+                                MainActivity.this.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        recordToggleButton.setChecked(!recordToggleButton.isChecked());
+                                    }
+                                });
                             }
                         }
                     });
@@ -696,6 +728,13 @@ public class MainActivity extends Activity
         flightController.setStateCallback(new FlightControllerState.Callback() {
             @Override
             public void onUpdate(@NonNull FlightControllerState flightControllerState) {
+                // Drop the callback data at a fixed rate to prevent
+                // the SDK from shitting its pants.
+                if (atomicInteger.getAndAdd(1) > 2) {
+                    atomicInteger.set(0);
+                    return;
+                }
+
                 LatLng cvLatLong = CoordinationConverter.GPS2BD09(
                         new LatLng(
                                 flightControllerState.getAircraftLocation().getLatitude(),
@@ -725,10 +764,10 @@ public class MainActivity extends Activity
                     );
                     baiduMap.addOverlay(new MarkerOptions()
                             .position(latLng)
-                            .title("POINT TEST")
                             .animateType(MarkerOptions.MarkerAnimateType.grow)
-                            .flat(false)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.fun))
+                            .flat(true)
+                            .anchor(0.5F, 0.5F)
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker))
                             .draggable(false));
                     final int pointListSize = wayPointList.size();
                     if (pointListSize > 1) {
@@ -744,7 +783,10 @@ public class MainActivity extends Activity
                                                 wayPointList.get(pointListSize - 2).coordinate.getLongitude()
                                         )));
                                     }
-                                }));
+                                })
+                                .color(R.color.purple)
+                                .dottedLine(true)
+                        );
                     }
                 }
             });
@@ -775,9 +817,9 @@ public class MainActivity extends Activity
         if ((djiParameterError =
                 builder
                         .waypointList(wayPointList)
-                        .maxFlightSpeed(3.0F)
+                        .maxFlightSpeed(15.0F)
                         .waypointCount(wayPointList.size())
-                        .autoFlightSpeed(2.0F)
+                        .autoFlightSpeed(15.0F)
                         .flightPathMode(WaypointMissionFlightPathMode.NORMAL)
                         .finishedAction(WaypointMissionFinishedAction.NO_ACTION)
                         .headingMode(WaypointMissionHeadingMode.AUTO)
@@ -785,24 +827,26 @@ public class MainActivity extends Activity
                         .checkParameters()) != null) {
             SimpleAlertDialog.showDJIError(this, djiParameterError);
         } else {
-            previousWayPointIndex = 0;
+            previousWayPointIndex.set(0);
+            atomicInteger.set(0);
+            isCompletedByStopping.set(false);
+
             DJIError djiErrorFirst = waypointMissionOperator.loadMission(builder.build());
             if (djiErrorFirst != null) {
                 SimpleAlertDialog.showDJIError(MainActivity.this, djiErrorFirst);
-                waypointMissionOperator.retryUploadMission(new CommonCallbacks.CompletionCallback() {
-                    @Override
-                    public void onResult(DJIError djiError) {
-                        if (djiError != null) {
-                            SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
-                        }
-                    }
-                });
             } else {
                 waypointMissionOperator.uploadMission(new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
                         if (djiError != null) {
-                            SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                            waypointMissionOperator.retryUploadMission(new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError djiError) {
+                                    if (djiError != null) {
+                                        SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                                    }
+                                }
+                            });
                         }
                     }
                 });

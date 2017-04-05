@@ -13,8 +13,10 @@
         android:id="@+id/mv_btn_undo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="46dp"
+        android:backgroundTint="@color/white"
         android:text="clean up"
+        android:textColor="@color/black"
         android:visibility="gone" />
 
     <Button
@@ -22,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="46dp"
         android:backgroundTint="@color/red"
         android:text="stop"
         android:textColor="@color/white"
@@ -32,7 +34,7 @@
         android:id="@+id/mv_btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="46dp"
         android:layout_toStartOf="@id/mv_btn_stop"
         android:backgroundTint="@color/green"
         android:text="start"
