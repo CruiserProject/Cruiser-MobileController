@@ -18,6 +18,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.amastigote.demo.dji.CoordinationUtil.CoordinationConverter;
@@ -78,6 +79,11 @@ public class MainActivity extends Activity
     /*
         UI components
      */
+    private TextView velocityXTextView;
+    private TextView velocityYTextView;
+    private TextView velocityZTextView;
+    private TextView altitudeTextView;
+    private TextView flightTimeTextView;
     private Button takeOffButton;
     private Button landButton;
     private Button captureButton;
@@ -326,6 +332,11 @@ public class MainActivity extends Activity
 
         isMapPanelFocused = false;
 
+        velocityXTextView = (TextView) findViewById(R.id.vx_text);
+        velocityYTextView = (TextView) findViewById(R.id.vy_text);
+        velocityZTextView = (TextView) findViewById(R.id.vz_text);
+        altitudeTextView = (TextView) findViewById(R.id.altitude_text);
+        flightTimeTextView = (TextView) findViewById(R.id.flight_time_text);
         takeOffButton = (Button) findViewById(R.id.takeoff_btn);
         switchButton = (Button) findViewById(R.id.btn_switch);
         landButton = (Button) findViewById(R.id.land_btn);
@@ -727,13 +738,26 @@ public class MainActivity extends Activity
         flightController = ((Aircraft) baseProduct).getFlightController();
         flightController.setStateCallback(new FlightControllerState.Callback() {
             @Override
-            public void onUpdate(@NonNull FlightControllerState flightControllerState) {
+            public void onUpdate(@NonNull final FlightControllerState flightControllerState) {
                 // Drop the callback data at a fixed rate to prevent
                 // the SDK from shitting its pants.
                 if (atomicInteger.getAndAdd(1) > 2) {
                     atomicInteger.set(0);
                     return;
                 }
+
+                //update params of FlightControllerState
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        velocityXTextView.setText("VelocityX: " + flightControllerState.getVelocityX() + "m/s");
+                        velocityYTextView.setText("VelocityY: " + flightControllerState.getVelocityY() + "m/s");
+                        velocityZTextView.setText("VelocityZ: " + flightControllerState.getVelocityZ() + "m/s");
+                        altitudeTextView.setText("Altitude: " + flightControllerState.getAircraftLocation().getAltitude() + "m");
+                        flightTimeTextView.setText("Flight Time: " + flightControllerState.getFlightTimeInSeconds() + "s");
+
+                    }
+                });
 
                 LatLng cvLatLong = CoordinationConverter.GPS2BD09(
                         new LatLng(
