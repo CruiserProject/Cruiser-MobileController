@@ -8,4 +8,5 @@
     <color name="green">#06b400</color>
     <color name="purple">#8e0383</color>
     <color name="black">#000000</color>
+    <color name="black_trans">#96000000</color>
 </resources>

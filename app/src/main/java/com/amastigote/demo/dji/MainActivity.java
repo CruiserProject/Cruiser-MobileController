@@ -92,7 +92,9 @@ public class MainActivity extends Activity
     private ToggleButton recordToggleButton;
     private SimpleProgressDialog startUpInfoDialog;
     private RelativeLayout relativeLayoutMain;
+
     private TextureView videoTextureView;
+
     private MapView mapView;
     private LinearLayout linearLayoutForMapView;
     private RelativeLayout mapViewPanel;
@@ -337,6 +339,7 @@ public class MainActivity extends Activity
         velocityZTextView = (TextView) findViewById(R.id.vz_text);
         altitudeTextView = (TextView) findViewById(R.id.altitude_text);
         flightTimeTextView = (TextView) findViewById(R.id.flight_time_text);
+
         takeOffButton = (Button) findViewById(R.id.takeoff_btn);
         switchButton = (Button) findViewById(R.id.btn_switch);
         landButton = (Button) findViewById(R.id.land_btn);
@@ -755,7 +758,6 @@ public class MainActivity extends Activity
                         velocityZTextView.setText("VelocityZ: " + flightControllerState.getVelocityZ() + "m/s");
                         altitudeTextView.setText("Altitude: " + flightControllerState.getAircraftLocation().getAltitude() + "m");
                         flightTimeTextView.setText("Flight Time: " + flightControllerState.getFlightTimeInSeconds() + "s");
-
                     }
                 });
 
@@ -784,7 +786,7 @@ public class MainActivity extends Activity
                     wayPointList.add(new Waypoint(
                             latLngGPS84.latitude,
                             latLngGPS84.longitude,
-                            10F)
+                            30F)
                     );
                     baiduMap.addOverlay(new MarkerOptions()
                             .position(latLng)
@@ -841,9 +843,9 @@ public class MainActivity extends Activity
         if ((djiParameterError =
                 builder
                         .waypointList(wayPointList)
-                        .maxFlightSpeed(15.0F)
+                        .maxFlightSpeed(3.0F)
                         .waypointCount(wayPointList.size())
-                        .autoFlightSpeed(15.0F)
+                        .autoFlightSpeed(2.0F)
                         .flightPathMode(WaypointMissionFlightPathMode.NORMAL)
                         .finishedAction(WaypointMissionFinishedAction.NO_ACTION)
                         .headingMode(WaypointMissionHeadingMode.AUTO)
