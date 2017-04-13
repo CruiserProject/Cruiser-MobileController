@@ -96,13 +96,10 @@ public class MainActivity extends Activity
     protected RelativeLayout relativeLayoutMain;
     @BindView(R.id.ll_for_map)
     protected LinearLayout linearLayoutForMapView;
-    @BindView(R.id.mv_btn_undo)
+
     protected Button mapPanelUndoButton;
-    @BindView(R.id.mv_btn_start)
     protected Button mapPanelStartButton;
-    @BindView(R.id.mv_btn_stop)
     protected Button mapPanelStopButton;
-    @BindView(R.id.mv_mapview)
     protected MapView mapView;
     private SimpleProgressDialog startUpInfoDialog;
     private TextureView videoTextureView;
@@ -114,7 +111,6 @@ public class MainActivity extends Activity
     private AtomicInteger previousWayPointIndex = new AtomicInteger();
     private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
     private WaypointMissionOperator waypointMissionOperator;
-    private FlightController flightController;
     private MissionControl missionControl;
     private DJICodecManager djiCodecManager;
     private DJISDKManager.SDKManagerCallback sdkManagerCallback
@@ -427,6 +423,10 @@ public class MainActivity extends Activity
         }
 
         mapViewPanel = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, null);
+        mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
+        mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
+        mapPanelStartButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_start);
+        mapPanelStopButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_stop);
         linearLayoutForMapView.addView(mapViewPanel);
         mapViewPanel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -545,7 +545,7 @@ public class MainActivity extends Activity
     }
 
     public void initFlightController() {
-        flightController = FlightControllerManager.getInstance(baseProduct);
+        FlightController flightController = FlightControllerManager.getInstance(baseProduct);
         flightController.setStateCallback(new FlightControllerState.Callback() {
             @Override
             public void onUpdate(@NonNull final FlightControllerState flightControllerState) {
