@@ -18,9 +18,8 @@ Built on the basis of DJI-SDK, branch information:
   - 警报、提醒 ✘
   - 目标框定、追踪 ✘
 
-
-### Architecture
-![](https://github.com/hwding/DJiMobileControllerDevel/blob/devel/art/DJI_MOB_SDK_INIT.png)  
-
 ### Data/Instuction Transmission
 ![](https://github.com/hwding/DJiMobileControllerDevel/blob/devel4/art/MO-OB_COMM.png)
+
+### Architecture
+![](https://github.com/hwding/DJiMobileControllerDevel/blob/devel4/art/DJI_MOB_SDK_INIT.png)  
