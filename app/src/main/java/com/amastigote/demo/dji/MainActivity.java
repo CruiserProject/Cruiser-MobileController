@@ -21,6 +21,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.amastigote.demo.dji.CoordinationUtil.CoordinationConverter;
+import com.amastigote.demo.dji.FlightModuleUtil.BatteryManager;
 import com.amastigote.demo.dji.FlightModuleUtil.FlightAssistantManager;
 import com.amastigote.demo.dji.FlightModuleUtil.FlightControllerManager;
 import com.amastigote.demo.dji.UIComponentUtil.SimpleAlertDialog;
@@ -49,6 +50,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dji.common.battery.BatteryState;
 import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
@@ -90,8 +92,8 @@ public class MainActivity extends Activity
     protected TextView velocityZTextView;
     @BindView(R.id.altitude_text)
     protected TextView altitudeTextView;
-    @BindView(R.id.flight_time_text)
-    protected TextView flightTimeTextView;
+    @BindView(R.id.battery_text)
+    protected TextView batteryTextView;
     @BindView(R.id.rl_main)
     protected RelativeLayout relativeLayoutMain;
     @BindView(R.id.ll_for_map)
@@ -144,6 +146,7 @@ public class MainActivity extends Activity
 
                 initMissionControl();
                 initFlightController();
+                initBattery();
 
                 SimpleAlertDialog.show(
                         MainActivity.this,
@@ -389,12 +392,17 @@ public class MainActivity extends Activity
     @SuppressLint("InflateParams")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         CoordinationConverter.init();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //noinspection deprecation
@@ -520,7 +528,6 @@ public class MainActivity extends Activity
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-
     }
 
     @Override
@@ -534,7 +541,6 @@ public class MainActivity extends Activity
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-
     }
 
     public void initMissionControl() {
@@ -557,11 +563,10 @@ public class MainActivity extends Activity
                 MainActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        velocityXTextView.setText(String.format(Locale.CHINA, "VelocityX: %f m/s", flightControllerState.getVelocityX()));
-                        velocityYTextView.setText(String.format(Locale.CHINA, "VelocityY: %f m/s", flightControllerState.getVelocityY()));
-                        velocityZTextView.setText(String.format(Locale.CHINA, "VelocityZ: %f m/s", flightControllerState.getVelocityZ()));
-                        altitudeTextView.setText(String.format(Locale.CHINA, "Altitude: %f m", flightControllerState.getAircraftLocation().getAltitude()));
-                        flightTimeTextView.setText(String.format(Locale.CHINA, "FlightTime: %d s", flightControllerState.getFlightTimeInSeconds()));
+                        velocityXTextView.setText(String.format(Locale.CHINA, "Velocity-X: %.2f m/s", flightControllerState.getVelocityX()));
+                        velocityYTextView.setText(String.format(Locale.CHINA, "Velocity-Y: %.2f m/s", flightControllerState.getVelocityY()));
+                        velocityZTextView.setText(String.format(Locale.CHINA, "Velocity-Z: %.2f m/s", flightControllerState.getVelocityZ()));
+                        altitudeTextView.setText(String.format(Locale.CHINA, "Altitude: %.2f m", flightControllerState.getAircraftLocation().getAltitude()));
                     }
                 });
 
@@ -577,6 +582,21 @@ public class MainActivity extends Activity
                         .direction(flightControllerState.getAircraftHeadDirection())
                         .build();
                 baiduMap.setMyLocationData(locationData);
+            }
+        });
+    }
+
+    public void initBattery() {
+        BatteryManager.getInstance(baseProduct).setStateCallback(new BatteryState.Callback() {
+            @Override
+            public void onUpdate(BatteryState batteryState) {
+                final String batteryText = String.format(Locale.CHINA, "Battery: %d%%", batteryState.getChargeRemainingInPercent());
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        batteryTextView.setText(batteryText);
+                    }
+                });
             }
         });
     }
