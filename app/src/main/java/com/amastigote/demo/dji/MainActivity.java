@@ -494,7 +494,6 @@ public class MainActivity extends Activity
                 null));
 
         videoTextureView = new TextureView(this);
-        videoTextureView.setClickable(true);
         videoTextureView.setLayoutParams(
                 new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.MATCH_PARENT,

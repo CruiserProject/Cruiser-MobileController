@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:backgroundTint="@color/white"
+        android:drawablePadding="8dp"
         android:drawableStart="@mipmap/clear"
         android:text="clean up"
         android:textColor="@color/black"
