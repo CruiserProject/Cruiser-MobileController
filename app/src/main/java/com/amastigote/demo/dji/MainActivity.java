@@ -154,16 +154,13 @@ public class MainActivity extends Activity
                 );
 
                 try {
-                    // todo be aware of components change
                     baseProduct.setBaseProductListener(new BaseProduct.BaseProductListener() {
                         @Override
                         public void onComponentChange(BaseProduct.ComponentKey componentKey, BaseComponent baseComponent, BaseComponent baseComponent1) {
-
                         }
 
                         @Override
                         public void onConnectivityChange(boolean b) {
-
                         }
                     });
 
@@ -302,7 +299,7 @@ public class MainActivity extends Activity
 
     @OnClick(R.id.btn_flight_assist)
     void fab_oc() {
-        View dialog_content = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_flight_assist_conf, null);
+        @SuppressLint("InflateParams") View dialog_content = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_flight_assist_conf, null);
         final Switch switch_ca = ButterKnife.findById(dialog_content, R.id.sw_ca);
         final Switch switch_ua = ButterKnife.findById(dialog_content, R.id.sw_ua);
         final Switch switch_aoa = ButterKnife.findById(dialog_content, R.id.sw_aoa);
@@ -350,7 +347,7 @@ public class MainActivity extends Activity
                         MainActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ((CompoundButton) view).setChecked(!b);
+                                ((CompoundButton) view).setChecked(false);
                             }
                         });
                     } else {
@@ -363,7 +360,7 @@ public class MainActivity extends Activity
                                     MainActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            ((CompoundButton) view).setChecked(!b);
+                                            ((CompoundButton) view).setChecked(false);
                                         }
                                     });
                             }
@@ -380,7 +377,7 @@ public class MainActivity extends Activity
                         MainActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ((CompoundButton) view).setChecked(!b);
+                                ((CompoundButton) view).setChecked(true);
                             }
                         });
                     }
@@ -400,6 +397,7 @@ public class MainActivity extends Activity
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         CoordinationConverter.init();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //noinspection deprecation
             this.requestPermissions(
                     new String[]{
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
