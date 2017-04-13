@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:backgroundTint="@color/white"
+        android:drawableStart="@mipmap/clear"
         android:text="clean up"
         android:textColor="@color/black"
         android:visibility="gone" />
@@ -26,6 +27,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="44dp"
         android:backgroundTint="@color/red"
+        android:drawablePadding="8dp"
+        android:drawableStart="@mipmap/stop"
         android:text="stop"
         android:textColor="@color/white"
         android:visibility="gone" />
@@ -37,6 +40,8 @@
         android:layout_marginTop="44dp"
         android:layout_toStartOf="@id/mv_btn_stop"
         android:backgroundTint="@color/green"
+        android:drawablePadding="8dp"
+        android:drawableStart="@mipmap/start"
         android:text="start"
         android:textColor="@color/white"
         android:visibility="gone" />

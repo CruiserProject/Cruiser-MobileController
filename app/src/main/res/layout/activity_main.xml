@@ -47,38 +47,82 @@
             android:text="flight assistant" />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:elevation="1dp"
-        android:gravity="center_horizontal">
-
-        <Button
-            android:id="@+id/capture_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:drawableStart="@mipmap/camera"
-            android:text="capture" />
-        <ToggleButton
-            android:id="@+id/record_tgbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="1"
-            android:drawableStart="@mipmap/video"
-            android:textOff="record"
-            android:textOn="stop record" />
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/ll_for_map"
             android:layout_width="140dp"
             android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
             android:orientation="horizontal" />
-    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_for_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@id/ll_for_map">
+
+            <Button
+                android:id="@+id/capture_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:drawableStart="@mipmap/camera"
+                android:text="capture" />
+
+            <ToggleButton
+                android:id="@+id/record_tgbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="2dp"
+                android:layout_weight="1"
+                android:drawableStart="@mipmap/video"
+                android:textOff="record"
+                android:textOn="stop record" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/ll_for_media"
+            android:layout_toStartOf="@id/ll_for_map">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:drawableStart="@mipmap/recognition"
+                android:text="recognition" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:drawableStart="@mipmap/follow"
+                android:text="follow" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="6dp"
+                android:background="@color/green_trans"
+                android:gravity="center"
+                android:text="√   未检测到异常"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
