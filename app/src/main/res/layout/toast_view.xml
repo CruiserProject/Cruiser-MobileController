@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:padding="5dp"
+    android:id="@+id/toast_view_ll"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/toast_shape_normal">
+
+    <TextView
+        android:id="@+id/toast_text"
+        android:textSize="16sp"
+        android:textColor="#ffffff"
+        android:layout_gravity="center"
+        android:text="Hello World"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
