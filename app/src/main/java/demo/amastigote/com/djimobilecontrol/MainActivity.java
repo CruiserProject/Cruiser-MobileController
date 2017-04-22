@@ -32,6 +32,7 @@ import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SideToast;
 import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SimpleAlertDialog;
 import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SimpleDialogButton;
 import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SimpleProgressDialog;
+import dji.common.battery.BatteryState;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.common.flightcontroller.FlightControllerState;
@@ -40,6 +41,9 @@ import dji.sdk.base.BaseProduct;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.flightcontroller.FlightController;
+import dji.sdk.mission.MissionControl;
+import dji.sdk.mission.timeline.actions.GoHomeAction;
+import dji.sdk.mission.timeline.actions.TakeOffAction;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
@@ -110,6 +114,7 @@ public class MainActivity extends Activity {
      */
     private DJICodecManager djiCodecManager;
     private FlightController flightController;
+    private MissionControl missionControl;
     private BaseProduct.BaseProductListener baseProductListener
             = new BaseProduct.BaseProductListener() {
         @Override
@@ -174,6 +179,7 @@ public class MainActivity extends Activity {
             });
 
             initFlightController();
+            initMissionControl();
             baseProduct.setBaseProductListener(baseProductListener);
 
 
@@ -205,14 +211,19 @@ public class MainActivity extends Activity {
             });
         }
     };
-
-    /*
-        State Data
-     */
-
-
-
-    @Override
+    private BatteryState.Callback batteryCallback
+            = new BatteryState.Callback() {
+        @Override
+        public void onUpdate(final BatteryState batteryState) {
+            final int remainingBatteryInPercent = batteryState.getChargeRemainingInPercent();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    // TODO: 2017/4/22 battery state update 
+                }
+            });
+        }
+    }
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -231,6 +242,7 @@ public class MainActivity extends Activity {
         initUI();
         initBaiduMap();
         initVideoTextureView();
+        initOnClickListener();
 
         startUpInfoDialog = new SimpleProgressDialog(MainActivity.this, "Validating API key");
 
@@ -346,12 +358,31 @@ public class MainActivity extends Activity {
         flightController.setStateCallback(fcsCallback);
     }
 
-    private void initOnClickListener(){
+    private void initMissionControl(){
+        missionControl = MissionControl.getInstance();
+    }
+
+    private void initOnClickListener() {
         takeOffImageView.setClickable(true);
         takeOffImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!baseProduct.isConnected() || baseProduct == null){
+                    SideToast.makeText(MainActivity.this,"无效的操作:起飞",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
+                }else{
+                    missionControl.startElement(new TakeOffAction());
+                }
+            }
+        });
 
+        landImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!baseProduct.isConnected() || baseProduct == null){
+                    SideToast.makeText(MainActivity.this,"无效的操作：返航",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
+                }else{
+                    missionControl.startElement(new GoHomeAction());
+                }
             }
         });
     }

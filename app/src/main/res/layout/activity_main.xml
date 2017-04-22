@@ -112,7 +112,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginLeft="15dp"
-                android:src="@mipmap/battery_80" />
+                android:src="@mipmap/battery_100" />
 
             <ImageView
                 android:id="@+id/more_option"
