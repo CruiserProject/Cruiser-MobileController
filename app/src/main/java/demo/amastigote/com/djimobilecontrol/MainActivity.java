@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -51,10 +52,13 @@ public class MainActivity extends Activity {
         UI components
      */
     private RelativeLayout relativeLayoutMain;
+    private FrameLayout videoTextureViewFrameLayout;
     private ImageView statusIndicatorImageView;
     private ImageView gpsSignalLevelImageView;
     private ImageView rcSignalLevelImageView;
     private ImageView remainingBatteryImageView;
+    private ImageView takeOffImageView;
+    private ImageView landImageView;
     private TextView aircraftTextView;
     private TextView statusDescriptionTextView;
     private TextView satelliteNumberTextView;
@@ -122,7 +126,6 @@ public class MainActivity extends Activity {
                         SideToast.makeText(MainActivity.this, "飞行器已连接", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                         aircraftTextView.setText(baseProduct.getModel().toString());
                     } else {
-                        // TODO: 2017/4/21 bug to be fixed: should be TYPE_ERROR
                         SideToast.makeText(MainActivity.this, "飞行器已断开连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                         aircraftTextView.setText("飞行器未连接");
                         stateVelocityTextView.setText("");
@@ -283,23 +286,28 @@ public class MainActivity extends Activity {
     private void initVideoTextureView(){
         videoTextureView = new TextureView(this);
         videoTextureView.setLayoutParams(
-                new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT)
+                new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                )
         );
+
         videoTextureView.setElevation(0);
         videoTextureView.setSurfaceTextureListener(textureListener);
-        relativeLayoutMain.addView(videoTextureView);
+        videoTextureViewFrameLayout.addView(videoTextureView);
 
     }
 
 
     private void initUI() {
+        videoTextureViewFrameLayout = (FrameLayout) findViewById(R.id.videoTextureViewLayout);
         relativeLayoutMain = (RelativeLayout) findViewById(R.id.rl_main);
         statusIndicatorImageView = (ImageView) findViewById(R.id.status_indicator_img);
         gpsSignalLevelImageView = (ImageView) findViewById(R.id.gps_signal);
         rcSignalLevelImageView = (ImageView) findViewById(R.id.rc_signal);
         remainingBatteryImageView = (ImageView) findViewById(R.id.remaining_battery);
+        takeOffImageView = (ImageView) findViewById(R.id.takeoff);
+        landImageView = (ImageView) findViewById(R.id.land);
         aircraftTextView = (TextView) findViewById(R.id.status_aircraft);
         statusDescriptionTextView = (TextView) findViewById(R.id.status_description_txt);
         satelliteNumberTextView = (TextView) findViewById(R.id.satellite_number_txt);
@@ -336,6 +344,16 @@ public class MainActivity extends Activity {
     private void initFlightController(){
         flightController = FlightControllerManager.getInstance(baseProduct);
         flightController.setStateCallback(fcsCallback);
+    }
+
+    private void initOnClickListener(){
+        takeOffImageView.setClickable(true);
+        takeOffImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
 
