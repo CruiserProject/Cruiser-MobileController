@@ -27,24 +27,26 @@ import com.baidu.mapapi.map.UiSettings;
 import java.util.List;
 import java.util.Locale;
 
+import demo.amastigote.com.djimobilecontrol.FlightModuleUtil.BatteryManager;
 import demo.amastigote.com.djimobilecontrol.FlightModuleUtil.FlightControllerManager;
 import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SideToast;
 import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SimpleAlertDialog;
 import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SimpleDialogButton;
 import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SimpleProgressDialog;
 import dji.common.battery.BatteryState;
+import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.common.flightcontroller.FlightControllerState;
+import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
+import dji.sdk.battery.Battery;
+import dji.sdk.camera.Camera;
 import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.mission.MissionControl;
-import dji.sdk.mission.timeline.actions.GoHomeAction;
-import dji.sdk.mission.timeline.actions.TakeOffAction;
-import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 
@@ -63,6 +65,8 @@ public class MainActivity extends Activity {
     private ImageView remainingBatteryImageView;
     private ImageView takeOffImageView;
     private ImageView landImageView;
+    private ImageView cameraShootImageView;
+    private ImageView cameraSwitchImageView;
     private TextView aircraftTextView;
     private TextView statusDescriptionTextView;
     private TextView satelliteNumberTextView;
@@ -76,8 +80,8 @@ public class MainActivity extends Activity {
             = new TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-            if(djiCodecManager == null){
-                djiCodecManager = new DJICodecManager(MainActivity.this,surface,width,height);
+            if (djiCodecManager == null) {
+                djiCodecManager = new DJICodecManager(MainActivity.this, surface, width, height);
             }
         }
 
@@ -88,7 +92,7 @@ public class MainActivity extends Activity {
 
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-            if(djiCodecManager != null){
+            if (djiCodecManager != null) {
                 djiCodecManager.cleanSurface();
                 djiCodecManager = null;
             }
@@ -112,7 +116,11 @@ public class MainActivity extends Activity {
     /*
         DJI sdk
      */
+    private int currentBatteryInPercent = -1;
+
+    private Camera camera;
     private DJICodecManager djiCodecManager;
+    private Battery battery;
     private FlightController flightController;
     private MissionControl missionControl;
     private BaseProduct.BaseProductListener baseProductListener
@@ -124,6 +132,27 @@ public class MainActivity extends Activity {
 
         @Override
         public void onConnectivityChange(final boolean b) {
+            if(b){
+                SideToast.makeText(MainActivity.this,"飞行器已连接",SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                camera.getMode(new CommonCallbacks.CompletionCallbackWith<SettingsDefinitions.CameraMode>() {
+                    @Override
+                    public void onSuccess(SettingsDefinitions.CameraMode cameraMode) {
+                        if(cameraMode.equals(SettingsDefinitions.CameraMode.SHOOT_PHOTO)){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(DJIError djiError) {
+
+                    }
+                });
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -135,6 +164,7 @@ public class MainActivity extends Activity {
                         aircraftTextView.setText("飞行器未连接");
                         stateVelocityTextView.setText("");
                         stateAltitudeTextView.setText("");
+                        currentBatteryInPercent = -1;
                     }
                 }
             });
@@ -170,6 +200,9 @@ public class MainActivity extends Activity {
             if (baseProduct == null) {
                 return;
             }
+
+            currentBatteryInPercent = -1;
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -179,17 +212,19 @@ public class MainActivity extends Activity {
             });
 
             initFlightController();
+            initBattery();
+            initCamera();
             initMissionControl();
             baseProduct.setBaseProductListener(baseProductListener);
 
 
             List<VideoFeeder.VideoFeed> videoFeeds = VideoFeeder.getInstance().getVideoFeeds();
-            if(videoFeeds.size() != 0){
+            if (videoFeeds.size() != 0) {
                 videoFeeds.get(0).setCallback(new VideoFeeder.VideoDataCallback() {
                     @Override
                     public void onReceive(byte[] videoBuffer, int size) {
-                        if(djiCodecManager != null){
-                            djiCodecManager.sendDataToDecoder(videoBuffer,size);
+                        if (djiCodecManager != null) {
+                            djiCodecManager.sendDataToDecoder(videoBuffer, size);
                         }
                     }
                 });
@@ -204,9 +239,9 @@ public class MainActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    stateAltitudeTextView.setText(String.format(Locale.CHINA,"Altitude: %.1f",flightControllerState.getAircraftLocation().getAltitude()));
-                    float velocity = (float)Math.sqrt(Math.pow(flightControllerState.getVelocityX(),2) + Math.pow(flightControllerState.getVelocityY(),2));
-                    stateVelocityTextView.setText(String.format(Locale.CHINA,"Velocity: %.1f",velocity));
+                    stateAltitudeTextView.setText(String.format(Locale.CHINA, "Altitude: %.1f", flightControllerState.getAircraftLocation().getAltitude()));
+                    float velocity = (float) Math.sqrt(Math.pow(flightControllerState.getVelocityX(), 2) + Math.pow(flightControllerState.getVelocityY(), 2));
+                    stateVelocityTextView.setText(String.format(Locale.CHINA, "Velocity: %.1f", velocity));
                 }
             });
         }
@@ -214,16 +249,13 @@ public class MainActivity extends Activity {
     private BatteryState.Callback batteryCallback
             = new BatteryState.Callback() {
         @Override
-        public void onUpdate(final BatteryState batteryState) {
-            final int remainingBatteryInPercent = batteryState.getChargeRemainingInPercent();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // TODO: 2017/4/22 battery state update 
-                }
-            });
+        public void onUpdate(BatteryState batteryState) {
+            int remainingBatteryInPercent = batteryState.getChargeRemainingInPercent();
+            updateBatteryState(remainingBatteryInPercent);
+
         }
-    }
+    };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -295,7 +327,7 @@ public class MainActivity extends Activity {
                 null));
     }
 
-    private void initVideoTextureView(){
+    private void initVideoTextureView() {
         videoTextureView = new TextureView(this);
         videoTextureView.setLayoutParams(
                 new FrameLayout.LayoutParams(
@@ -320,6 +352,8 @@ public class MainActivity extends Activity {
         remainingBatteryImageView = (ImageView) findViewById(R.id.remaining_battery);
         takeOffImageView = (ImageView) findViewById(R.id.takeoff);
         landImageView = (ImageView) findViewById(R.id.land);
+        cameraShootImageView = (ImageView) findViewById(R.id.camera_take);
+        cameraSwitchImageView = (ImageView) findViewById(R.id.camera_switch);
         aircraftTextView = (TextView) findViewById(R.id.status_aircraft);
         statusDescriptionTextView = (TextView) findViewById(R.id.status_description_txt);
         satelliteNumberTextView = (TextView) findViewById(R.id.satellite_number_txt);
@@ -353,12 +387,23 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void initFlightController(){
+    private void initFlightController() {
         flightController = FlightControllerManager.getInstance(baseProduct);
         flightController.setStateCallback(fcsCallback);
     }
 
-    private void initMissionControl(){
+    private void initBattery() {
+        battery = BatteryManager.getInstance(baseProduct);
+        battery.setStateCallback(batteryCallback);
+    }
+
+    private void initCamera() {
+        if(baseProduct != null){
+            camera = baseProduct.getCamera();
+        }
+    }
+
+    private void initMissionControl() {
         missionControl = MissionControl.getInstance();
     }
 
@@ -367,25 +412,129 @@ public class MainActivity extends Activity {
         takeOffImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!baseProduct.isConnected() || baseProduct == null){
-                    SideToast.makeText(MainActivity.this,"无效的操作:起飞",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
-                }else{
-                    missionControl.startElement(new TakeOffAction());
+                if (baseProduct == null || !baseProduct.isConnected()) {
+                    SideToast.makeText(MainActivity.this, "无效操作:飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                } else {
+                    flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(DJIError djiError) {
+                            if (djiError != null) {
+                                SideToast.makeText(MainActivity.this, "起飞时出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                            } else {
+                                SideToast.makeText(MainActivity.this, "成功起飞", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                            }
+                        }
+                    });
                 }
+
             }
         });
 
+        landImageView.setClickable(true);
         landImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!baseProduct.isConnected() || baseProduct == null){
-                    SideToast.makeText(MainActivity.this,"无效的操作：返航",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
-                }else{
-                    missionControl.startElement(new GoHomeAction());
+                if (baseProduct == null || !baseProduct.isConnected()) {
+                    SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                } else {
+                    flightController.startGoHome(new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(DJIError djiError) {
+                            if (djiError != null) {
+                                SideToast.makeText(MainActivity.this, "返航时出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                            } else {
+                                SideToast.makeText(MainActivity.this, "成功返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                            }
+                        }
+                    });
                 }
             }
         });
+
+        cameraShootImageView.setClickable(true);
+        cameraShootImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (baseProduct == null || !baseProduct.isConnected()) {
+                    SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
+                } else {
+
+                }
+            }
+        });
+
     }
 
+    private void updateBatteryState(int remainingBattery) {
+        if (currentBatteryInPercent == -1) {
+            currentBatteryInPercent = remainingBattery;
+            final int temp[] = new int[1];
+            if (currentBatteryInPercent <= 10) {
+                temp[0] = R.mipmap.battery_0;
+            } else {
+                if (currentBatteryInPercent <= 30) {
+                    temp[0] = R.mipmap.battery_10;
+                } else {
+                    if (currentBatteryInPercent <= 50) {
+                        temp[0] = R.mipmap.battery_30;
+                    } else {
+                        if (currentBatteryInPercent <= 70) {
+                            temp[0] = R.mipmap.battery_50;
+                        } else {
+                            if (currentBatteryInPercent <= 85) {
+                                temp[0] = R.mipmap.battery_70;
+                            } else {
+                                temp[0] = R.mipmap.battery_100;
+                            }
+                        }
+                    }
+                }
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    remainingBatteryImageView.setImageDrawable(MainActivity.this.getDrawable(temp[0]));
+                }
+            });
+        } else {
+            final int temp[] = new int[1];
+            if (remainingBattery <= 10 && currentBatteryInPercent > 10) {
+                temp[0] = R.mipmap.battery_0;
+                currentBatteryInPercent = remainingBattery;
+                SideToast.makeText(MainActivity.this, "电池电量低", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
+            } else {
+                if (remainingBattery <= 30 && currentBatteryInPercent > 30) {
+                    temp[0] = R.mipmap.battery_10;
+                    currentBatteryInPercent = remainingBattery;
+                } else {
+                    if (remainingBattery <= 50 && currentBatteryInPercent > 50) {
+                        temp[0] = R.mipmap.battery_30;
+                        currentBatteryInPercent = remainingBattery;
+                    } else {
+                        if (remainingBattery <= 70 && currentBatteryInPercent > 70) {
+                            temp[0] = R.mipmap.battery_50;
+                            currentBatteryInPercent = remainingBattery;
+                        } else {
+                            if (remainingBattery <= 85 && currentBatteryInPercent > 85) {
+                                temp[0] = R.mipmap.battery_70;
+                                currentBatteryInPercent = remainingBattery;
+                            } else {
+                                return;
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    remainingBatteryImageView.setImageDrawable(MainActivity.this.getDrawable(temp[0]));
+                }
+            });
+
+        }
+    }
 
 }
