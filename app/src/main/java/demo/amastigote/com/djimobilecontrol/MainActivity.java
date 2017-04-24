@@ -136,7 +136,12 @@ public class MainActivity extends Activity {
         public void onConnectivityChange(final boolean b) {
             if(b){
                 SideToast.makeText(MainActivity.this,"飞行器已连接",SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
-                aircraftTextView.setText(baseProduct.getModel().toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        aircraftTextView.setText(baseProduct.getModel().toString());
+                    }
+                });
                 changeCameraState();
             }else{
                 runOnUiThread(new Runnable() {
