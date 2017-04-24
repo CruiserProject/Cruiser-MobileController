@@ -7,6 +7,7 @@ import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -117,7 +118,8 @@ public class MainActivity extends Activity {
         DJI sdk
      */
     private int currentBatteryInPercent = -1;
-
+    private boolean isRecording = false;
+    private SettingsDefinitions.CameraMode curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
     private Camera camera;
     private DJICodecManager djiCodecManager;
     private Battery battery;
@@ -134,40 +136,21 @@ public class MainActivity extends Activity {
         public void onConnectivityChange(final boolean b) {
             if(b){
                 SideToast.makeText(MainActivity.this,"飞行器已连接",SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
-                camera.getMode(new CommonCallbacks.CompletionCallbackWith<SettingsDefinitions.CameraMode>() {
+                aircraftTextView.setText(baseProduct.getModel().toString());
+                changeCameraState();
+            }else{
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onSuccess(SettingsDefinitions.CameraMode cameraMode) {
-                        if(cameraMode.equals(SettingsDefinitions.CameraMode.SHOOT_PHOTO)){
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(DJIError djiError) {
-
-                    }
-                });
-            }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (b) {
-                        SideToast.makeText(MainActivity.this, "飞行器已连接", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
-                        aircraftTextView.setText(baseProduct.getModel().toString());
-                    } else {
+                    public void run() {
                         SideToast.makeText(MainActivity.this, "飞行器已断开连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                         aircraftTextView.setText("飞行器未连接");
                         stateVelocityTextView.setText("");
                         stateAltitudeTextView.setText("");
                         currentBatteryInPercent = -1;
+                        curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
                     }
-                }
-            });
+                });
+            }
         }
     };
     private DJISDKManager.SDKManagerCallback sdkManagerCallback
@@ -215,6 +198,7 @@ public class MainActivity extends Activity {
             initBattery();
             initCamera();
             initMissionControl();
+            changeCameraState();
             baseProduct.setBaseProductListener(baseProductListener);
 
 
@@ -458,7 +442,75 @@ public class MainActivity extends Activity {
                 if (baseProduct == null || !baseProduct.isConnected()) {
                     SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
                 } else {
+                    switch (curCameraMode){
+                        case SHOOT_PHOTO:
+                            camera.startShootPhoto(null);
+                            break;
+                        case RECORD_VIDEO:
+                            if(isRecording){
+                                camera.stopRecordVideo(null);
+                                isRecording = false;
+                            }else{
+                                camera.startRecordVideo(null);
+                                isRecording = true;
+                            }
+                            break;
+                        case UNKNOWN:
+                            SideToast.makeText(MainActivity.this,"相机连接错误",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
+                            break;
+                    }
+                }
+            }
+        });
 
+        cameraSwitchImageView.setClickable(true);
+        cameraSwitchImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (baseProduct == null || !baseProduct.isConnected()) {
+                    SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
+                }else{
+                    switch (curCameraMode){
+                        case SHOOT_PHOTO:
+                            camera.setMode(SettingsDefinitions.CameraMode.RECORD_VIDEO, new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError djiError) {
+                                    if(djiError  == null){
+                                        curCameraMode = SettingsDefinitions.CameraMode.RECORD_VIDEO;
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_record));
+                                            }
+                                        });
+                                    }else{
+                                        SideToast.makeText(MainActivity.this,"相机切换状态失败",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                                    }
+                                }
+                            });
+                            break;
+                        case RECORD_VIDEO:
+                            camera.setMode(SettingsDefinitions.CameraMode.SHOOT_PHOTO, new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError djiError) {
+                                    if(djiError == null){
+                                        curCameraMode = SettingsDefinitions.CameraMode.SHOOT_PHOTO;
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_take));
+                                            }
+                                        });
+                                    }else{
+                                        SideToast.makeText(MainActivity.this,"相机切换状态失败",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                                    }
+                                }
+                            });
+                            break;
+                        case UNKNOWN:
+                            SideToast.makeText(MainActivity.this,"相机连接错误",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
+                            break;
+                    }
                 }
             }
         });
@@ -535,6 +587,40 @@ public class MainActivity extends Activity {
             });
 
         }
+    }
+
+    private void changeCameraState(){
+        camera.getMode(new CommonCallbacks.CompletionCallbackWith<SettingsDefinitions.CameraMode>() {
+            @Override
+            public void onSuccess(SettingsDefinitions.CameraMode cameraMode) {
+                if(cameraMode.equals(SettingsDefinitions.CameraMode.SHOOT_PHOTO)){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_take));
+                            curCameraMode = SettingsDefinitions.CameraMode.SHOOT_PHOTO;
+                        }
+                    });
+                }else{
+                    if(cameraMode.equals(SettingsDefinitions.CameraMode.RECORD_VIDEO)){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_record));
+                                curCameraMode = SettingsDefinitions.CameraMode.RECORD_VIDEO;
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(DJIError djiError) {
+                Log.e("Camera State error",">>" + djiError.toString());
+//                        SideToast.makeText(MainActivity.this,"获取相机状态失败",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
+                curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
+            }
+        });
     }
 
 }
