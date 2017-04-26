@@ -204,6 +204,15 @@
         android:src="@mipmap/play" />
 
     <ImageView
+        android:elevation="1dp"
+        android:layout_alignTop="@+id/ll_for_map"
+        android:layout_alignParentEnd="true"
+        android:src="@mipmap/camera_switch"
+        android:id="@+id/switch_panel"
+        android:layout_width="25dp"
+        android:layout_height="25dp" />
+
+    <ImageView
         android:id="@+id/land"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -226,6 +235,13 @@
         android:background="@drawable/background_round"
         android:elevation="1dp"
         android:src="@mipmap/take_off" />
+
+    <Button
+        android:id="@+id/test_send_data_btn"
+        android:layout_toRightOf="@+id/land"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>

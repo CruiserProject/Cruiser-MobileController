@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,11 +69,16 @@ public class MainActivity extends Activity {
     private ImageView landImageView;
     private ImageView cameraShootImageView;
     private ImageView cameraSwitchImageView;
+    private ImageView cameraPlayImageView;
+    private ImageView switchPanelImageView;
     private TextView aircraftTextView;
     private TextView statusDescriptionTextView;
     private TextView satelliteNumberTextView;
     private TextView stateAltitudeTextView;
     private TextView stateVelocityTextView;
+
+    // a test for SendDataToOnBoardSDKDevice
+    private Button sendDataToOnBoardSDKDeviceButton;
 
     private SimpleProgressDialog startUpInfoDialog;
 
@@ -118,6 +124,7 @@ public class MainActivity extends Activity {
         DJI sdk
      */
     private int currentBatteryInPercent = -1;
+    private boolean isMapPanelFocused = false;
     private boolean isRecording = false;
     private SettingsDefinitions.CameraMode curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
     private Camera camera;
@@ -125,6 +132,14 @@ public class MainActivity extends Activity {
     private Battery battery;
     private FlightController flightController;
     private MissionControl missionControl;
+    private FlightController.OnboardSDKDeviceDataCallback onboardSDKDeviceDataCallback
+            = new FlightController.OnboardSDKDeviceDataCallback() {
+        @Override
+        public void onReceive(byte[] bytes) {
+            SideToast.makeText(MainActivity.this,"成功收到消息:" + bytes.toString(),SideToast.LENGTH_SHORT);
+            Log.e("Onboard device message",">> " + bytes);
+        }
+    };
     private BaseProduct.BaseProductListener baseProductListener
             = new BaseProduct.BaseProductListener() {
         @Override
@@ -264,6 +279,7 @@ public class MainActivity extends Activity {
         initBaiduMap();
         initVideoTextureView();
         initOnClickListener();
+        initSendDataOnClickListener();
 
         startUpInfoDialog = new SimpleProgressDialog(MainActivity.this, "Validating API key");
 
@@ -343,6 +359,8 @@ public class MainActivity extends Activity {
         landImageView = (ImageView) findViewById(R.id.land);
         cameraShootImageView = (ImageView) findViewById(R.id.camera_take);
         cameraSwitchImageView = (ImageView) findViewById(R.id.camera_switch);
+        cameraPlayImageView = (ImageView) findViewById(R.id.camera_play);
+        switchPanelImageView = (ImageView) findViewById(R.id.switch_panel);
         aircraftTextView = (TextView) findViewById(R.id.status_aircraft);
         statusDescriptionTextView = (TextView) findViewById(R.id.status_description_txt);
         satelliteNumberTextView = (TextView) findViewById(R.id.satellite_number_txt);
@@ -379,6 +397,7 @@ public class MainActivity extends Activity {
     private void initFlightController() {
         flightController = FlightControllerManager.getInstance(baseProduct);
         flightController.setStateCallback(fcsCallback);
+        flightController.setOnboardSDKDeviceDataCallback(onboardSDKDeviceDataCallback);
     }
 
     private void initBattery() {
@@ -520,6 +539,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        switchPanelImageView.setClickable(true);
+        switchPanelImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchMapPanelFocus();
+            }
+        });
+
     }
 
     private void updateBatteryState(int remainingBattery) {
@@ -626,6 +653,67 @@ public class MainActivity extends Activity {
                 curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
             }
         });
+    }
+
+    private void initSendDataOnClickListener(){
+        sendDataToOnBoardSDKDeviceButton = (Button)findViewById(R.id.test_send_data_btn);
+        sendDataToOnBoardSDKDeviceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(baseProduct == null || !baseProduct.isConnected()){
+                    SideToast.makeText(MainActivity.this,"发送失败：飞行器未连接",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                }else{
+                    byte arr[] = new byte[10];
+                    arr[0] = 2 + '0';
+                    arr[1] = 3 + '0';
+                    arr[2] = 3 + '0';
+                    arr[3] = 3 + '0';
+                    arr[4] = 3 + '0';
+                    arr[5] = 3 + '0';
+                    arr[6] = 3 + '0';
+                    arr[7] = 3 + '0';
+                    arr[8] = 3 + '0';
+                    arr[9] = '\0';
+                    flightController.sendDataToOnboardSDKDevice(arr, new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(DJIError djiError) {
+                            if(djiError == null){
+                                SideToast.makeText(MainActivity.this,"发送成功",SideToast.LENGTH_SHORT).show();
+                            }else{
+                                SideToast.makeText(MainActivity.this,"发送失败: 请查看日志",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                                Log.e("SendDataToOnBoard",">> " + djiError);
+                            }
+                        }
+                    });
+
+                }
+
+            }
+        });
+    }
+
+    private void switchMapPanelFocus() {
+        if(!isMapPanelFocused){
+            relativeLayoutMain.removeView(cameraPlayImageView);
+            relativeLayoutMain.removeView(cameraShootImageView);
+            relativeLayoutMain.removeView(cameraSwitchImageView);
+            linearLayoutForMap.removeView(mapViewPanel);
+            videoTextureViewFrameLayout.removeView(videoTextureView);
+            videoTextureViewFrameLayout.addView(mapViewPanel);
+            linearLayoutForMap.addView(videoTextureView);
+
+        }else{
+            videoTextureViewFrameLayout.removeView(mapViewPanel);
+            linearLayoutForMap.removeView(videoTextureView);
+            linearLayoutForMap.addView(mapViewPanel);
+            videoTextureViewFrameLayout.addView(videoTextureView);
+            relativeLayoutMain.addView(cameraShootImageView);
+            relativeLayoutMain.addView(cameraPlayImageView);
+            relativeLayoutMain.addView(cameraSwitchImageView);
+        }
+
+        mapView.onResume();
+        isMapPanelFocused = !isMapPanelFocused;
     }
 
 }
