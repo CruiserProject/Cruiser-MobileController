@@ -11,26 +11,27 @@
         android:layout_height="match_parent" />
 
     <Button
+        android:longClickable="true"
         android:id="@+id/mv_btn_undo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:backgroundTint="@color/white"
         android:drawablePadding="8dp"
-        android:text="clean up"
+        android:text="undo"
         android:textColor="@color/black"
         android:visibility="gone" />
 
     <Button
-        android:id="@+id/mv_btn_stop"
+        android:id="@+id/mv_btn_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="44dp"
-        android:backgroundTint="@color/red"
+        android:backgroundTint="@color/white"
         android:drawablePadding="8dp"
         android:text="stop"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:visibility="gone" />
 
     <Button
@@ -38,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
-        android:layout_toStartOf="@id/mv_btn_stop"
+        android:layout_toStartOf="@id/mv_btn_create"
         android:backgroundTint="@color/green"
         android:drawablePadding="8dp"
         android:text="start"

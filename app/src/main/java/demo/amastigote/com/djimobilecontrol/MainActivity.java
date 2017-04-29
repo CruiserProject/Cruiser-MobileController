@@ -79,6 +79,8 @@ public class MainActivity extends Activity {
 
     // a test for SendDataToOnBoardSDKDevice
     private Button sendDataToOnBoardSDKDeviceButton;
+    private Button mapPanelUndoButton;
+    private Button mapPanelCreateButton;
 
     private SimpleProgressDialog startUpInfoDialog;
 
@@ -366,6 +368,8 @@ public class MainActivity extends Activity {
         satelliteNumberTextView = (TextView) findViewById(R.id.satellite_number_txt);
         stateAltitudeTextView = (TextView) findViewById(R.id.state_altitude);
         stateVelocityTextView = (TextView) findViewById(R.id.state_velocity);
+        mapPanelCreateButton = (Button) findViewById(R.id.mv_btn_create);
+        mapPanelUndoButton = (Button) findViewById(R.id.mv_btn_undo);
     }
 
     private void initPermissionRequest() {
@@ -701,8 +705,11 @@ public class MainActivity extends Activity {
             videoTextureViewFrameLayout.removeView(videoTextureView);
             videoTextureViewFrameLayout.addView(mapViewPanel);
             linearLayoutForMap.addView(videoTextureView);
-
+            mapPanelUndoButton.setVisibility(View.VISIBLE);
+            mapPanelCreateButton.setVisibility(View.VISIBLE);
         }else{
+            mapPanelCreateButton.setVisibility(View.GONE);
+            mapPanelUndoButton.setVisibility(View.GONE);
             videoTextureViewFrameLayout.removeView(mapViewPanel);
             linearLayoutForMap.removeView(videoTextureView);
             linearLayoutForMap.addView(mapViewPanel);
@@ -710,6 +717,7 @@ public class MainActivity extends Activity {
             relativeLayoutMain.addView(cameraShootImageView);
             relativeLayoutMain.addView(cameraPlayImageView);
             relativeLayoutMain.addView(cameraSwitchImageView);
+
         }
 
         mapView.onResume();
