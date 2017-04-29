@@ -7,10 +7,12 @@ import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -21,14 +23,24 @@ import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
+import com.baidu.mapapi.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import demo.amastigote.com.djimobilecontrol.ConverterUtil.CoordinationConverter;
+import demo.amastigote.com.djimobilecontrol.ConverterUtil.DensityUtil;
+import demo.amastigote.com.djimobilecontrol.DataUtil.WaypointMissionParams;
 import demo.amastigote.com.djimobilecontrol.FlightModuleUtil.BatteryManager;
 import demo.amastigote.com.djimobilecontrol.FlightModuleUtil.FlightControllerManager;
 import demo.amastigote.com.djimobilecontrol.UIComponentUtil.SideToast;
@@ -40,6 +52,11 @@ import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.common.flightcontroller.FlightControllerState;
+import dji.common.mission.waypoint.Waypoint;
+import dji.common.mission.waypoint.WaypointMission;
+import dji.common.mission.waypoint.WaypointMissionDownloadEvent;
+import dji.common.mission.waypoint.WaypointMissionExecutionEvent;
+import dji.common.mission.waypoint.WaypointMissionUploadEvent;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
@@ -49,13 +66,14 @@ import dji.sdk.camera.VideoFeeder;
 import dji.sdk.codec.DJICodecManager;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.mission.MissionControl;
+import dji.sdk.mission.waypoint.WaypointMissionOperator;
+import dji.sdk.mission.waypoint.WaypointMissionOperatorListener;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 
 public class MainActivity extends Activity {
     private static BaseProduct baseProduct;
-
-
+    private final AtomicInteger atomicInteger = new AtomicInteger();
     /*
         UI components
      */
@@ -81,6 +99,8 @@ public class MainActivity extends Activity {
     private Button sendDataToOnBoardSDKDeviceButton;
     private Button mapPanelUndoButton;
     private Button mapPanelCreateButton;
+    private Button missionConfigurationPanelOKButton;
+    private Button missionConfigurationPanelCancelButton;
 
     private SimpleProgressDialog startUpInfoDialog;
 
@@ -120,7 +140,15 @@ public class MainActivity extends Activity {
     private LinearLayout linearLayoutForMap;
     private MapView mapView;
     private RelativeLayout mapViewPanel;
+    private RelativeLayout missionConfigurationPanel;
     private BaiduMap baiduMap;
+
+    /*
+        data
+     */
+    private AtomicInteger previousWayPointIndex = new AtomicInteger();
+    private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
+
 
     /*
         DJI sdk
@@ -134,12 +162,69 @@ public class MainActivity extends Activity {
     private Battery battery;
     private FlightController flightController;
     private MissionControl missionControl;
+    private WaypointMissionOperator waypointMissionOperator;
+    private List<Waypoint> wayPointList = new ArrayList<>();
+    private BaiduMap.OnMapLongClickListener onMapLongClickListener
+            = new BaiduMap.OnMapLongClickListener() {
+        @Override
+        public void onMapLongClick(LatLng latLng) {
+            LatLng latLngGPS84 = CoordinationConverter.BD092GPS84(latLng);
+            wayPointList.add(new Waypoint(
+                    latLngGPS84.latitude,
+                    latLngGPS84.longitude,
+                    30F)
+            );
+            baiduMap.addOverlay(new MarkerOptions()
+                    .position(latLng)
+                    .animateType(MarkerOptions.MarkerAnimateType.grow)
+                    .flat(true)
+                    .anchor(0.5F, 0.5F)
+                    .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker))
+                    .draggable(false));
+            final int pointListSize = wayPointList.size();
+            if (pointListSize > 1) {
+                baiduMap.addOverlay(new PolylineOptions()
+                        .points(new ArrayList<LatLng>() {
+                            {
+                                add(CoordinationConverter.GPS2BD09(new LatLng(
+                                        wayPointList.get(pointListSize - 1).coordinate.getLatitude(),
+                                        wayPointList.get(pointListSize - 1).coordinate.getLongitude()
+                                )));
+                                add(CoordinationConverter.GPS2BD09(new LatLng(
+                                        wayPointList.get(pointListSize - 2).coordinate.getLatitude(),
+                                        wayPointList.get(pointListSize - 2).coordinate.getLongitude()
+                                )));
+                            }
+                        })
+                        .color(R.color.purple)
+                        .dottedLine(true)
+                );
+            }
+        }
+    };
+
+    private View.OnClickListener newMissionOnClickListener
+            = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            mapPanelCreateButton.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(DensityUtil.dip2px(MainActivity.this, 200.0f), ViewGroup.LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.ALIGN_PARENT_END);
+            mapViewPanel.addView(missionConfigurationPanel, params);
+
+            linearLayoutForMap.setVisibility(View.GONE);
+            switchPanelImageView.setVisibility(View.GONE);
+
+        }
+    };
+
+
     private FlightController.OnboardSDKDeviceDataCallback onboardSDKDeviceDataCallback
             = new FlightController.OnboardSDKDeviceDataCallback() {
         @Override
         public void onReceive(byte[] bytes) {
-            SideToast.makeText(MainActivity.this,"成功收到消息:" + bytes.toString(),SideToast.LENGTH_SHORT);
-            Log.e("Onboard device message",">> " + bytes);
+            SideToast.makeText(MainActivity.this, "成功收到消息:" + bytes.toString(), SideToast.LENGTH_SHORT);
+            Log.e("Onboard device message", ">> " + bytes);
         }
     };
     private BaseProduct.BaseProductListener baseProductListener
@@ -151,8 +236,8 @@ public class MainActivity extends Activity {
 
         @Override
         public void onConnectivityChange(final boolean b) {
-            if(b){
-                SideToast.makeText(MainActivity.this,"飞行器已连接",SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+            if (b) {
+                SideToast.makeText(MainActivity.this, "飞行器已连接", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -160,7 +245,7 @@ public class MainActivity extends Activity {
                     }
                 });
                 changeCameraState();
-            }else{
+            } else {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -307,6 +392,8 @@ public class MainActivity extends Activity {
         mapViewPanel = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, null);
         linearLayoutForMap = (LinearLayout) findViewById(R.id.ll_for_map);
         mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
+        mapPanelCreateButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_create);
+        mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
         linearLayoutForMap.addView(mapViewPanel);
 
         /*
@@ -324,6 +411,7 @@ public class MainActivity extends Activity {
         uiSettings.setAllGesturesEnabled(false);
         uiSettings.setZoomGesturesEnabled(true);
 
+
         // zoom the map 6 times to ensure it is large enough :)
         for (int i = 0; i < 6; i++)
             baiduMap.setMapStatus(MapStatusUpdateFactory.zoomIn());
@@ -332,6 +420,14 @@ public class MainActivity extends Activity {
                 MyLocationConfiguration.LocationMode.FOLLOWING,
                 true,
                 null));
+        
+        /*
+            init mission configuration
+         */
+        missionConfigurationPanel = (RelativeLayout) LayoutInflater.from(MainActivity.this).inflate(R.layout.waypoint_configuration, null);
+        missionConfigurationPanelOKButton = (Button) missionConfigurationPanel.findViewById(R.id.control_mission_ok_btn);
+        missionConfigurationPanelCancelButton = (Button) missionConfigurationPanel.findViewById(R.id.control_mission_cancel_btn);
+
     }
 
     private void initVideoTextureView() {
@@ -368,8 +464,6 @@ public class MainActivity extends Activity {
         satelliteNumberTextView = (TextView) findViewById(R.id.satellite_number_txt);
         stateAltitudeTextView = (TextView) findViewById(R.id.state_altitude);
         stateVelocityTextView = (TextView) findViewById(R.id.state_velocity);
-        mapPanelCreateButton = (Button) findViewById(R.id.mv_btn_create);
-        mapPanelUndoButton = (Button) findViewById(R.id.mv_btn_undo);
     }
 
     private void initPermissionRequest() {
@@ -410,13 +504,63 @@ public class MainActivity extends Activity {
     }
 
     private void initCamera() {
-        if(baseProduct != null){
+        if (baseProduct != null) {
             camera = baseProduct.getCamera();
         }
     }
 
     private void initMissionControl() {
         missionControl = MissionControl.getInstance();
+        waypointMissionOperator = missionControl.getWaypointMissionOperator();
+        waypointMissionOperator.addListener(new WaypointMissionOperatorListener() {
+            @Override
+            public void onDownloadUpdate(@NonNull WaypointMissionDownloadEvent waypointMissionDownloadEvent) {
+
+            }
+
+            @Override
+            public void onUploadUpdate(@NonNull WaypointMissionUploadEvent waypointMissionUploadEvent) {
+                if (waypointMissionUploadEvent.getProgress() != null
+                        && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == waypointMissionUploadEvent.getProgress().totalWaypointCount - 1
+                        && waypointMissionUploadEvent.getProgress().isSummaryUploaded
+                        && previousWayPointIndex.get() != waypointMissionUploadEvent.getProgress().uploadedWaypointIndex) {
+                    previousWayPointIndex.set(waypointMissionUploadEvent.getProgress().uploadedWaypointIndex);
+                    SimpleAlertDialog.show(
+                            MainActivity.this,
+                            false,
+                            "Mission Uploaded",
+                            "Start mission immediately?",
+                            new SimpleDialogButton("yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    waypointMissionOperator.startMission(new CommonCallbacks.CompletionCallback() {
+                                        @Override
+                                        public void onResult(DJIError djiError) {
+                                            if (djiError != null) {
+                                                SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                                            }
+                                        }
+                                    });
+                                }
+                            }));
+                }
+            }
+
+            @Override
+            public void onExecutionUpdate(@NonNull WaypointMissionExecutionEvent waypointMissionExecutionEvent) {
+
+            }
+
+            @Override
+            public void onExecutionStart() {
+
+            }
+
+            @Override
+            public void onExecutionFinish(@Nullable DJIError djiError) {
+
+            }
+        });
     }
 
     private void initOnClickListener() {
@@ -470,21 +614,21 @@ public class MainActivity extends Activity {
                 if (baseProduct == null || !baseProduct.isConnected()) {
                     SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
                 } else {
-                    switch (curCameraMode){
+                    switch (curCameraMode) {
                         case SHOOT_PHOTO:
                             camera.startShootPhoto(null);
                             break;
                         case RECORD_VIDEO:
-                            if(isRecording){
+                            if (isRecording) {
                                 camera.stopRecordVideo(null);
                                 isRecording = false;
-                            }else{
+                            } else {
                                 camera.startRecordVideo(null);
                                 isRecording = true;
                             }
                             break;
                         case UNKNOWN:
-                            SideToast.makeText(MainActivity.this,"相机连接错误",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
+                            SideToast.makeText(MainActivity.this, "相机连接错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
                             break;
                     }
                 }
@@ -497,13 +641,13 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 if (baseProduct == null || !baseProduct.isConnected()) {
                     SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
-                }else{
-                    switch (curCameraMode){
+                } else {
+                    switch (curCameraMode) {
                         case SHOOT_PHOTO:
                             camera.setMode(SettingsDefinitions.CameraMode.RECORD_VIDEO, new CommonCallbacks.CompletionCallback() {
                                 @Override
                                 public void onResult(DJIError djiError) {
-                                    if(djiError  == null){
+                                    if (djiError == null) {
                                         curCameraMode = SettingsDefinitions.CameraMode.RECORD_VIDEO;
                                         runOnUiThread(new Runnable() {
                                             @Override
@@ -511,8 +655,8 @@ public class MainActivity extends Activity {
                                                 cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_record));
                                             }
                                         });
-                                    }else{
-                                        SideToast.makeText(MainActivity.this,"相机切换状态失败",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                                    } else {
+                                        SideToast.makeText(MainActivity.this, "相机切换状态失败", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                     }
                                 }
                             });
@@ -521,7 +665,7 @@ public class MainActivity extends Activity {
                             camera.setMode(SettingsDefinitions.CameraMode.SHOOT_PHOTO, new CommonCallbacks.CompletionCallback() {
                                 @Override
                                 public void onResult(DJIError djiError) {
-                                    if(djiError == null){
+                                    if (djiError == null) {
                                         curCameraMode = SettingsDefinitions.CameraMode.SHOOT_PHOTO;
                                         runOnUiThread(new Runnable() {
                                             @Override
@@ -529,14 +673,14 @@ public class MainActivity extends Activity {
                                                 cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_take));
                                             }
                                         });
-                                    }else{
-                                        SideToast.makeText(MainActivity.this,"相机切换状态失败",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                                    } else {
+                                        SideToast.makeText(MainActivity.this, "相机切换状态失败", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                     }
                                 }
                             });
                             break;
                         case UNKNOWN:
-                            SideToast.makeText(MainActivity.this,"相机连接错误",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
+                            SideToast.makeText(MainActivity.this, "相机连接错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
                             break;
                     }
                 }
@@ -550,6 +694,29 @@ public class MainActivity extends Activity {
                 switchMapPanelFocus();
             }
         });
+
+        mapPanelCreateButton.setOnClickListener(newMissionOnClickListener);
+
+        missionConfigurationPanelCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapViewPanel.removeView(missionConfigurationPanel);
+                mapPanelCreateButton.setVisibility(View.VISIBLE);
+                linearLayoutForMap.setVisibility(View.VISIBLE);
+                switchPanelImageView.setVisibility(View.VISIBLE);
+
+            }
+        });
+
+        missionConfigurationPanelOKButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //// TODO: 2017/4/29 收集数据至WaypointMissionParams实例
+                baiduMap.setOnMapLongClickListener(onMapLongClickListener);
+                mapViewPanel.removeView(missionConfigurationPanel);
+            }
+        });
+
 
     }
 
@@ -625,11 +792,11 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void changeCameraState(){
+    private void changeCameraState() {
         camera.getMode(new CommonCallbacks.CompletionCallbackWith<SettingsDefinitions.CameraMode>() {
             @Override
             public void onSuccess(SettingsDefinitions.CameraMode cameraMode) {
-                if(cameraMode.equals(SettingsDefinitions.CameraMode.SHOOT_PHOTO)){
+                if (cameraMode.equals(SettingsDefinitions.CameraMode.SHOOT_PHOTO)) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -637,8 +804,8 @@ public class MainActivity extends Activity {
                             curCameraMode = SettingsDefinitions.CameraMode.SHOOT_PHOTO;
                         }
                     });
-                }else{
-                    if(cameraMode.equals(SettingsDefinitions.CameraMode.RECORD_VIDEO)){
+                } else {
+                    if (cameraMode.equals(SettingsDefinitions.CameraMode.RECORD_VIDEO)) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -652,21 +819,21 @@ public class MainActivity extends Activity {
 
             @Override
             public void onFailure(DJIError djiError) {
-                Log.e("Camera State error",">>" + djiError.toString());
+                Log.e("Camera State error", ">>" + djiError.toString());
 //                        SideToast.makeText(MainActivity.this,"获取相机状态失败",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
                 curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
             }
         });
     }
 
-    private void initSendDataOnClickListener(){
-        sendDataToOnBoardSDKDeviceButton = (Button)findViewById(R.id.test_send_data_btn);
+    private void initSendDataOnClickListener() {
+        sendDataToOnBoardSDKDeviceButton = (Button) findViewById(R.id.test_send_data_btn);
         sendDataToOnBoardSDKDeviceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(baseProduct == null || !baseProduct.isConnected()){
-                    SideToast.makeText(MainActivity.this,"发送失败：飞行器未连接",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
-                }else{
+                if (baseProduct == null || !baseProduct.isConnected()) {
+                    SideToast.makeText(MainActivity.this, "发送失败：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                } else {
                     byte arr[] = new byte[10];
                     arr[0] = 2 + '0';
                     arr[1] = 3 + '0';
@@ -681,11 +848,11 @@ public class MainActivity extends Activity {
                     flightController.sendDataToOnboardSDKDevice(arr, new CommonCallbacks.CompletionCallback() {
                         @Override
                         public void onResult(DJIError djiError) {
-                            if(djiError == null){
-                                SideToast.makeText(MainActivity.this,"发送成功",SideToast.LENGTH_SHORT).show();
-                            }else{
-                                SideToast.makeText(MainActivity.this,"发送失败: 请查看日志",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
-                                Log.e("SendDataToOnBoard",">> " + djiError);
+                            if (djiError == null) {
+                                SideToast.makeText(MainActivity.this, "发送成功", SideToast.LENGTH_SHORT).show();
+                            } else {
+                                SideToast.makeText(MainActivity.this, "发送失败: 请查看日志", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                Log.e("SendDataToOnBoard", ">> " + djiError);
                             }
                         }
                     });
@@ -697,7 +864,7 @@ public class MainActivity extends Activity {
     }
 
     private void switchMapPanelFocus() {
-        if(!isMapPanelFocused){
+        if (!isMapPanelFocused) {
             relativeLayoutMain.removeView(cameraPlayImageView);
             relativeLayoutMain.removeView(cameraShootImageView);
             relativeLayoutMain.removeView(cameraSwitchImageView);
@@ -707,7 +874,7 @@ public class MainActivity extends Activity {
             linearLayoutForMap.addView(videoTextureView);
             mapPanelUndoButton.setVisibility(View.VISIBLE);
             mapPanelCreateButton.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mapPanelCreateButton.setVisibility(View.GONE);
             mapPanelUndoButton.setVisibility(View.GONE);
             videoTextureViewFrameLayout.removeView(mapViewPanel);
@@ -722,6 +889,55 @@ public class MainActivity extends Activity {
 
         mapView.onResume();
         isMapPanelFocused = !isMapPanelFocused;
+    }
+
+    private void executeWaypointMission(List<Waypoint> wayPointList, WaypointMissionParams params) {
+        WaypointMission.Builder builder = new WaypointMission.Builder();
+        DJIError djiParameterError;
+        if ((djiParameterError =
+                builder
+                        .waypointList(wayPointList)
+                        .maxFlightSpeed(params.getMaxFlightSpeed())
+                        .waypointCount(wayPointList.size())
+                        .autoFlightSpeed(params.getAutoFlightSpeed())
+                        .flightPathMode(params.getMissionFlightPathMode())
+                        .finishedAction(params.getMissionFinishedAction())
+                        .headingMode(params.getMissionHeadingMode())
+                        .gotoFirstWaypointMode(params.getMissionGotoWaypointMode())
+                        .checkParameters()) != null) {
+            SideToast.makeText(MainActivity.this, djiParameterError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+        } else {
+            previousWayPointIndex.set(0);
+            atomicInteger.set(0);
+            isCompletedByStopping.set(false);
+
+            DJIError djiErrorFirst = waypointMissionOperator.loadMission(builder.build());
+            if (djiErrorFirst != null) {
+                SideToast.makeText(MainActivity.this, djiErrorFirst.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+            } else {
+                final SimpleProgressDialog progressDialog = new SimpleProgressDialog(MainActivity.this, "上传任务数据…");
+                progressDialog.show();
+                waypointMissionOperator.uploadMission(new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError djiError) {
+                        if (djiError != null) {
+                            progressDialog.switchMessage("正在尝试重新上传…");
+                            waypointMissionOperator.retryUploadMission(new CommonCallbacks.CompletionCallback() {
+                                @Override
+                                public void onResult(DJIError djiError) {
+                                    if (djiError != null) {
+                                        SideToast.makeText(MainActivity.this, djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
+                                    }
+                                    progressDialog.dismiss();
+                                }
+                            });
+                        } else {
+                            progressDialog.dismiss();
+                        }
+                    }
+                });
+            }
+        }
     }
 
 }

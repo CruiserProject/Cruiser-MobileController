@@ -15,7 +15,6 @@
         android:id="@+id/mv_btn_undo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
         android:backgroundTint="@color/white"
         android:drawablePadding="8dp"
         android:text="undo"
@@ -27,10 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="44dp"
         android:backgroundTint="@color/white"
         android:drawablePadding="8dp"
-        android:text="stop"
+        android:text="new mission"
         android:textColor="@color/black"
         android:visibility="gone" />
 
@@ -38,7 +36,6 @@
         android:id="@+id/mv_btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
         android:layout_toStartOf="@id/mv_btn_create"
         android:backgroundTint="@color/green"
         android:drawablePadding="8dp"
