@@ -11,8 +11,8 @@
         android:layout_height="match_parent" />
 
     <Button
-        android:longClickable="true"
         android:id="@+id/mv_btn_undo"
+        android:longClickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/white"
@@ -30,13 +30,23 @@
         android:drawablePadding="8dp"
         android:text="new mission"
         android:textColor="@color/black"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
+    <Button
+        android:id="@+id/mv_btn_cancel"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/white"
+        android:drawablePadding="8dp"
+        android:text="cancel"
+        android:backgroundTint="@color/red"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
     <Button
         android:id="@+id/mv_btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toStartOf="@id/mv_btn_create"
+        android:layout_toStartOf="@id/mv_btn_cancel"
         android:backgroundTint="@color/green"
         android:drawablePadding="8dp"
         android:text="start"

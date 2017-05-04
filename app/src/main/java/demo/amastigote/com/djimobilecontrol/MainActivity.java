@@ -99,6 +99,8 @@ public class MainActivity extends Activity {
     private Button sendDataToOnBoardSDKDeviceButton;
     private Button mapPanelUndoButton;
     private Button mapPanelCreateButton;
+    private Button mapPanelStartMissionButton;
+    private Button mapPanelCancelMissionButton;
     private Button missionConfigurationPanelOKButton;
     private Button missionConfigurationPanelCancelButton;
 
@@ -394,6 +396,8 @@ public class MainActivity extends Activity {
         mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
         mapPanelCreateButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_create);
         mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
+        mapPanelCancelMissionButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_cancel);
+        mapPanelStartMissionButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_start);
         linearLayoutForMap.addView(mapViewPanel);
 
         /*
@@ -697,6 +701,40 @@ public class MainActivity extends Activity {
 
         mapPanelCreateButton.setOnClickListener(newMissionOnClickListener);
 
+        mapPanelStartMissionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SimpleAlertDialog.show(
+                        MainActivity.this,
+                        false,
+                        "Mission Confirm",
+                        "Start mission immediately?",
+                        new SimpleDialogButton("yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mapPanelCreateButton.setVisibility(View.VISIBLE);
+                                linearLayoutForMap.setVisibility(View.VISIBLE);
+                                mapPanelStartMissionButton.setVisibility(View.GONE);
+                                mapPanelCancelMissionButton.setVisibility(View.GONE);
+//                                executeWaypointMission();
+
+                            }
+                        }));
+            }
+        });
+
+        mapPanelCancelMissionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mapPanelStartMissionButton.setVisibility(View.GONE);
+                mapPanelCancelMissionButton.setVisibility(View.GONE);
+                baiduMap.setOnMapLongClickListener(null);
+                mapViewPanel.addView(missionConfigurationPanel);
+
+            }
+        });
+
+
         missionConfigurationPanelCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -714,6 +752,9 @@ public class MainActivity extends Activity {
                 //// TODO: 2017/4/29 收集数据至WaypointMissionParams实例
                 baiduMap.setOnMapLongClickListener(onMapLongClickListener);
                 mapViewPanel.removeView(missionConfigurationPanel);
+                mapPanelStartMissionButton.setVisibility(View.VISIBLE);
+                mapPanelCancelMissionButton.setVisibility(View.VISIBLE);
+
             }
         });
 
