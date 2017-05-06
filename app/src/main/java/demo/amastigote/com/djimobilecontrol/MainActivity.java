@@ -28,6 +28,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
@@ -52,10 +53,15 @@ import dji.common.camera.SettingsDefinitions;
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.common.flightcontroller.FlightControllerState;
+import dji.common.flightcontroller.LocationCoordinate3D;
 import dji.common.mission.waypoint.Waypoint;
 import dji.common.mission.waypoint.WaypointMission;
 import dji.common.mission.waypoint.WaypointMissionDownloadEvent;
 import dji.common.mission.waypoint.WaypointMissionExecutionEvent;
+import dji.common.mission.waypoint.WaypointMissionFinishedAction;
+import dji.common.mission.waypoint.WaypointMissionFlightPathMode;
+import dji.common.mission.waypoint.WaypointMissionGotoWaypointMode;
+import dji.common.mission.waypoint.WaypointMissionHeadingMode;
 import dji.common.mission.waypoint.WaypointMissionUploadEvent;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseComponent;
@@ -165,6 +171,7 @@ public class MainActivity extends Activity {
     private FlightController flightController;
     private MissionControl missionControl;
     private WaypointMissionOperator waypointMissionOperator;
+    private WaypointMissionParams waypointMissionParams;
     private List<Waypoint> wayPointList = new ArrayList<>();
     private BaiduMap.OnMapLongClickListener onMapLongClickListener
             = new BaiduMap.OnMapLongClickListener() {
@@ -224,9 +231,21 @@ public class MainActivity extends Activity {
     private FlightController.OnboardSDKDeviceDataCallback onboardSDKDeviceDataCallback
             = new FlightController.OnboardSDKDeviceDataCallback() {
         @Override
-        public void onReceive(byte[] bytes) {
-            SideToast.makeText(MainActivity.this, "成功收到消息:" + bytes.toString(), SideToast.LENGTH_SHORT);
-            Log.e("Onboard device message", ">> " + bytes);
+        public void onReceive(final byte[] bytes) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    SideToast.makeText(MainActivity.this,"成功收到消息: " + bytes.toString(),SideToast.LENGTH_SHORT,SideToast.TYPE_WARNING).show();
+                    int len = bytes.length;
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for(int i = 0; i < len ; i++){
+                        stringBuilder.append((char)bytes[i]);
+                    }
+                    Log.e(">> Onboard Message",stringBuilder.toString());
+
+                }
+            });
+//            SideToast.makeText(MainActivity.this, "成功收到消息:" + bytes.toString(), SideToast.LENGTH_SHORT).show();
         }
     };
     private BaseProduct.BaseProductListener baseProductListener
@@ -239,10 +258,10 @@ public class MainActivity extends Activity {
         @Override
         public void onConnectivityChange(final boolean b) {
             if (b) {
-                SideToast.makeText(MainActivity.this, "飞行器已连接", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        SideToast.makeText(MainActivity.this, "飞行器已连接", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                         aircraftTextView.setText(baseProduct.getModel().toString());
                     }
                 });
@@ -326,7 +345,7 @@ public class MainActivity extends Activity {
         }
     };
     private FlightControllerState.Callback fcsCallback
-            = new FlightControllerState.Callback() {
+            =   new FlightControllerState.Callback() {
         @Override
         public void onUpdate(@NonNull final FlightControllerState flightControllerState) {
             runOnUiThread(new Runnable() {
@@ -337,6 +356,19 @@ public class MainActivity extends Activity {
                     stateVelocityTextView.setText(String.format(Locale.CHINA, "Velocity: %.1f", velocity));
                 }
             });
+
+            LatLng cvLatLong = CoordinationConverter.GPS2BD09(
+                    new LatLng(
+                            flightControllerState.getAircraftLocation().getLatitude(),
+                            flightControllerState.getAircraftLocation().getLongitude()
+                    )
+            );
+            MyLocationData locationData = new MyLocationData.Builder()
+                    .latitude(cvLatLong.latitude)
+                    .longitude(cvLatLong.longitude)
+                    .direction(flightControllerState.getAircraftHeadDirection())
+                    .build();
+            baiduMap.setMyLocationData(locationData);
         }
     };
     private BatteryState.Callback batteryCallback
@@ -369,6 +401,8 @@ public class MainActivity extends Activity {
         initVideoTextureView();
         initOnClickListener();
         initSendDataOnClickListener();
+
+        waypointMissionParams = new WaypointMissionParams();
 
         startUpInfoDialog = new SimpleProgressDialog(MainActivity.this, "Validating API key");
 
@@ -541,7 +575,7 @@ public class MainActivity extends Activity {
                                         @Override
                                         public void onResult(DJIError djiError) {
                                             if (djiError != null) {
-                                                SimpleAlertDialog.showDJIError(MainActivity.this, djiError);
+                                                SideToast.makeText(MainActivity.this,"任务执行失败:" + djiError.toString(),SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
                                             }
                                         }
                                     });
@@ -714,9 +748,16 @@ public class MainActivity extends Activity {
                             public void onClick(DialogInterface dialog, int which) {
                                 mapPanelCreateButton.setVisibility(View.VISIBLE);
                                 linearLayoutForMap.setVisibility(View.VISIBLE);
+                                switchPanelImageView.setVisibility(View.VISIBLE);
                                 mapPanelStartMissionButton.setVisibility(View.GONE);
                                 mapPanelCancelMissionButton.setVisibility(View.GONE);
-//                                executeWaypointMission();
+                                if(flightController == null || !flightController.isConnected()){
+                                    SideToast.makeText(MainActivity.this,"任务执行错误：飞行器未连接",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                                    return;
+                                }
+                                LocationCoordinate3D temp = flightController.getState().getAircraftLocation();
+                                wayPointList.add(new Waypoint(temp.getLatitude(),temp.getLongitude(),50.0f));
+                                executeWaypointMission(wayPointList,waypointMissionParams);
 
                             }
                         }));
@@ -729,6 +770,8 @@ public class MainActivity extends Activity {
                 mapPanelStartMissionButton.setVisibility(View.GONE);
                 mapPanelCancelMissionButton.setVisibility(View.GONE);
                 baiduMap.setOnMapLongClickListener(null);
+                wayPointList.clear();
+                baiduMap.clear();
                 mapViewPanel.addView(missionConfigurationPanel);
 
             }
@@ -751,9 +794,17 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 //// TODO: 2017/4/29 收集数据至WaypointMissionParams实例
                 baiduMap.setOnMapLongClickListener(onMapLongClickListener);
+                waypointMissionParams.setMissionFinishedAction(WaypointMissionFinishedAction.NO_ACTION);
+                waypointMissionParams.setMissionFlightPathMode(WaypointMissionFlightPathMode.NORMAL);
+                waypointMissionParams.setMissionGotoWaypointMode(WaypointMissionGotoWaypointMode.SAFELY);
+                waypointMissionParams.setMissionHeadingMode(WaypointMissionHeadingMode.AUTO);
+                waypointMissionParams.setAutoFlightSpeed(2.0f);
+                waypointMissionParams.setMaxFlightSpeed(5.0f);
                 mapViewPanel.removeView(missionConfigurationPanel);
                 mapPanelStartMissionButton.setVisibility(View.VISIBLE);
                 mapPanelCancelMissionButton.setVisibility(View.VISIBLE);
+
+
 
             }
         });
@@ -762,6 +813,7 @@ public class MainActivity extends Activity {
     }
 
     private void updateBatteryState(int remainingBattery) {
+        Log.e(">> battery", String.valueOf(remainingBattery));
         if (currentBatteryInPercent == -1) {
             currentBatteryInPercent = remainingBattery;
             final int temp[] = new int[1];
@@ -797,7 +849,12 @@ public class MainActivity extends Activity {
             if (remainingBattery <= 10 && currentBatteryInPercent > 10) {
                 temp[0] = R.mipmap.battery_0;
                 currentBatteryInPercent = remainingBattery;
-                SideToast.makeText(MainActivity.this, "电池电量低", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        SideToast.makeText(MainActivity.this, "电池电量低", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
+                    }
+                });
             } else {
                 if (remainingBattery <= 30 && currentBatteryInPercent > 30) {
                     temp[0] = R.mipmap.battery_10;
@@ -967,7 +1024,7 @@ public class MainActivity extends Activity {
                                 @Override
                                 public void onResult(DJIError djiError) {
                                     if (djiError != null) {
-                                        SideToast.makeText(MainActivity.this, djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
+                                        SideToast.makeText(MainActivity.this, djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                     }
                                     progressDialog.dismiss();
                                 }

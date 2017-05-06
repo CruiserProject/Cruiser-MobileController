@@ -7,8 +7,8 @@ import dji.common.mission.waypoint.WaypointMissionGotoWaypointMode;
 import dji.common.mission.waypoint.WaypointMissionHeadingMode;
 
 public class WaypointMissionParams {
-    private final float autoFlightSpeed = 0.0f;
-    private final float maxFlightSpeed = 0.0f;
+    private float autoFlightSpeed = 0.0f;
+    private float maxFlightSpeed = 0.0f;
 
     private WaypointMissionGotoWaypointMode missionGotoWaypointMode;
     private WaypointMissionHeadingMode missionHeadingMode;
@@ -17,6 +17,14 @@ public class WaypointMissionParams {
 
     public float getAutoFlightSpeed() {
         return autoFlightSpeed;
+    }
+
+    public void setAutoFlightSpeed(float autoFlightSpeed) {
+        this.autoFlightSpeed = autoFlightSpeed;
+    }
+
+    public void setMaxFlightSpeed(float maxFlightSpeed) {
+        this.maxFlightSpeed = maxFlightSpeed;
     }
 
     public float getMaxFlightSpeed() {
