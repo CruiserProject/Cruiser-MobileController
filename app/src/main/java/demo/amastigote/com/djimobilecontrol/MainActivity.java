@@ -162,6 +162,8 @@ public class MainActivity extends Activity {
         DJI sdk
      */
     private int currentBatteryInPercent = -1;
+    private int currentSatellitesCount = -1;
+
     private boolean isMapPanelFocused = false;
     private boolean isRecording = false;
     private SettingsDefinitions.CameraMode curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
@@ -238,8 +240,8 @@ public class MainActivity extends Activity {
                     SideToast.makeText(MainActivity.this,"成功收到消息: " + bytes.toString(),SideToast.LENGTH_SHORT,SideToast.TYPE_WARNING).show();
                     int len = bytes.length;
                     StringBuilder stringBuilder = new StringBuilder();
-                    for(int i = 0; i < len ; i++){
-                        stringBuilder.append((char)bytes[i]);
+                    for (byte aByte : bytes) {
+                        stringBuilder.append((char) aByte);
                     }
                     Log.e(">> Onboard Message",stringBuilder.toString());
 
@@ -348,27 +350,11 @@ public class MainActivity extends Activity {
             =   new FlightControllerState.Callback() {
         @Override
         public void onUpdate(@NonNull final FlightControllerState flightControllerState) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    stateAltitudeTextView.setText(String.format(Locale.CHINA, "Altitude: %.1f", flightControllerState.getAircraftLocation().getAltitude()));
-                    float velocity = (float) Math.sqrt(Math.pow(flightControllerState.getVelocityX(), 2) + Math.pow(flightControllerState.getVelocityY(), 2));
-                    stateVelocityTextView.setText(String.format(Locale.CHINA, "Velocity: %.1f", velocity));
-                }
-            });
+            updateVelocity(flightControllerState);
 
-            LatLng cvLatLong = CoordinationConverter.GPS2BD09(
-                    new LatLng(
-                            flightControllerState.getAircraftLocation().getLatitude(),
-                            flightControllerState.getAircraftLocation().getLongitude()
-                    )
-            );
-            MyLocationData locationData = new MyLocationData.Builder()
-                    .latitude(cvLatLong.latitude)
-                    .longitude(cvLatLong.longitude)
-                    .direction(flightControllerState.getAircraftHeadDirection())
-                    .build();
-            baiduMap.setMyLocationData(locationData);
+            updateBaiduMapMyLocation(flightControllerState);
+
+            updateSatellitesCount(flightControllerState.getSatelliteCount());
         }
     };
     private BatteryState.Callback batteryCallback
@@ -815,28 +801,32 @@ public class MainActivity extends Activity {
     private void updateBatteryState(int remainingBattery) {
         Log.e(">> battery", String.valueOf(remainingBattery));
         if (currentBatteryInPercent == -1) {
-            currentBatteryInPercent = remainingBattery;
             final int temp[] = new int[1];
-            if (currentBatteryInPercent <= 10) {
-                temp[0] = R.mipmap.battery_0;
-            } else {
-                if (currentBatteryInPercent <= 30) {
+            switch ((remainingBattery + 10) / 20){
+                case 0:
+                    temp[0] = R.mipmap.battery_0;
+                    currentBatteryInPercent = 0;
+                    break;
+                case 1:
+                    currentBatteryInPercent = 1;
                     temp[0] = R.mipmap.battery_10;
-                } else {
-                    if (currentBatteryInPercent <= 50) {
-                        temp[0] = R.mipmap.battery_30;
-                    } else {
-                        if (currentBatteryInPercent <= 70) {
-                            temp[0] = R.mipmap.battery_50;
-                        } else {
-                            if (currentBatteryInPercent <= 85) {
-                                temp[0] = R.mipmap.battery_70;
-                            } else {
-                                temp[0] = R.mipmap.battery_100;
-                            }
-                        }
-                    }
-                }
+                    break;
+                case 2:
+                    currentBatteryInPercent = 2;
+                    temp[0] = R.mipmap.battery_30;
+                    break;
+                case 3:
+                    currentBatteryInPercent = 3;
+                    temp[0] = R.mipmap.battery_50;
+                    break;
+                case 4:
+                    currentBatteryInPercent = 4;
+                    temp[0] = R.mipmap.battery_70;
+                    break;
+                case 5:
+                    currentBatteryInPercent = 5;
+                    temp[0] = R.mipmap.battery_100;
+                    break;
             }
             runOnUiThread(new Runnable() {
                 @Override
@@ -845,49 +835,83 @@ public class MainActivity extends Activity {
                 }
             });
         } else {
-            final int temp[] = new int[1];
-            if (remainingBattery <= 10 && currentBatteryInPercent > 10) {
-                temp[0] = R.mipmap.battery_0;
-                currentBatteryInPercent = remainingBattery;
+            int flag = (remainingBattery + 10) / 20;
+            if(flag != currentBatteryInPercent){
+                final int temp[] = new int[1];
+                switch (flag) {
+                    case 0:
+                        temp[0] = R.mipmap.battery_0;
+                        currentBatteryInPercent = 0;
+                        break;
+                    case 1:
+                        currentBatteryInPercent = 1;
+                        temp[0] = R.mipmap.battery_10;
+                        break;
+                    case 2:
+                        currentBatteryInPercent = 2;
+                        temp[0] = R.mipmap.battery_30;
+                        break;
+                    case 3:
+                        currentBatteryInPercent = 3;
+                        temp[0] = R.mipmap.battery_50;
+                        break;
+                    case 4:
+                        currentBatteryInPercent = 4;
+                        temp[0] = R.mipmap.battery_70;
+                        break;
+                    case 5:
+                        currentBatteryInPercent = 5;
+                        temp[0] = R.mipmap.battery_100;
+                        break;
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        SideToast.makeText(MainActivity.this, "电池电量低", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
+                        remainingBatteryImageView.setImageDrawable(MainActivity.this.getDrawable(temp[0]));
                     }
                 });
-            } else {
-                if (remainingBattery <= 30 && currentBatteryInPercent > 30) {
-                    temp[0] = R.mipmap.battery_10;
-                    currentBatteryInPercent = remainingBattery;
-                } else {
-                    if (remainingBattery <= 50 && currentBatteryInPercent > 50) {
-                        temp[0] = R.mipmap.battery_30;
-                        currentBatteryInPercent = remainingBattery;
-                    } else {
-                        if (remainingBattery <= 70 && currentBatteryInPercent > 70) {
-                            temp[0] = R.mipmap.battery_50;
-                            currentBatteryInPercent = remainingBattery;
-                        } else {
-                            if (remainingBattery <= 85 && currentBatteryInPercent > 85) {
-                                temp[0] = R.mipmap.battery_70;
-                                currentBatteryInPercent = remainingBattery;
-                            } else {
-                                return;
-                            }
-                        }
-                    }
-                }
-
             }
 
+
+        }
+    }
+
+    private void updateSatellitesCount(final int satellitesCount) {
+        if(satellitesCount != currentSatellitesCount){
+            currentSatellitesCount = satellitesCount;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    remainingBatteryImageView.setImageDrawable(MainActivity.this.getDrawable(temp[0]));
+                    satelliteNumberTextView.setText(satellitesCount);
                 }
             });
-
         }
+    }
+
+    private void updateVelocity(final FlightControllerState flightControllerState){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                stateAltitudeTextView.setText(String.format(Locale.CHINA, "Altitude: %.1f", flightControllerState.getAircraftLocation().getAltitude()));
+                float velocity = (float) Math.sqrt(Math.pow(flightControllerState.getVelocityX(), 2) + Math.pow(flightControllerState.getVelocityY(), 2));
+                stateVelocityTextView.setText(String.format(Locale.CHINA, "Velocity: %.1f", velocity));
+            }
+        });
+    }
+
+    private void updateBaiduMapMyLocation(FlightControllerState flightControllerState){
+        LatLng cvLatLong = CoordinationConverter.GPS2BD09(
+                new LatLng(
+                        flightControllerState.getAircraftLocation().getLatitude(),
+                        flightControllerState.getAircraftLocation().getLongitude()
+                )
+        );
+        MyLocationData locationData = new MyLocationData.Builder()
+                .latitude(cvLatLong.latitude)
+                .longitude(cvLatLong.longitude)
+                .direction(flightControllerState.getAircraftHeadDirection())
+                .build();
+        baiduMap.setMyLocationData(locationData);
     }
 
     private void changeCameraState() {
