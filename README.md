@@ -1,4 +1,5 @@
-# DJiMobileControllerDevel
+# Cruiser-MobileController
+
 ### Collaborators
   - [@TrafalgarZZZ](https://github.com/TrafalgarZZZ)
   - [@hwding](https://github.com/hwding)
