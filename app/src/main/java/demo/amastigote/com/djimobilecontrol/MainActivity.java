@@ -13,11 +13,13 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -109,6 +111,14 @@ public class MainActivity extends Activity {
     private Button mapPanelCancelMissionButton;
     private Button missionConfigurationPanelOKButton;
     private Button missionConfigurationPanelCancelButton;
+
+    private RadioGroup radioGroupMissionStartAction;
+    private RadioGroup radioGroupMissionFinishAction;
+    private RadioGroup radioGroupPathMode;
+    private RadioGroup radioGroupHeading;
+
+    private TextView textViewAutoFlightSpeed;
+    private TextView textViewMaxFlightSpeed;
 
     private SimpleProgressDialog startUpInfoDialog;
 
@@ -371,7 +381,9 @@ public class MainActivity extends Activity {
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | View.SYSTEM_UI_FLAG_IMMERSIVE);
+        getWindow().getAttributes().systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE;
 
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
@@ -446,7 +458,12 @@ public class MainActivity extends Activity {
         missionConfigurationPanel = (RelativeLayout) LayoutInflater.from(MainActivity.this).inflate(R.layout.waypoint_configuration, null);
         missionConfigurationPanelOKButton = (Button) missionConfigurationPanel.findViewById(R.id.control_mission_ok_btn);
         missionConfigurationPanelCancelButton = (Button) missionConfigurationPanel.findViewById(R.id.control_mission_cancel_btn);
-
+        radioGroupMissionStartAction = (RadioGroup) missionConfigurationPanel.findViewById(R.id.rg_mission_start_acton);
+        radioGroupMissionFinishAction = (RadioGroup) missionConfigurationPanel.findViewById(R.id.rg_mission_finish_action);
+        radioGroupPathMode = (RadioGroup) missionConfigurationPanel.findViewById(R.id.rg_path_mode);
+        radioGroupHeading = (RadioGroup) missionConfigurationPanel.findViewById(R.id.rg_heading);
+        textViewMaxFlightSpeed = (TextView) missionConfigurationPanel.findViewById(R.id.edtxt_max_flight_speed);
+        textViewAutoFlightSpeed = (TextView) missionConfigurationPanel.findViewById(R.id.edtxt_auto_flight_speed);
     }
 
     private void initVideoTextureView() {
@@ -775,21 +792,78 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 //// TODO: 2017/4/29 收集数据至WaypointMissionParams实例
                 baiduMap.setOnMapLongClickListener(onMapLongClickListener);
-                waypointMissionParams.setMissionFinishedAction(WaypointMissionFinishedAction.NO_ACTION);
-                waypointMissionParams.setMissionFlightPathMode(WaypointMissionFlightPathMode.NORMAL);
-                waypointMissionParams.setMissionGotoWaypointMode(WaypointMissionGotoWaypointMode.SAFELY);
-                waypointMissionParams.setMissionHeadingMode(WaypointMissionHeadingMode.AUTO);
-                waypointMissionParams.setAutoFlightSpeed(2.0f);
-                waypointMissionParams.setMaxFlightSpeed(5.0f);
+                WaypointMissionFinishedAction waypointMissionFinishedAction;
+                WaypointMissionFlightPathMode waypointMissionFlightPathMode;
+                WaypointMissionGotoWaypointMode waypointMissionGotoWaypointModel;
+                WaypointMissionHeadingMode waypointMissionHeadingMode;
+
+                switch (radioGroupMissionFinishAction.getCheckedRadioButtonId()) {
+                    case R.id.rb_c:
+                        waypointMissionFinishedAction = WaypointMissionFinishedAction.NO_ACTION;
+                        break;
+                    case R.id.rb_d:
+                        waypointMissionFinishedAction = WaypointMissionFinishedAction.GO_HOME;
+                        break;
+                    case R.id.rb_e:
+                        waypointMissionFinishedAction = WaypointMissionFinishedAction.GO_FIRST_WAYPOINT;
+                        break;
+                    default:
+                        waypointMissionFinishedAction = WaypointMissionFinishedAction.NO_ACTION;
+                        break;
+                }
+
+                switch (radioGroupPathMode.getCheckedRadioButtonId()) {
+                    case R.id.rb_f:
+                        waypointMissionFlightPathMode = WaypointMissionFlightPathMode.NORMAL;
+                        break;
+                    case R.id.rb_g:
+                        waypointMissionFlightPathMode = WaypointMissionFlightPathMode.CURVED;
+                        break;
+                    default:
+                        waypointMissionFlightPathMode = WaypointMissionFlightPathMode.NORMAL;
+                        break;
+                }
+
+                switch (radioGroupMissionStartAction.getCheckedRadioButtonId()) {
+                    case R.id.rb_a:
+                        waypointMissionGotoWaypointModel = WaypointMissionGotoWaypointMode.SAFELY;
+                        break;
+                    case R.id.rb_b:
+                        waypointMissionGotoWaypointModel = WaypointMissionGotoWaypointMode.POINT_TO_POINT;
+                        break;
+                    default:
+                        waypointMissionGotoWaypointModel = WaypointMissionGotoWaypointMode.SAFELY;
+                        break;
+                }
+
+                switch (radioGroupHeading.getCheckedRadioButtonId()) {
+                    case R.id.rb_h:
+                        waypointMissionHeadingMode = WaypointMissionHeadingMode.AUTO;
+                        break;
+                    case R.id.rb_i:
+                        waypointMissionHeadingMode = WaypointMissionHeadingMode.USING_INITIAL_DIRECTION;
+                        break;
+                    case R.id.rb_j:
+                        waypointMissionHeadingMode = WaypointMissionHeadingMode.CONTROL_BY_REMOTE_CONTROLLER;
+                        break;
+                    default:
+                        waypointMissionHeadingMode = WaypointMissionHeadingMode.AUTO;
+                        break;
+                }
+
+                waypointMissionParams.setMissionFinishedAction(waypointMissionFinishedAction);
+                waypointMissionParams.setMissionFlightPathMode(waypointMissionFlightPathMode);
+                waypointMissionParams.setMissionGotoWaypointMode(waypointMissionGotoWaypointModel);
+                waypointMissionParams.setMissionHeadingMode(waypointMissionHeadingMode);
+                String maxSpeedString = String.valueOf(textViewAutoFlightSpeed.getText());
+                String autoSpeedString = String.valueOf(textViewMaxFlightSpeed.getText());
+                waypointMissionParams.setMaxFlightSpeed(Float.valueOf("".equals(maxSpeedString) ? "2" : maxSpeedString));
+                waypointMissionParams.setAutoFlightSpeed(Float.valueOf("".equals(autoSpeedString) ? "5" : autoSpeedString));
                 mapViewPanel.removeView(missionConfigurationPanel);
                 mapPanelStartMissionButton.setVisibility(View.VISIBLE);
                 mapPanelCancelMissionButton.setVisibility(View.VISIBLE);
-
-
             }
         });
-
-
     }
 
     private void updateBatteryState(int remainingBattery) {
@@ -876,7 +950,7 @@ public class MainActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    satelliteNumberTextView.setText(satellitesCount);
+                    satelliteNumberTextView.setText(String.valueOf(satellitesCount));
                 }
             });
         }
@@ -950,17 +1024,8 @@ public class MainActivity extends Activity {
                 if (baseProduct == null || !baseProduct.isConnected()) {
                     SideToast.makeText(MainActivity.this, "发送失败：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                 } else {
-                    byte arr[] = new byte[10];
+                    byte arr[] = new byte[1];
                     arr[0] = 2 + '0';
-                    arr[1] = 3 + '0';
-                    arr[2] = 3 + '0';
-                    arr[3] = 3 + '0';
-                    arr[4] = 3 + '0';
-                    arr[5] = 3 + '0';
-                    arr[6] = 3 + '0';
-                    arr[7] = 3 + '0';
-                    arr[8] = 3 + '0';
-                    arr[9] = '\0';
                     flightController.sendDataToOnboardSDKDevice(arr, new CommonCallbacks.CompletionCallback() {
                         @Override
                         public void onResult(DJIError djiError) {

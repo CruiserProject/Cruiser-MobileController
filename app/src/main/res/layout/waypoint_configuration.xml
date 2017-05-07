@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:layout_alignParentEnd="true"
     android:background="@color/grey"
-    android:padding="5dp">
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,9 +26,9 @@
             android:paddingTop="10dp">
 
             <TextView
-                android:layout_marginTop="5dp"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="飞行速度(m/s)"
                 android:textColor="@color/whiteTrans"
                 android:textSize="15sp"
@@ -50,7 +51,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:backgroundTint="@color/white"
-                    android:imeOptions="flagNoExtractUi" />
+                    android:gravity="center"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:text="2"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -71,11 +77,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:backgroundTint="@color/white"
-                    android:imeOptions="flagNoExtractUi" />
+                    android:gravity="center"
+                    android:imeOptions="flagNoExtractUi"
+                    android:inputType="number"
+                    android:text="5"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="任务开始行为"
@@ -84,25 +95,29 @@
                 android:textStyle="bold" />
 
             <RadioGroup
+                android:id="@+id/rg_mission_start_acton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:checkedButton="@+id/rb_a">
 
                 <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:buttonTint="@color/white"
-                    android:text="最短路径"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <RadioButton
+                    android:id="@+id/rb_a"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:buttonTint="@color/white"
                     android:text="优先上升"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:id="@+id/rb_b"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
+                    android:text="最短路径"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </RadioGroup>
@@ -117,11 +132,14 @@
                 android:textStyle="bold" />
 
             <RadioGroup
+                android:id="@+id/rg_mission_finish_action"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:checkedButton="@+id/rb_c">
 
                 <RadioButton
+                    android:id="@+id/rb_c"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -131,6 +149,7 @@
                     android:textSize="12sp" />
 
                 <RadioButton
+                    android:id="@+id/rb_d"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -140,6 +159,7 @@
                     android:textSize="12sp" />
 
                 <RadioButton
+                    android:id="@+id/rb_e"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -159,12 +179,14 @@
                 android:textStyle="bold" />
 
             <RadioGroup
+                android:id="@+id/rg_path_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:checkedButton="@+id/rb_f">
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/rb_f"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -174,6 +196,7 @@
                     android:textSize="12sp" />
 
                 <RadioButton
+                    android:id="@+id/rb_g"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
@@ -194,13 +217,15 @@
                 android:textStyle="bold" />
 
             <RadioGroup
+                android:id="@+id/rg_heading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp">
+                android:layout_marginTop="5dp"
+                android:checkedButton="@+id/rb_h">
 
                 <RadioButton
+                    android:id="@+id/rb_h"
                     android:layout_width="wrap_content"
-
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:buttonTint="@color/white"
@@ -209,8 +234,8 @@
                     android:textSize="12sp" />
 
                 <RadioButton
+                    android:id="@+id/rb_i"
                     android:layout_width="wrap_content"
-
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:buttonTint="@color/white"
@@ -219,8 +244,8 @@
                     android:textSize="12sp" />
 
                 <RadioButton
+                    android:id="@+id/rb_j"
                     android:layout_width="wrap_content"
-
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:buttonTint="@color/white"
@@ -235,30 +260,24 @@
         android:id="@+id/control_mission_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:gravity="center">
+        android:layout_alignParentBottom="true">
 
         <Button
-            android:layout_weight="1"
             android:id="@+id/control_mission_ok_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:backgroundTint="@color/green"
-            android:drawablePadding="8dp"
-            android:text="✓    创建"
+            android:text="✓   创建"
             android:textColor="@color/white" />
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="1dp" />
-
         <Button
-            android:layout_weight="1"
             android:id="@+id/control_mission_cancel_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:backgroundTint="@color/red"
-            android:text="✘    取消"
+            android:text="✘   取消"
             android:textColor="@color/white" />
     </LinearLayout>
 </RelativeLayout>
