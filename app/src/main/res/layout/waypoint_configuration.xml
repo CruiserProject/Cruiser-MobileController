@@ -1,113 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="match_parent"
     android:layout_alignParentEnd="true"
     android:background="@color/grey"
-    android:padding="5dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="200dp"
-    android:layout_height="match_parent">
+    android:padding="5dp">
 
     <ScrollView
-        android:layout_marginBottom="10dp"
-        android:layout_above="@+id/control_mission_ll"
-        android:scrollbars="none"
-        android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/control_mission_ll"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_marginBottom="10dp"
+        android:scrollbars="none">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:paddingTop="10dp">
 
             <TextView
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:text="飞行速度设置"
+                android:layout_marginTop="5dp"
                 android:layout_width="120dp"
-                android:layout_height="wrap_content" />
-            <View
-                android:layout_marginTop="2dp"
-                android:background="@color/black"
-                android:layout_width="130dp"
-                android:layout_height="1dp"/>
+                android:layout_height="wrap_content"
+                android:text="飞行速度(m/s)"
+                android:textColor="@color/whiteTrans"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp">
 
                 <TextView
-                    android:text="自动飞行速度:(m/s)"
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="自动飞行:"
+                    android:textColor="@color/white" />
+
                 <EditText
                     android:id="@+id/edtxt_auto_flight_speed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content" />
+                    android:backgroundTint="@color/white"
+                    android:imeOptions="flagNoExtractUi" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="-10dp">
 
                 <TextView
-                    android:text="最大飞行速度:(m/s)"
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="手动控制:"
+                    android:textColor="@color/white" />
+
                 <EditText
                     android:id="@+id/edtxt_max_flight_speed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content" />
+                    android:backgroundTint="@color/white"
+                    android:imeOptions="flagNoExtractUi" />
             </LinearLayout>
 
             <TextView
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"
-                android:text="任务开始行为"
-                android:textSize="18sp"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content" />
-            <View
-
-                android:background="@color/black"
-                android:layout_width="130dp"
-                android:layout_height="1dp"/>
-            <RadioGroup
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:text="最短路径"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <RadioButton
-                    android:text="优先上升"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </RadioGroup>
-
-            <TextView
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"
-                android:text="任务结束行为"
-                android:textSize="18sp"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content" />
-            <View
-
-                android:background="@color/black"
-                android:layout_width="130dp"
-                android:layout_height="1dp"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="任务开始行为"
+                android:textColor="@color/whiteTrans"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <RadioGroup
                 android:layout_width="match_parent"
@@ -117,129 +91,174 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
+                    android:text="最短路径"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
+                    android:text="优先上升"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+            </RadioGroup>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="任务结束行为"
+                android:textColor="@color/whiteTrans"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
                     android:text="无"
-                    android:textSize="10sp" />
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
                     android:text="返航"
-                    android:textSize="10sp" />
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
                     android:text="返回第一个路径点"
-                    android:textSize="10sp" />
-
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
             </RadioGroup>
 
             <TextView
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"
-                android:text="飞行路径模式"
-                android:textSize="18sp"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="路径模式"
+                android:textColor="@color/whiteTrans"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-
-
-            <View
-
-                android:background="@color/black"
-                android:layout_width="130dp"
-                android:layout_height="1dp"/>
             <RadioGroup
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
                 <RadioButton
+                    android:id="@+id/radioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
                     android:text="普通"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
                 <RadioButton
-                    android:text="曲线"
-                    android:textSize="10sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
+                    android:text="曲线"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
             </RadioGroup>
 
             <TextView
-                android:textColor="@color/black"
-                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:text="机头朝向"
-                android:textSize="18sp"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content" />
-            <View
+                android:textColor="@color/whiteTrans"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-                android:background="@color/black"
-                android:layout_width="130dp"
-                android:layout_height="1dp"/>
             <RadioGroup
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
 
                 <RadioButton
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
                     android:text="自动"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
 
                 <RadioButton
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
                     android:text="根据初始"
-                    android:textSize="10sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
                 <RadioButton
-                    android:text="遥控器控制"
-                    android:textSize="10sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
 
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:buttonTint="@color/white"
+                    android:text="遥控器控制"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
             </RadioGroup>
-
         </LinearLayout>
-
-
     </ScrollView>
 
     <LinearLayout
         android:id="@+id/control_mission_ll"
-        android:gravity="center"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
 
         <Button
+            android:layout_weight="1"
             android:id="@+id/control_mission_ok_btn"
-            android:layout_marginRight="5dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/green"
             android:drawablePadding="8dp"
-            android:background="@color/green"
-            android:drawableStart="@mipmap/correct"
-            android:textColor="@color/white"
-            android:text="创建"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="✓    创建"
+            android:textColor="@color/white" />
 
         <View
             android:layout_width="1dp"
-            android:layout_height="1dp"/>
+            android:layout_height="1dp" />
 
         <Button
+            android:layout_weight="1"
             android:id="@+id/control_mission_cancel_btn"
-            android:layout_marginLeft="5dp"
-            android:textColor="@color/white"
-            android:text="取消"
-            android:background="@color/red"
-            android:drawableStart="@mipmap/wrong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/red"
+            android:text="✘    取消"
+            android:textColor="@color/white" />
     </LinearLayout>
 </RelativeLayout>

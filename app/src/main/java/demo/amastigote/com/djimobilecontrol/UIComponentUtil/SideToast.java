@@ -2,8 +2,6 @@ package demo.amastigote.com.djimobilecontrol.UIComponentUtil;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,30 +16,25 @@ import demo.amastigote.com.djimobilecontrol.R;
 
 
 public class SideToast {
-    private static int isShow = 0;
-    private static int maxIndex = 0;
-    private static final int MAX_SHOW_NUMBER = 3;
-
-    private WindowManager windowManager;
-    private WindowManager.LayoutParams params;
-
-    private View toastView;
-    private int duration;
-
-
-    private Timer timer;
-
     public static final int LENGTH_SHORT = 0;
     public static final int LENGTH_LONG = 1;
     public static final int TYPE_NORMAL = 1;
     public static final int TYPE_WARNING = 2;
     public static final int TYPE_ERROR = 3;
+    private static final int MAX_SHOW_NUMBER = 3;
+    private static int isShow = 0;
+    private static int maxIndex = 0;
+    private WindowManager windowManager;
+    private WindowManager.LayoutParams params;
+    private View toastView;
+    private int duration;
+    private Timer timer;
 
     public SideToast(Context context, String text, int duration) {
         this.duration = duration;
-        windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.toast_view,null);
-        TextView toastTextView = (TextView)linearLayout.findViewById(R.id.toast_text);
+        windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.toast_view, null);
+        TextView toastTextView = (TextView) linearLayout.findViewById(R.id.toast_text);
         toastTextView.setText(text);
         toastView = linearLayout;
         timer = new Timer();
@@ -52,9 +45,9 @@ public class SideToast {
 
     public SideToast(Context context, String text, int duration, int viewId) {
         this.duration = duration;
-        windowManager = (WindowManager)context.getSystemService(context.WINDOW_SERVICE);
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.toast_view,null);
-        switch (viewId){
+        windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.toast_view, null);
+        switch (viewId) {
             case 1:
                 linearLayout.setBackgroundResource(R.drawable.toast_shape_normal);
                 break;
@@ -65,7 +58,7 @@ public class SideToast {
                 linearLayout.setBackgroundResource(R.drawable.toast_shape_error);
         }
 
-        TextView toastTextView = (TextView)linearLayout.findViewById(R.id.toast_text);
+        TextView toastTextView = (TextView) linearLayout.findViewById(R.id.toast_text);
         toastTextView.setText(text);
         toastView = linearLayout;
         timer = new Timer();
@@ -73,31 +66,37 @@ public class SideToast {
         configureParms();
     }
 
+    public static SideToast makeText(Context context, String text, int duration) {
+        SideToast sideToast = new SideToast(context, text, duration);
+        return sideToast;
+    }
+
+    public static SideToast makeText(Context context, String text, int duration, int viewID) {
+        SideToast sideToast = new SideToast(context, text, duration, viewID);
+        return sideToast;
+    }
+
     public View getToastView() {
         return toastView;
     }
-
 
     public void setToastView(View toastView) {
         this.toastView = toastView;
     }
 
-
-    public void setGravity(int gravity){
+    public void setGravity(int gravity) {
         params.gravity = gravity;
     }
 
-
-    public void setX(int x){
+    public void setX(int x) {
         params.x = x;
     }
 
-    public void setY(int y){
+    public void setY(int y) {
         params.y = y;
     }
 
-
-    private void configureParms(){
+    private void configureParms() {
         params = new WindowManager.LayoutParams();
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -114,22 +113,10 @@ public class SideToast {
 
     }
 
-
-
-    public static SideToast makeText(Context context,String text,int duration){
-        SideToast sideToast = new SideToast(context,text,duration);
-        return sideToast;
-    }
-
-    public static SideToast makeText(Context context,String text,int duration,int viewID){
-        SideToast sideToast = new SideToast(context,text,duration,viewID);
-        return sideToast;
-    }
-
-    public void show(){
-        if(isShow <= MAX_SHOW_NUMBER - 1){
+    public void show() {
+        if (isShow <= MAX_SHOW_NUMBER - 1) {
             params.y += maxIndex * 150;
-            windowManager.addView(toastView,params);
+            windowManager.addView(toastView, params);
             isShow++;
             maxIndex = (maxIndex + 1) % MAX_SHOW_NUMBER;
             timer.schedule(new TimerTask() {
@@ -137,17 +124,15 @@ public class SideToast {
                 public void run() {
                     windowManager.removeView(toastView);
                     isShow--;
-                    if(isShow == 0){
+                    if (isShow == 0) {
                         maxIndex = 0;
                     }
                 }
-            },(long)(duration == 1 ? 3500 : 2000));
+            }, (long) (duration == 1 ? 3500 : 2000));
 
 
         }
     }
-
-
 
 
 }

@@ -23,12 +23,12 @@ public class WaypointMissionParams {
         this.autoFlightSpeed = autoFlightSpeed;
     }
 
-    public void setMaxFlightSpeed(float maxFlightSpeed) {
-        this.maxFlightSpeed = maxFlightSpeed;
-    }
-
     public float getMaxFlightSpeed() {
         return maxFlightSpeed;
+    }
+
+    public void setMaxFlightSpeed(float maxFlightSpeed) {
+        this.maxFlightSpeed = maxFlightSpeed;
     }
 
     public WaypointMissionGotoWaypointMode getMissionGotoWaypointMode() {

@@ -113,6 +113,29 @@ public class MainActivity extends Activity {
     private SimpleProgressDialog startUpInfoDialog;
 
     private TextureView videoTextureView;
+    /*
+        baidu map
+     */
+    private LinearLayout linearLayoutForMap;
+    private MapView mapView;
+    private RelativeLayout mapViewPanel;
+    private RelativeLayout missionConfigurationPanel;
+    private BaiduMap baiduMap;
+    /*
+        data
+     */
+    private AtomicInteger previousWayPointIndex = new AtomicInteger();
+    private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
+    /*
+        DJI sdk
+     */
+    private int currentBatteryInPercent = -1;
+    private int currentSatellitesCount = -1;
+    private boolean isMapPanelFocused = false;
+    private boolean isRecording = false;
+    private SettingsDefinitions.CameraMode curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
+    private Camera camera;
+    private DJICodecManager djiCodecManager;
     private TextureView.SurfaceTextureListener textureListener
             = new TextureView.SurfaceTextureListener() {
         @Override
@@ -141,34 +164,6 @@ public class MainActivity extends Activity {
 
         }
     };
-
-    /*
-        baidu map
-     */
-    private LinearLayout linearLayoutForMap;
-    private MapView mapView;
-    private RelativeLayout mapViewPanel;
-    private RelativeLayout missionConfigurationPanel;
-    private BaiduMap baiduMap;
-
-    /*
-        data
-     */
-    private AtomicInteger previousWayPointIndex = new AtomicInteger();
-    private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
-
-
-    /*
-        DJI sdk
-     */
-    private int currentBatteryInPercent = -1;
-    private int currentSatellitesCount = -1;
-
-    private boolean isMapPanelFocused = false;
-    private boolean isRecording = false;
-    private SettingsDefinitions.CameraMode curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
-    private Camera camera;
-    private DJICodecManager djiCodecManager;
     private Battery battery;
     private FlightController flightController;
     private MissionControl missionControl;
@@ -237,13 +232,13 @@ public class MainActivity extends Activity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    SideToast.makeText(MainActivity.this,"成功收到消息: " + bytes.toString(),SideToast.LENGTH_SHORT,SideToast.TYPE_WARNING).show();
+                    SideToast.makeText(MainActivity.this, "成功收到消息: " + bytes.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
                     int len = bytes.length;
                     StringBuilder stringBuilder = new StringBuilder();
                     for (byte aByte : bytes) {
                         stringBuilder.append((char) aByte);
                     }
-                    Log.e(">> Onboard Message",stringBuilder.toString());
+                    Log.e(">> Onboard Message", stringBuilder.toString());
 
                 }
             });
@@ -281,6 +276,26 @@ public class MainActivity extends Activity {
                     }
                 });
             }
+        }
+    };
+    private FlightControllerState.Callback fcsCallback
+            = new FlightControllerState.Callback() {
+        @Override
+        public void onUpdate(@NonNull final FlightControllerState flightControllerState) {
+            updateVelocity(flightControllerState);
+
+            updateBaiduMapMyLocation(flightControllerState);
+
+            updateSatellitesCount(flightControllerState.getSatelliteCount());
+        }
+    };
+    private BatteryState.Callback batteryCallback
+            = new BatteryState.Callback() {
+        @Override
+        public void onUpdate(BatteryState batteryState) {
+            int remainingBatteryInPercent = batteryState.getChargeRemainingInPercent();
+            updateBatteryState(remainingBatteryInPercent);
+
         }
     };
     private DJISDKManager.SDKManagerCallback sdkManagerCallback
@@ -343,26 +358,6 @@ public class MainActivity extends Activity {
                     }
                 });
             }
-
-        }
-    };
-    private FlightControllerState.Callback fcsCallback
-            =   new FlightControllerState.Callback() {
-        @Override
-        public void onUpdate(@NonNull final FlightControllerState flightControllerState) {
-            updateVelocity(flightControllerState);
-
-            updateBaiduMapMyLocation(flightControllerState);
-
-            updateSatellitesCount(flightControllerState.getSatelliteCount());
-        }
-    };
-    private BatteryState.Callback batteryCallback
-            = new BatteryState.Callback() {
-        @Override
-        public void onUpdate(BatteryState batteryState) {
-            int remainingBatteryInPercent = batteryState.getChargeRemainingInPercent();
-            updateBatteryState(remainingBatteryInPercent);
 
         }
     };
@@ -561,7 +556,7 @@ public class MainActivity extends Activity {
                                         @Override
                                         public void onResult(DJIError djiError) {
                                             if (djiError != null) {
-                                                SideToast.makeText(MainActivity.this,"任务执行失败:" + djiError.toString(),SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                                                SideToast.makeText(MainActivity.this, "任务执行失败:" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                             }
                                         }
                                     });
@@ -737,13 +732,13 @@ public class MainActivity extends Activity {
                                 switchPanelImageView.setVisibility(View.VISIBLE);
                                 mapPanelStartMissionButton.setVisibility(View.GONE);
                                 mapPanelCancelMissionButton.setVisibility(View.GONE);
-                                if(flightController == null || !flightController.isConnected()){
-                                    SideToast.makeText(MainActivity.this,"任务执行错误：飞行器未连接",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR).show();
+                                if (flightController == null || !flightController.isConnected()) {
+                                    SideToast.makeText(MainActivity.this, "任务执行错误：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                     return;
                                 }
                                 LocationCoordinate3D temp = flightController.getState().getAircraftLocation();
-                                wayPointList.add(new Waypoint(temp.getLatitude(),temp.getLongitude(),50.0f));
-                                executeWaypointMission(wayPointList,waypointMissionParams);
+                                wayPointList.add(new Waypoint(temp.getLatitude(), temp.getLongitude(), 50.0f));
+                                executeWaypointMission(wayPointList, waypointMissionParams);
 
                             }
                         }));
@@ -791,7 +786,6 @@ public class MainActivity extends Activity {
                 mapPanelCancelMissionButton.setVisibility(View.VISIBLE);
 
 
-
             }
         });
 
@@ -802,7 +796,7 @@ public class MainActivity extends Activity {
         Log.e(">> battery", String.valueOf(remainingBattery));
         if (currentBatteryInPercent == -1) {
             final int temp[] = new int[1];
-            switch ((remainingBattery + 10) / 20){
+            switch ((remainingBattery + 10) / 20) {
                 case 0:
                     temp[0] = R.mipmap.battery_0;
                     currentBatteryInPercent = 0;
@@ -836,7 +830,7 @@ public class MainActivity extends Activity {
             });
         } else {
             int flag = (remainingBattery + 10) / 20;
-            if(flag != currentBatteryInPercent){
+            if (flag != currentBatteryInPercent) {
                 final int temp[] = new int[1];
                 switch (flag) {
                     case 0:
@@ -877,7 +871,7 @@ public class MainActivity extends Activity {
     }
 
     private void updateSatellitesCount(final int satellitesCount) {
-        if(satellitesCount != currentSatellitesCount){
+        if (satellitesCount != currentSatellitesCount) {
             currentSatellitesCount = satellitesCount;
             runOnUiThread(new Runnable() {
                 @Override
@@ -888,7 +882,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void updateVelocity(final FlightControllerState flightControllerState){
+    private void updateVelocity(final FlightControllerState flightControllerState) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -899,7 +893,7 @@ public class MainActivity extends Activity {
         });
     }
 
-    private void updateBaiduMapMyLocation(FlightControllerState flightControllerState){
+    private void updateBaiduMapMyLocation(FlightControllerState flightControllerState) {
         LatLng cvLatLong = CoordinationConverter.GPS2BD09(
                 new LatLng(
                         flightControllerState.getAircraftLocation().getLatitude(),
