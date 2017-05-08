@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -481,7 +480,6 @@ public class MainActivity extends Activity {
 
     }
 
-
     private void initUI() {
         videoTextureViewFrameLayout = (FrameLayout) findViewById(R.id.videoTextureViewLayout);
         relativeLayoutMain = (RelativeLayout) findViewById(R.id.rl_main);
@@ -753,10 +751,9 @@ public class MainActivity extends Activity {
                                     SideToast.makeText(MainActivity.this, "任务执行错误：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                     return;
                                 }
-                                LocationCoordinate3D temp = flightController.getState().getAircraftLocation();
-                                wayPointList.add(new Waypoint(temp.getLatitude(), temp.getLongitude(), 50.0f));
+                                LocationCoordinate3D homeLocation = flightController.getState().getAircraftLocation();
+                                wayPointList.add(new Waypoint(homeLocation.getLatitude(), homeLocation.getLongitude(), 30.0f));
                                 executeWaypointMission(wayPointList, waypointMissionParams);
-
                             }
                         }));
             }
@@ -771,7 +768,6 @@ public class MainActivity extends Activity {
                 wayPointList.clear();
                 baiduMap.clear();
                 mapViewPanel.addView(missionConfigurationPanel);
-
             }
         });
 
@@ -783,14 +779,12 @@ public class MainActivity extends Activity {
                 mapPanelCreateButton.setVisibility(View.VISIBLE);
                 linearLayoutForMap.setVisibility(View.VISIBLE);
                 switchPanelImageView.setVisibility(View.VISIBLE);
-
             }
         });
 
         missionConfigurationPanelOKButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //// TODO: 2017/4/29 收集数据至WaypointMissionParams实例
                 baiduMap.setOnMapLongClickListener(onMapLongClickListener);
                 WaypointMissionFinishedAction waypointMissionFinishedAction;
                 WaypointMissionFlightPathMode waypointMissionFlightPathMode;
@@ -855,10 +849,10 @@ public class MainActivity extends Activity {
                 waypointMissionParams.setMissionFlightPathMode(waypointMissionFlightPathMode);
                 waypointMissionParams.setMissionGotoWaypointMode(waypointMissionGotoWaypointModel);
                 waypointMissionParams.setMissionHeadingMode(waypointMissionHeadingMode);
-                String maxSpeedString = String.valueOf(textViewAutoFlightSpeed.getText());
-                String autoSpeedString = String.valueOf(textViewMaxFlightSpeed.getText());
-                waypointMissionParams.setMaxFlightSpeed(Float.valueOf("".equals(maxSpeedString) ? "2" : maxSpeedString));
-                waypointMissionParams.setAutoFlightSpeed(Float.valueOf("".equals(autoSpeedString) ? "5" : autoSpeedString));
+                String maxSpeedString = textViewMaxFlightSpeed.getText().toString().trim();
+                String autoSpeedString = textViewAutoFlightSpeed.getText().toString().trim();
+                waypointMissionParams.setMaxFlightSpeed(Float.valueOf("".equals(maxSpeedString) ? "5" : maxSpeedString));
+                waypointMissionParams.setAutoFlightSpeed(Float.valueOf("".equals(autoSpeedString) ? "2" : autoSpeedString));
                 mapViewPanel.removeView(missionConfigurationPanel);
                 mapPanelStartMissionButton.setVisibility(View.VISIBLE);
                 mapPanelCancelMissionButton.setVisibility(View.VISIBLE);
@@ -867,7 +861,6 @@ public class MainActivity extends Activity {
     }
 
     private void updateBatteryState(int remainingBattery) {
-        Log.e(">> battery", String.valueOf(remainingBattery));
         if (currentBatteryInPercent == -1) {
             final int temp[] = new int[1];
             switch ((remainingBattery + 10) / 20) {
@@ -1096,29 +1089,22 @@ public class MainActivity extends Activity {
             if (djiErrorFirst != null) {
                 SideToast.makeText(MainActivity.this, djiErrorFirst.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
             } else {
-                final SimpleProgressDialog progressDialog = new SimpleProgressDialog(MainActivity.this, "上传任务数据…");
-                progressDialog.show();
                 waypointMissionOperator.uploadMission(new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
                         if (djiError != null) {
-                            progressDialog.switchMessage("正在尝试重新上传…");
                             waypointMissionOperator.retryUploadMission(new CommonCallbacks.CompletionCallback() {
                                 @Override
                                 public void onResult(DJIError djiError) {
                                     if (djiError != null) {
                                         SideToast.makeText(MainActivity.this, djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                     }
-                                    progressDialog.dismiss();
                                 }
                             });
-                        } else {
-                            progressDialog.dismiss();
                         }
                     }
                 });
             }
         }
     }
-
 }
