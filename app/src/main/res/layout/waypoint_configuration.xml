@@ -164,7 +164,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:buttonTint="@color/white"
-                    android:text="返回第一个路径点"
+                    android:text="视觉辅助精准降落"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </RadioGroup>

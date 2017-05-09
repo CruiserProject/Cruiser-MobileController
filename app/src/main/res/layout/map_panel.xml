@@ -16,7 +16,7 @@
         android:backgroundTint="@color/white"
         android:drawablePadding="8dp"
         android:longClickable="true"
-        android:text="undo"
+        android:text="clean up"
         android:textColor="@color/black"
         android:visibility="gone" />
 
@@ -50,6 +50,17 @@
         android:backgroundTint="@color/green"
         android:drawablePadding="8dp"
         android:text="start"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/mv_btn_stop_mission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:backgroundTint="@color/red"
+        android:drawablePadding="8dp"
+        android:text="stop"
         android:textColor="@color/white"
         android:visibility="gone" />
 </RelativeLayout>

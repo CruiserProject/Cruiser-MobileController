@@ -125,11 +125,23 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btn_follow"
+        android:layout_marginTop="2dp"
+        android:textColor="@color/black"
+        android:text="目标追踪"
+        android:layout_below="@+id/status_bar_ll"
+        android:backgroundTint="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <FrameLayout
         android:id="@+id/videoTextureViewLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/status_bar_ll"></FrameLayout>
+        android:layout_below="@+id/status_bar_ll">
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/ll_for_map"
@@ -234,13 +246,6 @@
         android:background="@drawable/background_round"
         android:elevation="1dp"
         android:src="@mipmap/take_off" />
-
-    <Button
-        android:id="@+id/test_send_data_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/land" />
 
 
 </RelativeLayout>

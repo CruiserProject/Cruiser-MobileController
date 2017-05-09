@@ -21,7 +21,7 @@ public class SideToast {
     public static final int TYPE_NORMAL = 1;
     public static final int TYPE_WARNING = 2;
     public static final int TYPE_ERROR = 3;
-    private static final int MAX_SHOW_NUMBER = 3;
+    private static final int MAX_SHOW_NUMBER = 4;
     private static int isShow = 0;
     private static int maxIndex = 0;
     private WindowManager windowManager;
@@ -108,14 +108,14 @@ public class SideToast {
                 | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
         params.gravity = Gravity.LEFT | Gravity.TOP;
         params.x = 0;
-        params.y = 400;
+        params.y = 250;
 
 
     }
 
     public void show() {
         if (isShow <= MAX_SHOW_NUMBER - 1) {
-            params.y += maxIndex * 150;
+            params.y += maxIndex * 100;
             windowManager.addView(toastView, params);
             isShow++;
             maxIndex = (maxIndex + 1) % MAX_SHOW_NUMBER;
