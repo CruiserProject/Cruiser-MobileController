@@ -130,6 +130,7 @@ public class MainActivity extends Activity {
 
     private RectView rectView;
 
+
     /*
         baidu map
      */
@@ -145,8 +146,6 @@ public class MainActivity extends Activity {
     private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
     private AtomicBoolean isUsingPreciselyLanding = new AtomicBoolean(false);
 
-    private float x1_rect = 0.0f;
-    private float y1_rect = 0.0f;
     /*
         DJI sdk
      */
