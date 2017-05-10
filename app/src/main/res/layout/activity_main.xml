@@ -126,6 +126,7 @@
     </LinearLayout>
 
     <Button
+        android:elevation="1dp"
         android:id="@+id/btn_follow"
         android:layout_marginTop="2dp"
         android:textColor="@color/black"

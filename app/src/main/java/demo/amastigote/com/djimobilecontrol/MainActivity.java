@@ -43,6 +43,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import demo.amastigote.com.djimobilecontrol.ConverterUtil.CoordinationConverter;
 import demo.amastigote.com.djimobilecontrol.ConverterUtil.DensityUtil;
+import demo.amastigote.com.djimobilecontrol.ConverterUtil.ScreenSizeConverter;
+import demo.amastigote.com.djimobilecontrol.DataUtil.OnboardDataEncoder;
 import demo.amastigote.com.djimobilecontrol.DataUtil.WaypointMissionParams;
 import demo.amastigote.com.djimobilecontrol.FlightModuleUtil.BatteryManager;
 import demo.amastigote.com.djimobilecontrol.FlightModuleUtil.FlightControllerManager;
@@ -129,6 +131,8 @@ public class MainActivity extends Activity {
     private TextureView videoTextureView;
 
     private RectView rectView;
+
+    private ScreenSizeConverter screenSizeConverter;
 
 
     /*
@@ -262,8 +266,19 @@ public class MainActivity extends Activity {
                     rectView.invalidate();
                     break;
                 case MotionEvent.ACTION_UP:
-                    Log.e(">>", "left: " + rectView.getX1() + ", top:" + rectView.getY1());
-                    Log.e(">>", "right: " + rectView.getX2() + ", bottom:" + rectView.getY2());
+                    byte[] coordinations = new byte[4];
+                    coordinations[0] = screenSizeConverter.convertX2XPercent(rectView.getX1());
+                    coordinations[1] = screenSizeConverter.convertY2YPercent(rectView.getY1());
+                    coordinations[2] = screenSizeConverter.convertX2XPercent(rectView.getX2());
+                    coordinations[3] = screenSizeConverter.convertY2YPercent(rectView.getY2());
+                    Log.e(">>", "left: " + screenSizeConverter.convertX2XPercent(rectView.getX1()));
+                    Log.e(">>", "top: " + screenSizeConverter.convertY2YPercent(rectView.getY1()));
+                    Log.e(">>", "right: " + screenSizeConverter.convertX2XPercent(rectView.getX2()));
+                    Log.e(">>", "bottom: " + screenSizeConverter.convertY2YPercent(rectView.getY2()));
+
+                    byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_VALUE, coordinations);
+                    //// TODO: 2017/5/10 根据逻辑发送数据 
+                    
                     videoTextureViewFrameLayout.removeView(rectView);
                     videoTextureViewFrameLayout.setOnTouchListener(null);
                     followButton.setVisibility(View.VISIBLE);
@@ -544,6 +559,8 @@ public class MainActivity extends Activity {
         followButton = (Button) findViewById(R.id.btn_follow);
 
         rectView = new RectView(MainActivity.this);
+
+        screenSizeConverter = new ScreenSizeConverter(MainActivity.this);
     }
 
     private void initPermissionRequest() {
@@ -662,10 +679,7 @@ public class MainActivity extends Activity {
                 });
                 if (isUsingPreciselyLanding.get()) {
                     if (!isCompletedByStopping.get()) {
-                        Log.e(">>", "start send message");
-                        byte[] data = new byte[10];
-                        data[0] = 0x01;
-                        data[1] = 0x01;
+                        byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.VISUAL_LANDING_START, null);
                         flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
                             @Override
                             public void onResult(final DJIError djiError) {
@@ -751,20 +765,30 @@ public class MainActivity extends Activity {
         takeOffImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (baseProduct == null || !baseProduct.isConnected()) {
-                    SideToast.makeText(MainActivity.this, "无效操作:飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
-                } else {
-                    flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
-                        @Override
-                        public void onResult(DJIError djiError) {
-                            if (djiError != null) {
-                                SideToast.makeText(MainActivity.this, "起飞时出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
-                            } else {
-                                SideToast.makeText(MainActivity.this, "成功起飞", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                SimpleAlertDialog.show(
+                        MainActivity.this,
+                        true,
+                        "确认起飞",
+                        "是否现在起飞",
+                        new SimpleDialogButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (baseProduct == null || !baseProduct.isConnected()) {
+                                    SideToast.makeText(MainActivity.this, "无效操作:飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                } else {
+                                    flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
+                                        @Override
+                                        public void onResult(DJIError djiError) {
+                                            if (djiError != null) {
+                                                SideToast.makeText(MainActivity.this, "起飞时出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                            } else {
+                                                SideToast.makeText(MainActivity.this, "成功起飞", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                            }
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    });
-                }
+                        }));
 
             }
         });
