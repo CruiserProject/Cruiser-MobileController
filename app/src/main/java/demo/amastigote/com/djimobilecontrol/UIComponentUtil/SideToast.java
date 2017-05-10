@@ -101,7 +101,7 @@ public class SideToast {
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.width = WindowManager.LayoutParams.WRAP_CONTENT;
         params.format = PixelFormat.TRANSLUCENT;
-        params.windowAnimations = R.style.anim_view;
+        params.windowAnimations = R.style.anim_toast_view;
         params.type = WindowManager.LayoutParams.TYPE_TOAST;
         params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE

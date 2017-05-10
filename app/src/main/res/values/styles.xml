@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="anim_view">
+    <style name="anim_toast_view">
         <item name="@android:windowEnterAnimation">@anim/anim_in</item>
         <item name="@android:windowExitAnimation">@anim/anim_out</item>
     </style>

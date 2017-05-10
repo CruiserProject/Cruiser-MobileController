@@ -32,7 +32,7 @@ public class RectView extends View {
         p.setColor(Color.RED);
 
         p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(2.0f);
+        p.setStrokeWidth(10.0f);
 
         canvas.drawRect(x1, y1, x2, y2, p);
 
