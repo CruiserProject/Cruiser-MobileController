@@ -15,6 +15,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -244,7 +246,6 @@ public class MainActivity extends Activity {
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(DensityUtil.dip2px(MainActivity.this, 200.0f), ViewGroup.LayoutParams.MATCH_PARENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_END);
             mapViewPanel.addView(missionConfigurationPanel, params);
-
             linearLayoutForMap.setVisibility(View.GONE);
             switchPanelImageView.setVisibility(View.GONE);
 

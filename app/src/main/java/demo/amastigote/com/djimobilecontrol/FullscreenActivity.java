@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.Fade;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -30,6 +31,7 @@ public class FullscreenActivity extends AppCompatActivity {
         ((TextView) findViewById(R.id.app_name)).setTypeface(
                 Typeface.createFromAsset(getAssets(), "splash.ttf")
         );
+
 
         new Timer().schedule(new TimerTask() {
             @Override
