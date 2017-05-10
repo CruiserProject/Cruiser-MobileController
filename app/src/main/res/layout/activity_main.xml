@@ -90,13 +90,13 @@
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginLeft="1dp"
                 android:src="@mipmap/signal" />
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="19dp"
                 android:src="@mipmap/satellite" />
 
             <TextView
@@ -111,7 +111,7 @@
                 android:id="@+id/remaining_battery"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="16dp"
                 android:src="@mipmap/battery_100" />
 
             <ImageView
@@ -125,16 +125,32 @@
 
     </LinearLayout>
 
-    <Button
-        android:elevation="1dp"
-        android:id="@+id/btn_follow"
-        android:layout_marginTop="2dp"
-        android:textColor="@color/black"
-        android:text="目标追踪"
-        android:layout_below="@+id/status_bar_ll"
-        android:backgroundTint="@color/white"
+    <LinearLayout
+        android:id="@+id/folllow_ll"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="40dp"
+        android:layout_below="@+id/status_bar_ll"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/background_round"
+        android:elevation="1dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/follow_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            android:src="@mipmap/follow" />
+
+        <TextView
+            android:id="@+id/follow_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="12dp"
+            android:text="目标跟踪 OFF" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/videoTextureViewLayout"
@@ -183,8 +199,8 @@
 
     <ImageView
         android:id="@+id/camera_take"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
@@ -193,27 +209,16 @@
 
     <ImageView
         android:id="@+id/camera_switch"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_above="@+id/camera_take"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="6dp"
-        android:layout_marginRight="18dp"
+        android:layout_marginBottom="7dp"
+        android:layout_marginRight="11dp"
         android:background="@drawable/background_round"
-        android:elevation="1dp"
-        android:src="@mipmap/camera_switch" />
-
-    <ImageView
-        android:id="@+id/camera_play"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/camera_take"
-        android:layout_marginRight="18dp"
-        android:layout_marginTop="6dp"
-        android:background="@drawable/background_round"
-        android:elevation="1dp"
-        android:src="@mipmap/play" />
+        android:elevation="2dp"
+        android:padding="7dp"
+        android:src="@mipmap/switch_camera" />
 
     <ImageView
         android:id="@+id/switch_panel"
@@ -222,32 +227,61 @@
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/ll_for_map"
         android:elevation="1dp"
-        android:src="@mipmap/camera_switch" />
+        android:src="@mipmap/switch_panel" />
 
-    <ImageView
+    <LinearLayout
         android:id="@+id/land"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         android:background="@drawable/background_round"
-        android:elevation="1dp"
-        android:src="@mipmap/land" />
+        android:elevation="2dp"
+        android:orientation="horizontal">
 
-    <ImageView
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:elevation="2dp"
+            android:padding="10dp"
+            android:src="@mipmap/land" />
+
+        <TextView
+            android:text="降落"
+            android:layout_marginEnd="12dp"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
         android:id="@+id/takeoff"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_above="@+id/land"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="10dp"
         android:background="@drawable/background_round"
-        android:elevation="1dp"
-        android:src="@mipmap/take_off" />
+        android:elevation="2dp"
+        android:orientation="horizontal">
 
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="10dp"
+            android:src="@mipmap/take_off" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="12dp"
+            android:text="起飞" />
+    </LinearLayout>
 
 </RelativeLayout>
 

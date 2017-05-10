@@ -30,4 +30,14 @@ public class ScreenSizeConverter {
     public byte convertY2YPercent(float y) {
         return (byte) ((int) (y / videoTextureFrameLayout_height * 100 + 0.5f));
     }
+
+    public float convertXPercent2X(byte x_perc) {
+        return (float) (x_perc / 100.0 * videoTextureFrameLayout_width);
+    }
+
+    public float convertYPercent2Y(byte y_perc) {
+        return (float) (y_perc / 100.0 * videoTextureFrameLayout_height);
+    }
+
+
 }

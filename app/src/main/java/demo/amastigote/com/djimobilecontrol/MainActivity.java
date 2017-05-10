@@ -90,21 +90,23 @@ public class MainActivity extends Activity {
      */
     private RelativeLayout relativeLayoutMain;
     private FrameLayout videoTextureViewFrameLayout;
+    private LinearLayout takeOffLinearLayout;
+    private LinearLayout landLinearLayout;
+    private LinearLayout followLinearLayout;
+    private ImageView remainingBatteryImageView;
     private ImageView statusIndicatorImageView;
     private ImageView gpsSignalLevelImageView;
     private ImageView rcSignalLevelImageView;
-    private ImageView remainingBatteryImageView;
-    private ImageView takeOffImageView;
-    private ImageView landImageView;
     private ImageView cameraShootImageView;
     private ImageView cameraSwitchImageView;
-    private ImageView cameraPlayImageView;
     private ImageView switchPanelImageView;
+    private ImageView followStateImageView;
     private TextView aircraftTextView;
     private TextView statusDescriptionTextView;
     private TextView satelliteNumberTextView;
     private TextView stateAltitudeTextView;
     private TextView stateVelocityTextView;
+    private TextView followStateTextView;
 
     // a test for SendDataToOnBoardSDKDevice
     private Button mapPanelUndoButton;
@@ -114,7 +116,6 @@ public class MainActivity extends Activity {
     private Button mapPanelStopMissionButton;
     private Button missionConfigurationPanelOKButton;
     private Button missionConfigurationPanelCancelButton;
-    private Button followButton;
 
     private RadioGroup radioGroupMissionStartAction;
     private RadioGroup radioGroupMissionFinishAction;
@@ -146,10 +147,12 @@ public class MainActivity extends Activity {
     /*
         data
      */
+    private byte[] coordinations = new byte[4];
+
     private AtomicInteger previousWayPointIndex = new AtomicInteger();
     private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
     private AtomicBoolean isUsingPreciselyLanding = new AtomicBoolean(false);
-
+    private AtomicBoolean isUsingObjectFollow = new AtomicBoolean(false);
     /*
         DJI sdk
      */
@@ -266,7 +269,6 @@ public class MainActivity extends Activity {
                     rectView.invalidate();
                     break;
                 case MotionEvent.ACTION_UP:
-                    byte[] coordinations = new byte[4];
                     coordinations[0] = screenSizeConverter.convertX2XPercent(rectView.getX1());
                     coordinations[1] = screenSizeConverter.convertY2YPercent(rectView.getY1());
                     coordinations[2] = screenSizeConverter.convertX2XPercent(rectView.getX2());
@@ -276,12 +278,35 @@ public class MainActivity extends Activity {
                     Log.e(">>", "right: " + screenSizeConverter.convertX2XPercent(rectView.getX2()));
                     Log.e(">>", "bottom: " + screenSizeConverter.convertY2YPercent(rectView.getY2()));
 
-                    byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_VALUE, coordinations);
-                    //// TODO: 2017/5/10 根据逻辑发送数据 
-                    
+                    byte[] data_start = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_START, null);
+
+                    if (baseProduct != null && baseProduct.isConnected() && flightController != null) {
+                        flightController.sendDataToOnboardSDKDevice(data_start, new CommonCallbacks.CompletionCallback() {
+                            @Override
+                            public void onResult(DJIError djiError) {
+                                if (djiError == null) {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            SideToast.makeText(MainActivity.this, "正在请求启用目标追踪", SideToast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            SideToast.makeText(MainActivity.this, "请求启用目标追踪失败", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        SideToast.makeText(MainActivity.this, "无效操作：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                    }
                     videoTextureViewFrameLayout.removeView(rectView);
                     videoTextureViewFrameLayout.setOnTouchListener(null);
-                    followButton.setVisibility(View.VISIBLE);
+                    followLinearLayout.setVisibility(View.VISIBLE);
                     break;
 
             }
@@ -294,20 +319,131 @@ public class MainActivity extends Activity {
             = new FlightController.OnboardSDKDeviceDataCallback() {
         @Override
         public void onReceive(final byte[] bytes) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    SideToast.makeText(MainActivity.this, "成功收到消息: " + bytes.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
-                    int len = bytes.length;
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (byte aByte : bytes) {
-                        stringBuilder.append((char) aByte);
-                    }
-                    Log.e(">> Onboard Message", stringBuilder.toString());
-
+            if (bytes[0] == 0x01) {
+                switch (bytes[1]) {
+                    case 0x02:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "精准辅助降落已启用", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                            }
+                        });
+                        break;
+                    case 0x04:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "精准辅助降落已取消", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                            }
+                        });
+                        break;
+                    case 0x06:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "已成功降落", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL);
+                            }
+                        });
+                        break;
+                    default:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "不可识别的消息", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
+                            }
+                        });
+                        break;
                 }
-            });
-//            SideToast.makeText(MainActivity.this, "成功收到消息:" + bytes.toString(), SideToast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (bytes[0] == 0x02) {
+                switch (bytes[1]) {
+                    case 0x02:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (flightController != null && baseProduct != null && baseProduct.isConnected()) {
+                                    byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_VALUE, coordinations);
+                                    flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
+                                        @Override
+                                        public void onResult(DJIError djiError) {
+                                            if (djiError == null) {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        SideToast.makeText(MainActivity.this, "正在上传目标信息", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                                    }
+                                                });
+                                            } else {
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        SideToast.makeText(MainActivity.this, "上传目标信息失败", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            SideToast.makeText(MainActivity.this, "上传目标信息失败：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                        }
+                                    });
+                                }
+                                followStateTextView.setText("目标跟踪 ON");
+                                followStateImageView.setImageDrawable(getDrawable(R.mipmap.follow_on));
+                                isUsingObjectFollow.set(true);
+
+                                rectView.setX1(0.0f);
+                                rectView.setY1(0.0f);
+                                rectView.setX2(0.0f);
+                                rectView.setY2(0.0f);
+
+                                videoTextureViewFrameLayout.addView(rectView);
+                            }
+                        });
+                        break;
+                    case 0x04:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "目标跟踪已取消", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                followStateImageView.setImageDrawable(getDrawable(R.mipmap.follow));
+                                followStateTextView.setText("目标跟踪 OFF");
+                                isUsingObjectFollow.set(false);
+
+                                videoTextureViewFrameLayout.removeView(rectView);
+
+                            }
+                        });
+                        break;
+                    case 0x44:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                rectView.setX1(screenSizeConverter.convertXPercent2X(bytes[2]));
+                                rectView.setY1(screenSizeConverter.convertYPercent2Y(bytes[3]));
+                                rectView.setX2(screenSizeConverter.convertXPercent2X(bytes[4]));
+                                rectView.setY2(screenSizeConverter.convertYPercent2Y(bytes[5]));
+
+                                rectView.invalidate();
+                            }
+                        });
+                        break;
+                    default:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "不可识别的消息", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
+                            }
+                        });
+                        break;
+                }
+            }
+
         }
     };
     private BaseProduct.BaseProductListener baseProductListener
@@ -545,18 +681,19 @@ public class MainActivity extends Activity {
         gpsSignalLevelImageView = (ImageView) findViewById(R.id.gps_signal);
         rcSignalLevelImageView = (ImageView) findViewById(R.id.rc_signal);
         remainingBatteryImageView = (ImageView) findViewById(R.id.remaining_battery);
-        takeOffImageView = (ImageView) findViewById(R.id.takeoff);
-        landImageView = (ImageView) findViewById(R.id.land);
         cameraShootImageView = (ImageView) findViewById(R.id.camera_take);
         cameraSwitchImageView = (ImageView) findViewById(R.id.camera_switch);
-        cameraPlayImageView = (ImageView) findViewById(R.id.camera_play);
         switchPanelImageView = (ImageView) findViewById(R.id.switch_panel);
+        followStateImageView = (ImageView) findViewById(R.id.follow_img);
+        followStateTextView = (TextView) findViewById(R.id.follow_txt);
         aircraftTextView = (TextView) findViewById(R.id.status_aircraft);
         statusDescriptionTextView = (TextView) findViewById(R.id.status_description_txt);
         satelliteNumberTextView = (TextView) findViewById(R.id.satellite_number_txt);
         stateAltitudeTextView = (TextView) findViewById(R.id.state_altitude);
         stateVelocityTextView = (TextView) findViewById(R.id.state_velocity);
-        followButton = (Button) findViewById(R.id.btn_follow);
+        takeOffLinearLayout = (LinearLayout) findViewById(R.id.takeoff);
+        landLinearLayout = (LinearLayout) findViewById(R.id.land);
+        followLinearLayout = (LinearLayout) findViewById(R.id.folllow_ll);
 
         rectView = new RectView(MainActivity.this);
 
@@ -751,18 +888,33 @@ public class MainActivity extends Activity {
 
 
     private void initOnClickListener() {
-        followButton.setOnClickListener(new View.OnClickListener() {
+        followLinearLayout.setClickable(true);
+        followLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                followButton.setVisibility(View.GONE);
-                SideToast.makeText(MainActivity.this, "在屏幕上滑动以框定目标", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
-                videoTextureViewFrameLayout.setOnTouchListener(videoTextureViewFrameLayoutOnTouchListener);
+                if (!isUsingObjectFollow.get()) {
+                    SideToast.makeText(MainActivity.this, "在屏幕上滑动以框定目标", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
+                    followLinearLayout.setVisibility(View.GONE);
+                    videoTextureViewFrameLayout.setOnTouchListener(videoTextureViewFrameLayoutOnTouchListener);
 
+                } else {
+                    byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_STOP, null);
+                    flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(final DJIError djiError) {
+                            if (djiError == null) {
+                                SideToast.makeText(MainActivity.this, "正在请求终止目标跟踪", SideToast.LENGTH_SHORT).show();
+                            } else {
+                                SideToast.makeText(MainActivity.this, "请求终止目标跟踪失败：" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                            }
+                        }
+                    });
+                }
             }
         });
 
-        takeOffImageView.setClickable(true);
-        takeOffImageView.setOnClickListener(new View.OnClickListener() {
+        takeOffLinearLayout.setClickable(true);
+        takeOffLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SimpleAlertDialog.show(
@@ -774,7 +926,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (baseProduct == null || !baseProduct.isConnected()) {
-                                    SideToast.makeText(MainActivity.this, "无效操作:飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                    SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                 } else {
                                     flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
                                         @Override
@@ -793,8 +945,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        landImageView.setClickable(true);
-        landImageView.setOnClickListener(new View.OnClickListener() {
+        landLinearLayout.setClickable(true);
+        landLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (baseProduct == null || !baseProduct.isConnected()) {
@@ -1292,7 +1444,6 @@ public class MainActivity extends Activity {
 
     private void switchMapPanelFocus() {
         if (!isMapPanelFocused) {
-            relativeLayoutMain.removeView(cameraPlayImageView);
             relativeLayoutMain.removeView(cameraShootImageView);
             relativeLayoutMain.removeView(cameraSwitchImageView);
             linearLayoutForMap.removeView(mapViewPanel);
@@ -1300,7 +1451,7 @@ public class MainActivity extends Activity {
             videoTextureViewFrameLayout.addView(mapViewPanel);
             linearLayoutForMap.addView(videoTextureView);
             mapPanelCreateButton.setVisibility(View.VISIBLE);
-            followButton.setVisibility(View.GONE);
+            followLinearLayout.setVisibility(View.GONE);
         } else {
             wayPointList.clear();
             baiduMap.clear();
@@ -1310,10 +1461,8 @@ public class MainActivity extends Activity {
             linearLayoutForMap.addView(mapViewPanel);
             videoTextureViewFrameLayout.addView(videoTextureView);
             relativeLayoutMain.addView(cameraShootImageView);
-            relativeLayoutMain.addView(cameraPlayImageView);
             relativeLayoutMain.addView(cameraSwitchImageView);
-            followButton.setVisibility(View.VISIBLE);
-
+            followLinearLayout.setVisibility(View.VISIBLE);
         }
 
         mapView.onResume();
