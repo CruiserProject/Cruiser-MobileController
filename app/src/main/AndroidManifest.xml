@@ -66,16 +66,10 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/Theme.Design.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
             </intent-filter>
-
-            <meta-data
-                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
-                android:resource="@xml/accessory_filter" />
         </activity>
         <activity
             android:screenOrientation="landscape"

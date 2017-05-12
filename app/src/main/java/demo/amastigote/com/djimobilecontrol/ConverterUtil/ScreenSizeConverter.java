@@ -39,5 +39,7 @@ public class ScreenSizeConverter {
         return (float) (y_perc / 100.0 * videoTextureFrameLayout_height);
     }
 
-
+    public float getScreen_density() {
+        return screen_density;
+    }
 }

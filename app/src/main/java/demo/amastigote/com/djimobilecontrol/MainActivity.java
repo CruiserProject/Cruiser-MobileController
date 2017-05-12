@@ -3,6 +3,7 @@ package demo.amastigote.com.djimobilecontrol;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,8 +16,6 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -95,29 +94,35 @@ public class MainActivity extends Activity {
     private LinearLayout takeOffLinearLayout;
     private LinearLayout landLinearLayout;
     private LinearLayout followLinearLayout;
+    private LinearLayout logLinearLayout;
+    private LinearLayout developerOptionsLinearLayout;
     private ImageView remainingBatteryImageView;
-    private ImageView statusIndicatorImageView;
     private ImageView gpsSignalLevelImageView;
     private ImageView rcSignalLevelImageView;
     private ImageView cameraShootImageView;
     private ImageView cameraSwitchImageView;
     private ImageView switchPanelImageView;
     private ImageView followStateImageView;
+    private ImageView developOptionImageView;
     private TextView aircraftTextView;
-    private TextView statusDescriptionTextView;
     private TextView satelliteNumberTextView;
-    private TextView stateAltitudeTextView;
-    private TextView stateVelocityTextView;
+    private TextView statusAltitudeTextView;
+    private TextView statusVelocityTextView;
+    private TextView statusLandingTextView;
+    private TextView statusTrackingTextView;
     private TextView followStateTextView;
 
     // a test for SendDataToOnBoardSDKDevice
+    private Button sendDataLandingButton;
+
     private Button mapPanelUndoButton;
-    private Button mapPanelCreateButton;
+    private LinearLayout mapPanelCreateButton;
     private Button mapPanelStartMissionButton;
     private Button mapPanelCancelMissionButton;
     private Button mapPanelStopMissionButton;
     private Button missionConfigurationPanelOKButton;
     private Button missionConfigurationPanelCancelButton;
+    private Button debugConfigurationExitButton;
 
     private RadioGroup radioGroupMissionStartAction;
     private RadioGroup radioGroupMissionFinishAction;
@@ -262,7 +267,7 @@ public class MainActivity extends Activity {
                     rectView.setY1(event.getY());
                     rectView.setX2(event.getX());
                     rectView.setY2(event.getY());
-                    videoTextureViewFrameLayout.addView(rectView);
+                    rectView.setVisibility(View.VISIBLE);
                     break;
                 case MotionEvent.ACTION_MOVE:
                     rectView.setX2(event.getX());
@@ -270,8 +275,8 @@ public class MainActivity extends Activity {
                     rectView.invalidate();
                     break;
                 case MotionEvent.ACTION_UP:
-                    videoTextureViewFrameLayout.removeView(rectView);
                     videoTextureViewFrameLayout.setOnTouchListener(null);
+                    rectView.setVisibility(View.GONE);
                     followLinearLayout.setVisibility(View.VISIBLE);
 
                     coordinations[0] = screenSizeConverter.convertX2XPercent(rectView.getX1());
@@ -360,7 +365,7 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                //// TODO: 2017/5/12 update drone status deltaXY
+                                statusLandingTextView.setText(String.format(Locale.CHINA, "L:  deltaX: %d.%d   deltaY: %d.%d", (int) bytes[2], (int) bytes[3], (int) bytes[4], (int) bytes[5]));
                             }
                         });
                         break;
@@ -385,6 +390,7 @@ public class MainActivity extends Activity {
             }
 
             if (bytes[0] == 0x02) {
+                Log.e(">>", String.format("%d %d %d %d %d %d", (int) bytes[0], (int) bytes[1], (int) bytes[2], (int) bytes[3], (int) bytes[4], (int) bytes[5]));
                 switch (bytes[1]) {
                     case 0x02:
                         runOnUiThread(new Runnable() {
@@ -420,6 +426,7 @@ public class MainActivity extends Activity {
                                         }
                                     });
                                 }
+//                                followStateTextView.setTextColor(Color.rgb(18,150,219));
                                 followStateTextView.setText("目标跟踪 ON");
                                 followStateImageView.setImageDrawable(getDrawable(R.mipmap.follow_on));
                                 isUsingObjectFollow.set(true);
@@ -429,7 +436,7 @@ public class MainActivity extends Activity {
                                 rectView.setX2(0.0f);
                                 rectView.setY2(0.0f);
 
-                                videoTextureViewFrameLayout.addView(rectView);
+                                rectView.setVisibility(View.VISIBLE);
                             }
                         });
                         break;
@@ -439,16 +446,22 @@ public class MainActivity extends Activity {
                             public void run() {
                                 SideToast.makeText(MainActivity.this, "目标跟踪已取消", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                                 followStateImageView.setImageDrawable(getDrawable(R.mipmap.follow));
+//                                followStateTextView.setTextColor(followStateTextView.getTextColors().getDefaultColor());
                                 followStateTextView.setText("目标跟踪 OFF");
                                 isUsingObjectFollow.set(false);
 
-                                videoTextureViewFrameLayout.removeView(rectView);
+                                rectView.setVisibility(View.GONE);
 
                             }
                         });
                         break;
                     case 0x42:
-                        //// TODO: 2017/5/12 update Object deltaXY
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                statusTrackingTextView.setText(String.format(Locale.CHINA, "T:  deltaX: %d.%d   deltaY: %d.%d", (int) bytes[2], (int) bytes[3], (int) bytes[4], (int) bytes[5]));
+                            }
+                        });
                         break;
                     case 0x44:
                         runOnUiThread(new Runnable() {
@@ -500,8 +513,8 @@ public class MainActivity extends Activity {
                     public void run() {
                         SideToast.makeText(MainActivity.this, "飞行器已断开连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                         aircraftTextView.setText("飞行器未连接");
-                        stateVelocityTextView.setText("");
-                        stateAltitudeTextView.setText("");
+                        statusVelocityTextView.setText("V: n/a");
+                        statusAltitudeTextView.setText("A: n/a");
                         currentBatteryInPercent = -1;
                         curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
                     }
@@ -526,7 +539,6 @@ public class MainActivity extends Activity {
         public void onUpdate(BatteryState batteryState) {
             int remainingBatteryInPercent = batteryState.getChargeRemainingInPercent();
             updateBatteryState(remainingBatteryInPercent);
-
         }
     };
     private DJISDKManager.SDKManagerCallback sdkManagerCallback
@@ -643,7 +655,7 @@ public class MainActivity extends Activity {
         mapViewPanel = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, null);
         linearLayoutForMap = (LinearLayout) findViewById(R.id.ll_for_map);
         mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
-        mapPanelCreateButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_create);
+        mapPanelCreateButton = (LinearLayout) mapViewPanel.findViewById(R.id.mv_btn_create);
         mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
         mapPanelCancelMissionButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_cancel);
         mapPanelStartMissionButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_start);
@@ -707,7 +719,7 @@ public class MainActivity extends Activity {
     private void initUI() {
         videoTextureViewFrameLayout = (FrameLayout) findViewById(R.id.videoTextureViewLayout);
         relativeLayoutMain = (RelativeLayout) findViewById(R.id.rl_main);
-        statusIndicatorImageView = (ImageView) findViewById(R.id.status_indicator_img);
+        developOptionImageView = (ImageView) findViewById(R.id.develop_option);
         gpsSignalLevelImageView = (ImageView) findViewById(R.id.gps_signal);
         rcSignalLevelImageView = (ImageView) findViewById(R.id.rc_signal);
         remainingBatteryImageView = (ImageView) findViewById(R.id.remaining_battery);
@@ -717,15 +729,39 @@ public class MainActivity extends Activity {
         followStateImageView = (ImageView) findViewById(R.id.follow_img);
         followStateTextView = (TextView) findViewById(R.id.follow_txt);
         aircraftTextView = (TextView) findViewById(R.id.status_aircraft);
-        statusDescriptionTextView = (TextView) findViewById(R.id.status_description_txt);
         satelliteNumberTextView = (TextView) findViewById(R.id.satellite_number_txt);
-        stateAltitudeTextView = (TextView) findViewById(R.id.state_altitude);
-        stateVelocityTextView = (TextView) findViewById(R.id.state_velocity);
+        statusAltitudeTextView = (TextView) findViewById(R.id.altitude_txt);
+        statusVelocityTextView = (TextView) findViewById(R.id.velocity_txt);
+        statusLandingTextView = (TextView) findViewById(R.id.landing_status_txt);
+        statusTrackingTextView = (TextView) findViewById(R.id.tracking_status_txt);
         takeOffLinearLayout = (LinearLayout) findViewById(R.id.takeoff);
         landLinearLayout = (LinearLayout) findViewById(R.id.land);
         followLinearLayout = (LinearLayout) findViewById(R.id.folllow_ll);
 
+        logLinearLayout = (LinearLayout) findViewById(R.id.log_ll);
+
         rectView = new RectView(MainActivity.this);
+        rectView.setX1(0.0f);
+        rectView.setY1(0.0f);
+        rectView.setX2(0.0f);
+        rectView.setY2(0.0f);
+
+        rectView.setElevation(Integer.MAX_VALUE);
+
+        videoTextureViewFrameLayout.addView(rectView);
+
+        developerOptionsLinearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.debug_configuration, null);
+        debugConfigurationExitButton = (Button) developerOptionsLinearLayout.findViewById(R.id.debug_exit_btn);
+
+        //// TODO: 2017/5/12 delete this Button
+        sendDataLandingButton = (Button) developerOptionsLinearLayout.findViewById(R.id.send_data_test_btn);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(500, ViewGroup.LayoutParams.MATCH_PARENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_START);
+        developerOptionsLinearLayout.setElevation(Integer.MAX_VALUE);
+        developerOptionsLinearLayout.setLayoutParams(params);
+        relativeLayoutMain.addView(developerOptionsLinearLayout);
+        developerOptionsLinearLayout.setVisibility(View.GONE);
 
         screenSizeConverter = new ScreenSizeConverter(MainActivity.this);
     }
@@ -918,6 +954,55 @@ public class MainActivity extends Activity {
 
 
     private void initOnClickListener() {
+        /*
+            test sendData
+         */
+        sendDataLandingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (flightController == null || !flightController.isConnected()) {
+                    SideToast.makeText(MainActivity.this, "发送失败：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                    return;
+                }
+                byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.VISUAL_LANDING_START, null);
+                flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(final DJIError djiError) {
+                        if (djiError == null) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SideToast.makeText(MainActivity.this, "正在请求视觉辅助精准降落", SideToast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SideToast.makeText(MainActivity.this, "请求精准降落失败：" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        debugConfigurationExitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                developerOptionsLinearLayout.setVisibility(View.GONE);
+            }
+        });
+
+        developOptionImageView.setClickable(true);
+        developOptionImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                developerOptionsLinearLayout.setVisibility(View.VISIBLE);
+            }
+        });
+
         followLinearLayout.setClickable(true);
         followLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1416,9 +1501,9 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                stateAltitudeTextView.setText(String.format(Locale.CHINA, "Altitude: %.1f", flightControllerState.getAircraftLocation().getAltitude()));
+                statusAltitudeTextView.setText(String.format(Locale.CHINA, "A: %.1f", flightControllerState.getAircraftLocation().getAltitude()));
                 float velocity = (float) Math.sqrt(Math.pow(flightControllerState.getVelocityX(), 2) + Math.pow(flightControllerState.getVelocityY(), 2));
-                stateVelocityTextView.setText(String.format(Locale.CHINA, "Velocity: %.1f", velocity));
+                statusVelocityTextView.setText(String.format(Locale.CHINA, "V: %.1f", velocity));
             }
         });
     }

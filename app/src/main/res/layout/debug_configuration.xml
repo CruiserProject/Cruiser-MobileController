@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:layout_width="160dp"
+    android:layout_height="match_parent"
+    android:background="#191919"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_gravity="center_vertical"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@mipmap/bug" />
+
+        <TextView
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开发者选项"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <View
+                android:layout_marginBottom="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/whiteTrans"
+                android:layout_marginTop="7dp" />
+
+            <Switch
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="飞行速度"
+                android:textColor="@color/whiteTrans" />
+
+            <Switch
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="飞行高度"
+                android:textColor="@color/whiteTrans" />
+
+            <Switch
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:switchPadding="10dp"
+                android:text="降落位移"
+                android:textColor="@color/whiteTrans" />
+
+            <Switch
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:switchPadding="10dp"
+                android:text="目标跟踪位移"
+                android:textColor="@color/whiteTrans" />
+
+            <Switch
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:switchPadding="10dp"
+                android:text="降落绘图"
+                android:textColor="@color/whiteTrans" />
+
+            <Switch
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:switchPadding="10dp"
+                android:text="目标跟踪绘图"
+                android:textColor="@color/whiteTrans" />
+
+            <Switch
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:switchPadding="10dp"
+                android:text="其他调试信息"
+                android:textColor="@color/whiteTrans" />
+
+            <Button
+                android:id="@+id/send_data_test_btn"
+                android:layout_width="80dp"
+                android:layout_height="40dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:layout_marginTop="8dp"
+        android:id="@+id/debug_exit_btn"
+        android:textColor="@color/red"
+        android:text="关闭"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:background="@drawable/button_selector" />
+</LinearLayout>
