@@ -342,10 +342,17 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SideToast.makeText(MainActivity.this, "已成功降落", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL);
+                                SideToast.makeText(MainActivity.this, "开始垂直下降", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                             }
                         });
                         break;
+                    case 0x08:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "已成功降落", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                            }
+                        });
                     default:
                         runOnUiThread(new Runnable() {
                             @Override
