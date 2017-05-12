@@ -270,6 +270,10 @@ public class MainActivity extends Activity {
                     rectView.invalidate();
                     break;
                 case MotionEvent.ACTION_UP:
+                    videoTextureViewFrameLayout.removeView(rectView);
+                    videoTextureViewFrameLayout.setOnTouchListener(null);
+                    followLinearLayout.setVisibility(View.VISIBLE);
+
                     coordinations[0] = screenSizeConverter.convertX2XPercent(rectView.getX1());
                     coordinations[1] = screenSizeConverter.convertY2YPercent(rectView.getY1());
                     coordinations[2] = screenSizeConverter.convertX2XPercent(rectView.getX2());
@@ -305,9 +309,7 @@ public class MainActivity extends Activity {
                     } else {
                         SideToast.makeText(MainActivity.this, "无效操作：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                     }
-                    videoTextureViewFrameLayout.removeView(rectView);
-                    videoTextureViewFrameLayout.setOnTouchListener(null);
-                    followLinearLayout.setVisibility(View.VISIBLE);
+
                     break;
 
             }
@@ -353,6 +355,23 @@ public class MainActivity extends Activity {
                                 SideToast.makeText(MainActivity.this, "已成功降落", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                             }
                         });
+                        break;
+                    case 0x42:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //// TODO: 2017/5/12 update drone status deltaXY
+                            }
+                        });
+                        break;
+                    case 0x44:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                //// TODO: 2017/5/12 update circle and radius
+                            }
+                        });
+                        break;
                     default:
                         runOnUiThread(new Runnable() {
                             @Override
@@ -427,6 +446,9 @@ public class MainActivity extends Activity {
 
                             }
                         });
+                        break;
+                    case 0x42:
+                        //// TODO: 2017/5/12 update Object deltaXY
                         break;
                     case 0x44:
                         runOnUiThread(new Runnable() {
