@@ -46,6 +46,7 @@
                 android:layout_marginTop="7dp" />
 
             <Switch
+                android:id="@+id/switch1"
                 android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,6 +55,7 @@
                 android:textColor="@color/whiteTrans" />
 
             <Switch
+                android:id="@+id/switch2"
                 android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,24 +64,25 @@
                 android:textColor="@color/whiteTrans" />
 
             <Switch
+                android:id="@+id/switch3"
                 android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:switchPadding="10dp"
                 android:text="降落位移"
                 android:textColor="@color/whiteTrans" />
 
             <Switch
+                android:id="@+id/switch4"
                 android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:switchPadding="10dp"
                 android:text="目标跟踪位移"
                 android:textColor="@color/whiteTrans" />
 
             <Switch
+                android:id="@+id/switch5"
                 android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,6 +92,7 @@
                 android:textColor="@color/whiteTrans" />
 
             <Switch
+                android:id="@+id/switch6"
                 android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,10 +102,10 @@
                 android:textColor="@color/whiteTrans" />
 
             <Switch
+                android:id="@+id/switch7"
                 android:layout_marginTop="7dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:switchPadding="10dp"
                 android:text="其他调试信息"
                 android:textColor="@color/whiteTrans" />

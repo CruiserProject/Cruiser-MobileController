@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -22,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -95,6 +98,7 @@ public class MainActivity extends Activity {
     private LinearLayout landLinearLayout;
     private LinearLayout followLinearLayout;
     private LinearLayout logLinearLayout;
+    private ScrollView logScrollView;
     private LinearLayout developerOptionsLinearLayout;
     private ImageView remainingBatteryImageView;
     private ImageView gpsSignalLevelImageView;
@@ -129,9 +133,12 @@ public class MainActivity extends Activity {
     private RadioGroup radioGroupPathMode;
     private RadioGroup radioGroupHeading;
 
+    private Switch[] developSwitchGroup;
+
 
     private TextView textViewAutoFlightSpeed;
     private TextView textViewMaxFlightSpeed;
+    private TextView textLogTitle;
 
     private SimpleProgressDialog startUpInfoDialog;
     private SimpleProgressDialog uploadInfoDialog;
@@ -160,6 +167,8 @@ public class MainActivity extends Activity {
     private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
     private AtomicBoolean isUsingPreciselyLanding = new AtomicBoolean(false);
     private AtomicBoolean isUsingObjectFollow = new AtomicBoolean(false);
+    private AtomicBoolean isExectuingMission = new AtomicBoolean(false);
+
     /*
         DJI sdk
      */
@@ -283,10 +292,6 @@ public class MainActivity extends Activity {
                     coordinations[1] = screenSizeConverter.convertY2YPercent(rectView.getY1());
                     coordinations[2] = screenSizeConverter.convertX2XPercent(rectView.getX2());
                     coordinations[3] = screenSizeConverter.convertY2YPercent(rectView.getY2());
-                    Log.e(">>", "left: " + screenSizeConverter.convertX2XPercent(rectView.getX1()));
-                    Log.e(">>", "top: " + screenSizeConverter.convertY2YPercent(rectView.getY1()));
-                    Log.e(">>", "right: " + screenSizeConverter.convertX2XPercent(rectView.getX2()));
-                    Log.e(">>", "bottom: " + screenSizeConverter.convertY2YPercent(rectView.getY2()));
 
                     byte[] data_start = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_START, null);
 
@@ -327,6 +332,16 @@ public class MainActivity extends Activity {
             = new FlightController.OnboardSDKDeviceDataCallback() {
         @Override
         public void onReceive(final byte[] bytes) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    TextView txt = new TextView(MainActivity.this);
+                    txt.setTextColor(Color.YELLOW);
+                    txt.setShadowLayer(4.0f, 0.0f, 0.0f, Color.BLACK);
+                    txt.setText(String.format(Locale.CHINA, "Received:  %x %x //  %x %x %x %x", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]));
+                    logLinearLayout.addView(txt);
+                }
+            });
             if (bytes[0] == 0x01) {
                 switch (bytes[1]) {
                     case 0x02:
@@ -350,6 +365,27 @@ public class MainActivity extends Activity {
                             @Override
                             public void run() {
                                 SideToast.makeText(MainActivity.this, "开始垂直下降", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                final byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.VISUAL_LANDING_STOP, null);
+                                flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
+                                    @Override
+                                    public void onResult(DJIError djiError) {
+                                        if (djiError != null) {
+                                            flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
+                                                @Override
+                                                public void onResult(DJIError djiError) {
+                                                    if (djiError != null) {
+                                                        runOnUiThread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                SideToast.makeText(MainActivity.this, "视觉辅助终止失败", SideToast.LENGTH_SHORT, SideToast.LENGTH_SHORT);
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
                             }
                         });
                         break;
@@ -390,7 +426,6 @@ public class MainActivity extends Activity {
             }
 
             if (bytes[0] == 0x02) {
-                Log.e(">>", String.format("%d %d %d %d %d %d", (int) bytes[0], (int) bytes[1], (int) bytes[2], (int) bytes[3], (int) bytes[4], (int) bytes[5]));
                 switch (bytes[1]) {
                     case 0x02:
                         runOnUiThread(new Runnable() {
@@ -734,11 +769,25 @@ public class MainActivity extends Activity {
         statusVelocityTextView = (TextView) findViewById(R.id.velocity_txt);
         statusLandingTextView = (TextView) findViewById(R.id.landing_status_txt);
         statusTrackingTextView = (TextView) findViewById(R.id.tracking_status_txt);
+        textLogTitle = (TextView) findViewById(R.id.log_title);
         takeOffLinearLayout = (LinearLayout) findViewById(R.id.takeoff);
         landLinearLayout = (LinearLayout) findViewById(R.id.land);
         followLinearLayout = (LinearLayout) findViewById(R.id.folllow_ll);
 
         logLinearLayout = (LinearLayout) findViewById(R.id.log_ll);
+        logScrollView = (ScrollView) findViewById(R.id.log_sv);
+
+        logScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                logLinearLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        logScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
+            }
+        });
 
         rectView = new RectView(MainActivity.this);
         rectView.setX1(0.0f);
@@ -748,10 +797,25 @@ public class MainActivity extends Activity {
 
         rectView.setElevation(Integer.MAX_VALUE);
 
+        statusTrackingTextView.setVisibility(View.GONE);
+        statusLandingTextView.setVisibility(View.GONE);
+        textLogTitle.setVisibility(View.GONE);
+        logLinearLayout.setVisibility(View.GONE);
+
         videoTextureViewFrameLayout.addView(rectView);
+
+        developSwitchGroup = new Switch[7];
 
         developerOptionsLinearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.debug_configuration, null);
         debugConfigurationExitButton = (Button) developerOptionsLinearLayout.findViewById(R.id.debug_exit_btn);
+
+        developSwitchGroup[0] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch1);
+        developSwitchGroup[1] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch2);
+        developSwitchGroup[2] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch3);
+        developSwitchGroup[3] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch4);
+        developSwitchGroup[4] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch5);
+        developSwitchGroup[5] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch6);
+        developSwitchGroup[6] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch7);
 
         //// TODO: 2017/5/12 delete this Button
         sendDataLandingButton = (Button) developerOptionsLinearLayout.findViewById(R.id.send_data_test_btn);
@@ -762,6 +826,7 @@ public class MainActivity extends Activity {
         developerOptionsLinearLayout.setLayoutParams(params);
         relativeLayoutMain.addView(developerOptionsLinearLayout);
         developerOptionsLinearLayout.setVisibility(View.GONE);
+
 
         screenSizeConverter = new ScreenSizeConverter(MainActivity.this);
     }
@@ -839,6 +904,8 @@ public class MainActivity extends Activity {
                                         public void onResult(DJIError djiError) {
                                             if (djiError != null) {
                                                 SideToast.makeText(MainActivity.this, "任务执行失败:" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                            } else {
+                                                isExectuingMission.set(true);
                                             }
                                         }
                                     });
@@ -859,7 +926,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onExecutionFinish(@Nullable DJIError djiError) {
-                Log.e(">>execution", "aaaa");
+                isExectuingMission.set(false);
 
                 if (djiError != null) {
                     runOnUiThread(new Runnable() {
@@ -867,8 +934,10 @@ public class MainActivity extends Activity {
                         public void run() {
                             SideToast.makeText(MainActivity.this, "任务出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
 
-                            mapPanelStopMissionButton.setVisibility(View.GONE);
-                            mapPanelCreateButton.setVisibility(View.VISIBLE);
+                            if (isMapPanelFocused) {
+                                mapPanelStopMissionButton.setVisibility(View.GONE);
+                                mapPanelCreateButton.setVisibility(View.VISIBLE);
+                            }
                         }
                     });
                     return;
@@ -991,6 +1060,38 @@ public class MainActivity extends Activity {
         debugConfigurationExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (developSwitchGroup[0].isChecked()) {
+                    statusVelocityTextView.setVisibility(View.VISIBLE);
+                } else {
+                    statusVelocityTextView.setVisibility(View.GONE);
+                }
+
+                if (developSwitchGroup[1].isChecked()) {
+                    statusAltitudeTextView.setVisibility(View.VISIBLE);
+                } else {
+                    statusAltitudeTextView.setVisibility(View.GONE);
+                }
+
+                if (developSwitchGroup[2].isChecked()) {
+                    statusLandingTextView.setVisibility(View.VISIBLE);
+                } else {
+                    statusLandingTextView.setVisibility(View.GONE);
+                }
+
+                if (developSwitchGroup[3].isChecked()) {
+                    statusTrackingTextView.setVisibility(View.VISIBLE);
+                } else {
+                    statusTrackingTextView.setVisibility(View.GONE);
+                }
+
+                if (developSwitchGroup[6].isChecked()) {
+                    logLinearLayout.setVisibility(View.VISIBLE);
+                    textLogTitle.setVisibility(View.VISIBLE);
+                } else {
+                    logLinearLayout.setVisibility(View.GONE);
+                    textLogTitle.setVisibility(View.GONE);
+                }
+
                 developerOptionsLinearLayout.setVisibility(View.GONE);
             }
         });
@@ -1559,18 +1660,24 @@ public class MainActivity extends Activity {
 
     private void switchMapPanelFocus() {
         if (!isMapPanelFocused) {
+            if (isExectuingMission.get()) {
+                mapPanelStopMissionButton.setVisibility(View.VISIBLE);
+            } else {
+                mapPanelCreateButton.setVisibility(View.VISIBLE);
+            }
             relativeLayoutMain.removeView(cameraShootImageView);
             relativeLayoutMain.removeView(cameraSwitchImageView);
             linearLayoutForMap.removeView(mapViewPanel);
             videoTextureViewFrameLayout.removeView(videoTextureView);
             videoTextureViewFrameLayout.addView(mapViewPanel);
             linearLayoutForMap.addView(videoTextureView);
-            mapPanelCreateButton.setVisibility(View.VISIBLE);
             followLinearLayout.setVisibility(View.GONE);
         } else {
-            wayPointList.clear();
-            baiduMap.clear();
-            mapPanelCreateButton.setVisibility(View.GONE);
+            if (isExectuingMission.get()) {
+                mapPanelStopMissionButton.setVisibility(View.GONE);
+            } else {
+                mapPanelCreateButton.setVisibility(View.GONE);
+            }
             videoTextureViewFrameLayout.removeView(mapViewPanel);
             linearLayoutForMap.removeView(videoTextureView);
             linearLayoutForMap.addView(mapViewPanel);

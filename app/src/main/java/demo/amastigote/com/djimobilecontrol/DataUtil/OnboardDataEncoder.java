@@ -1,8 +1,5 @@
 package demo.amastigote.com.djimobilecontrol.DataUtil;
 
-/**
- * Created by Trafalgar on 2017/5/10.
- */
 
 public class OnboardDataEncoder {
     static byte[] data = new byte[10];

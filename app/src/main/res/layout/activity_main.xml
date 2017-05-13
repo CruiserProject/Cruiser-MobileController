@@ -165,7 +165,9 @@
         android:id="@+id/videoTextureViewLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/status_bar_ll"></FrameLayout>
+        android:layout_below="@+id/status_bar_ll">
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/ll_for_map"
@@ -195,7 +197,7 @@
             android:shadowColor="@color/black"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="4"
+            android:shadowRadius="5"
             android:text="V: 5.31 LY/US"
             android:textColor="@color/white"
             android:textSize="10sp" />
@@ -207,7 +209,7 @@
             android:shadowColor="@color/black"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="4"
+            android:shadowRadius="5"
             android:text="A: 173.6 LY"
             android:textColor="@color/white"
             android:textSize="10sp" />
@@ -219,7 +221,7 @@
             android:shadowColor="@color/black"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="4"
+            android:shadowRadius="5"
             android:text="L: NO MARK DETECTED"
             android:textColor="@color/white"
             android:textSize="10sp" />
@@ -231,7 +233,7 @@
             android:shadowColor="@color/black"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="4"
+            android:shadowRadius="5"
             android:text="T: NO TARGET ASSIGNED"
             android:textColor="@color/white"
             android:textSize="10sp" />
@@ -243,12 +245,14 @@
             android:shadowColor="@color/black"
             android:shadowDx="0"
             android:shadowDy="0"
-            android:shadowRadius="4"
+            android:shadowRadius="5"
             android:text="LOG:"
             android:textColor="@color/white"
             android:textSize="10sp" />
 
         <ScrollView
+            android:scrollbars="none"
+            android:id="@+id/log_sv"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
