@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
     private LinearLayout followLinearLayout;
     private LinearLayout logLinearLayout;
     private ScrollView logScrollView;
-    private LinearLayout developerOptionsLinearLayout;
+    private RelativeLayout developerOptionsRelativeLayout;
     private ImageView remainingBatteryImageView;
     private ImageView gpsSignalLevelImageView;
     private ImageView rcSignalLevelImageView;
@@ -806,26 +806,26 @@ public class MainActivity extends Activity {
 
         developSwitchGroup = new Switch[7];
 
-        developerOptionsLinearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.debug_configuration, null);
-        debugConfigurationExitButton = (Button) developerOptionsLinearLayout.findViewById(R.id.debug_exit_btn);
+        developerOptionsRelativeLayout = (RelativeLayout) getLayoutInflater().inflate(R.layout.debug_configuration, null);
+        debugConfigurationExitButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.debug_exit_btn);
 
-        developSwitchGroup[0] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch1);
-        developSwitchGroup[1] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch2);
-        developSwitchGroup[2] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch3);
-        developSwitchGroup[3] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch4);
-        developSwitchGroup[4] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch5);
-        developSwitchGroup[5] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch6);
-        developSwitchGroup[6] = (Switch) developerOptionsLinearLayout.findViewById(R.id.switch7);
+        developSwitchGroup[0] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch1);
+        developSwitchGroup[1] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch2);
+        developSwitchGroup[2] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch3);
+        developSwitchGroup[3] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch4);
+        developSwitchGroup[4] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch5);
+        developSwitchGroup[5] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch6);
+        developSwitchGroup[6] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch7);
 
         //// TODO: 2017/5/12 delete this Button
-        sendDataLandingButton = (Button) developerOptionsLinearLayout.findViewById(R.id.send_data_test_btn);
+        sendDataLandingButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.send_data_test_btn);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(500, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_START);
-        developerOptionsLinearLayout.setElevation(Integer.MAX_VALUE);
-        developerOptionsLinearLayout.setLayoutParams(params);
-        relativeLayoutMain.addView(developerOptionsLinearLayout);
-        developerOptionsLinearLayout.setVisibility(View.GONE);
+        developerOptionsRelativeLayout.setElevation(Integer.MAX_VALUE);
+        developerOptionsRelativeLayout.setLayoutParams(params);
+        relativeLayoutMain.addView(developerOptionsRelativeLayout);
+        developerOptionsRelativeLayout.setVisibility(View.GONE);
 
 
         screenSizeConverter = new ScreenSizeConverter(MainActivity.this);
@@ -1092,7 +1092,7 @@ public class MainActivity extends Activity {
                     textLogTitle.setVisibility(View.GONE);
                 }
 
-                developerOptionsLinearLayout.setVisibility(View.GONE);
+                developerOptionsRelativeLayout.setVisibility(View.GONE);
             }
         });
 
@@ -1100,7 +1100,7 @@ public class MainActivity extends Activity {
         developOptionImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                developerOptionsLinearLayout.setVisibility(View.VISIBLE);
+                developerOptionsRelativeLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -1133,17 +1133,17 @@ public class MainActivity extends Activity {
         takeOffLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SimpleAlertDialog.show(
-                        MainActivity.this,
-                        true,
-                        "确认起飞",
-                        "是否现在起飞",
-                        new SimpleDialogButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (baseProduct == null || !baseProduct.isConnected()) {
-                                    SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
-                                } else {
+                if (baseProduct == null || !baseProduct.isConnected()) {
+                    SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                } else {
+                    SimpleAlertDialog.show(
+                            MainActivity.this,
+                            true,
+                            "",
+                            "确认起飞",
+                            new SimpleDialogButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
                                     flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
                                         @Override
                                         public void onResult(DJIError djiError) {
@@ -1154,9 +1154,11 @@ public class MainActivity extends Activity {
                                             }
                                         }
                                     });
+
                                 }
-                            }
-                        }));
+                            }));
+                }
+
 
             }
         });
@@ -1168,16 +1170,27 @@ public class MainActivity extends Activity {
                 if (baseProduct == null || !baseProduct.isConnected()) {
                     SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                 } else {
-                    flightController.startGoHome(new CommonCallbacks.CompletionCallback() {
-                        @Override
-                        public void onResult(DJIError djiError) {
-                            if (djiError != null) {
-                                SideToast.makeText(MainActivity.this, "返航时出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
-                            } else {
-                                SideToast.makeText(MainActivity.this, "成功返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
-                            }
-                        }
-                    });
+                    SimpleAlertDialog.show(
+                            MainActivity.this,
+                            true,
+                            "",
+                            "确认降落",
+                            new SimpleDialogButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    flightController.startGoHome(new CommonCallbacks.CompletionCallback() {
+                                        @Override
+                                        public void onResult(DJIError djiError) {
+                                            if (djiError != null) {
+                                                SideToast.makeText(MainActivity.this, "返航时出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                            } else {
+                                                SideToast.makeText(MainActivity.this, "成功返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            })
+                    );
                 }
             }
         });

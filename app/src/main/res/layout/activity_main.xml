@@ -27,16 +27,18 @@
             android:gravity="center_vertical">
 
             <ImageView
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:id="@+id/develop_option"
-                android:src="@mipmap/bug"
-                android:layout_width="20dp"
-                android:layout_height="20dp" />
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/bug" />
 
             <View
-                android:layout_marginStart="10dp"
-                android:background="@color/blackTrans"
                 android:layout_width="1dp"
-                android:layout_height="15dp" />
+                android:layout_height="15dp"
+                android:layout_marginStart="10dp"
+                android:background="@color/blackTrans" />
 
             <ImageView
                 android:layout_width="16dp"
