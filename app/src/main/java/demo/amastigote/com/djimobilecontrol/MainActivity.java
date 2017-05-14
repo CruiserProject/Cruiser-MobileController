@@ -39,6 +39,7 @@ import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 
+import java.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -96,6 +97,7 @@ public class MainActivity extends Activity {
     private FrameLayout videoTextureViewFrameLayout;
     private LinearLayout takeOffLinearLayout;
     private LinearLayout landLinearLayout;
+    private LinearLayout mapPanelCreateLinearLayout;
     private LinearLayout followLinearLayout;
     private LinearLayout logLinearLayout;
     private ScrollView logScrollView;
@@ -116,17 +118,18 @@ public class MainActivity extends Activity {
     private TextView statusTrackingTextView;
     private TextView followStateTextView;
 
-    // a test for SendDataToOnBoardSDKDevice
-    private Button sendDataLandingButton;
+    private Vector<TextView> logTexts;
 
     private Button mapPanelUndoButton;
-    private LinearLayout mapPanelCreateButton;
     private Button mapPanelStartMissionButton;
     private Button mapPanelCancelMissionButton;
     private Button mapPanelStopMissionButton;
     private Button missionConfigurationPanelOKButton;
     private Button missionConfigurationPanelCancelButton;
     private Button debugConfigurationExitButton;
+    private Button debugClearLogButton;
+    // a test for SendDataToOnBoardSDKDevice
+    private Button debugSendDataLandingButton;
 
     private RadioGroup radioGroupMissionStartAction;
     private RadioGroup radioGroupMissionFinishAction;
@@ -174,6 +177,8 @@ public class MainActivity extends Activity {
      */
     private int currentBatteryInPercent = -1;
     private int currentSatellitesCount = -1;
+    private boolean isDrawingLandingCircle = true;
+    private boolean isDrawingFollowObject = true;
     private boolean isMapPanelFocused = false;
     private boolean isRecording = false;
     private SettingsDefinitions.CameraMode curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
@@ -256,7 +261,7 @@ public class MainActivity extends Activity {
             = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            mapPanelCreateButton.setVisibility(View.GONE);
+            mapPanelCreateLinearLayout.setVisibility(View.GONE);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(DensityUtil.dip2px(MainActivity.this, 200.0f), ViewGroup.LayoutParams.MATCH_PARENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_END);
             mapViewPanel.addView(missionConfigurationPanel, params);
@@ -339,6 +344,7 @@ public class MainActivity extends Activity {
                     txt.setTextColor(Color.YELLOW);
                     txt.setShadowLayer(4.0f, 0.0f, 0.0f, Color.BLACK);
                     txt.setText(String.format(Locale.CHINA, "Received:  %x %x //  %x %x %x %x", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]));
+                    logTexts.add(txt);
                     logLinearLayout.addView(txt);
                 }
             });
@@ -463,8 +469,6 @@ public class MainActivity extends Activity {
                                 }
 //                                followStateTextView.setTextColor(Color.rgb(18,150,219));
                                 followStateTextView.setText("目标跟踪 ON");
-                                followStateImageView.setImageDrawable(getDrawable(R.mipmap.follow_on));
-                                isUsingObjectFollow.set(true);
 
                                 rectView.setX1(0.0f);
                                 rectView.setY1(0.0f);
@@ -472,6 +476,11 @@ public class MainActivity extends Activity {
                                 rectView.setY2(0.0f);
 
                                 rectView.setVisibility(View.VISIBLE);
+
+                                followStateImageView.setImageDrawable(getDrawable(R.mipmap.follow_on));
+                                isUsingObjectFollow.set(true);
+
+
                             }
                         });
                         break;
@@ -507,7 +516,12 @@ public class MainActivity extends Activity {
                                 rectView.setX2(screenSizeConverter.convertXPercent2X(bytes[4]));
                                 rectView.setY2(screenSizeConverter.convertYPercent2Y(bytes[5]));
 
-                                rectView.invalidate();
+//                                rectView.setElevation(Integer.MAX_VALUE - 1);
+
+                                if (isDrawingFollowObject) {
+                                    Log.e(">>", "dsadsads");
+                                    rectView.invalidate();
+                                }
                             }
                         });
                         break;
@@ -690,7 +704,7 @@ public class MainActivity extends Activity {
         mapViewPanel = (RelativeLayout) LayoutInflater.from(this).inflate(R.layout.map_panel, null);
         linearLayoutForMap = (LinearLayout) findViewById(R.id.ll_for_map);
         mapView = (MapView) mapViewPanel.findViewById(R.id.mv_mapview);
-        mapPanelCreateButton = (LinearLayout) mapViewPanel.findViewById(R.id.mv_btn_create);
+        mapPanelCreateLinearLayout = (LinearLayout) mapViewPanel.findViewById(R.id.mv_btn_create);
         mapPanelUndoButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_undo);
         mapPanelCancelMissionButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_cancel);
         mapPanelStartMissionButton = (Button) mapViewPanel.findViewById(R.id.mv_btn_start);
@@ -776,6 +790,7 @@ public class MainActivity extends Activity {
 
         logLinearLayout = (LinearLayout) findViewById(R.id.log_ll);
         logScrollView = (ScrollView) findViewById(R.id.log_sv);
+        logTexts = new Vector<>();
 
         logScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -818,8 +833,8 @@ public class MainActivity extends Activity {
         developSwitchGroup[6] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch7);
 
         //// TODO: 2017/5/12 delete this Button
-        sendDataLandingButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.send_data_test_btn);
-
+        debugSendDataLandingButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.send_data_test_btn);
+        debugClearLogButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.debug_clear_log_btn);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(500, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_START);
         developerOptionsRelativeLayout.setElevation(Integer.MAX_VALUE);
@@ -936,7 +951,7 @@ public class MainActivity extends Activity {
 
                             if (isMapPanelFocused) {
                                 mapPanelStopMissionButton.setVisibility(View.GONE);
-                                mapPanelCreateButton.setVisibility(View.VISIBLE);
+                                mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
                             }
                         }
                     });
@@ -945,8 +960,10 @@ public class MainActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        mapPanelStopMissionButton.setVisibility(View.GONE);
-                        mapPanelCreateButton.setVisibility(View.VISIBLE);
+                        if (isMapPanelFocused) {
+                            mapPanelStopMissionButton.setVisibility(View.GONE);
+                            mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
                 if (isUsingPreciselyLanding.get()) {
@@ -1026,7 +1043,7 @@ public class MainActivity extends Activity {
         /*
             test sendData
          */
-        sendDataLandingButton.setOnClickListener(new View.OnClickListener() {
+        debugSendDataLandingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (flightController == null || !flightController.isConnected()) {
@@ -1057,6 +1074,16 @@ public class MainActivity extends Activity {
             }
         });
 
+        debugClearLogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (TextView txt : logTexts) {
+                    logLinearLayout.removeView(txt);
+                }
+                logTexts.clear();
+            }
+        });
+
         debugConfigurationExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1082,6 +1109,18 @@ public class MainActivity extends Activity {
                     statusTrackingTextView.setVisibility(View.VISIBLE);
                 } else {
                     statusTrackingTextView.setVisibility(View.GONE);
+                }
+
+                if (developSwitchGroup[4].isChecked()) {
+                    isDrawingLandingCircle = true;
+                } else {
+                    isDrawingLandingCircle = false;
+                }
+
+                if (developSwitchGroup[5].isChecked()) {
+                    isDrawingFollowObject = true;
+                } else {
+                    isDrawingFollowObject = false;
                 }
 
                 if (developSwitchGroup[6].isChecked()) {
@@ -1283,7 +1322,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        mapPanelCreateButton.setOnClickListener(newMissionOnClickListener);
+        mapPanelCreateLinearLayout.setOnClickListener(newMissionOnClickListener);
 
         mapPanelStartMissionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1381,7 +1420,7 @@ public class MainActivity extends Activity {
                                 public void run() {
                                     SideToast.makeText(MainActivity.this, "成功取消任务", SideToast.LENGTH_SHORT).show();
                                     mapPanelStopMissionButton.setVisibility(View.GONE);
-                                    mapPanelCreateButton.setVisibility(View.VISIBLE);
+                                    mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
                                 }
                             });
                             isCompletedByStopping.set(true);
@@ -1412,7 +1451,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mapViewPanel.removeView(missionConfigurationPanel);
-                mapPanelCreateButton.setVisibility(View.VISIBLE);
+                mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
                 linearLayoutForMap.setVisibility(View.VISIBLE);
                 switchPanelImageView.setVisibility(View.VISIBLE);
             }
@@ -1676,7 +1715,7 @@ public class MainActivity extends Activity {
             if (isExectuingMission.get()) {
                 mapPanelStopMissionButton.setVisibility(View.VISIBLE);
             } else {
-                mapPanelCreateButton.setVisibility(View.VISIBLE);
+                mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
             }
             relativeLayoutMain.removeView(cameraShootImageView);
             relativeLayoutMain.removeView(cameraSwitchImageView);
@@ -1689,7 +1728,7 @@ public class MainActivity extends Activity {
             if (isExectuingMission.get()) {
                 mapPanelStopMissionButton.setVisibility(View.GONE);
             } else {
-                mapPanelCreateButton.setVisibility(View.GONE);
+                mapPanelCreateLinearLayout.setVisibility(View.GONE);
             }
             videoTextureViewFrameLayout.removeView(mapViewPanel);
             linearLayoutForMap.removeView(videoTextureView);

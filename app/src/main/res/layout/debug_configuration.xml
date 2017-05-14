@@ -116,7 +116,16 @@
                 android:textColor="@color/whiteTrans" />
 
             <Button
+                android:textSize="10sp"
+                android:text="降落测试"
                 android:id="@+id/send_data_test_btn"
+                android:layout_width="80dp"
+                android:layout_height="40dp" />
+
+            <Button
+                android:textSize="10sp"
+                android:id="@+id/debug_clear_log_btn"
+                android:text="清空日志"
                 android:layout_width="80dp"
                 android:layout_height="40dp" />
 
