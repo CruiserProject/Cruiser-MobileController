@@ -39,7 +39,6 @@ import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -159,12 +158,12 @@ public class MainActivity extends Activity {
     /*
         data
      */
-    private byte[] coordinations = new byte[4];
+    private byte[] coordinators = new byte[4];
     private AtomicInteger previousWayPointIndex = new AtomicInteger();
     private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
     private AtomicBoolean isUsingPreciselyLanding = new AtomicBoolean(false);
     private AtomicBoolean isUsingObjectFollow = new AtomicBoolean(false);
-    private AtomicBoolean isExectuingMission = new AtomicBoolean(false);
+    private AtomicBoolean isExecutingMission = new AtomicBoolean(false);
     private AtomicBoolean isSocketConnected = new AtomicBoolean(false);
     private Socket socket;
     private BufferedWriter bufferedWriter;
@@ -290,10 +289,10 @@ public class MainActivity extends Activity {
                     rectView.setVisibility(View.GONE);
                     followLinearLayout.setVisibility(View.VISIBLE);
 
-                    coordinations[0] = screenSizeConverter.convertX2XPercent(rectView.getX1());
-                    coordinations[1] = screenSizeConverter.convertY2YPercent(rectView.getY1());
-                    coordinations[2] = screenSizeConverter.convertX2XPercent(rectView.getX2());
-                    coordinations[3] = screenSizeConverter.convertY2YPercent(rectView.getY2());
+                    coordinators[0] = screenSizeConverter.convertX2XPercent(rectView.getX1());
+                    coordinators[1] = screenSizeConverter.convertY2YPercent(rectView.getY1());
+                    coordinators[2] = screenSizeConverter.convertX2XPercent(rectView.getX2());
+                    coordinators[3] = screenSizeConverter.convertY2YPercent(rectView.getY2());
 
                     byte[] data_start = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_START, null);
 
@@ -423,7 +422,7 @@ public class MainActivity extends Activity {
                             @Override
                             public void run() {
                                 if (flightController != null && baseProduct != null && baseProduct.isConnected()) {
-                                    byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_VALUE, coordinations);
+                                    byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_VALUE, coordinators);
                                     flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
                                         @Override
                                         public void onResult(DJIError djiError) {
@@ -910,7 +909,7 @@ public class MainActivity extends Activity {
                                             if (djiError != null) {
                                                 SideToast.makeText(MainActivity.this, "任务执行失败:" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                             } else {
-                                                isExectuingMission.set(true);
+                                                isExecutingMission.set(true);
                                             }
                                         }
                                     });
@@ -931,7 +930,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onExecutionFinish(@Nullable DJIError djiError) {
-                isExectuingMission.set(false);
+                isExecutingMission.set(false);
 
                 if (djiError != null) {
                     runOnUiThread(new Runnable() {
@@ -1728,7 +1727,7 @@ public class MainActivity extends Activity {
 
     private void switchMapPanelFocus() {
         if (!isMapPanelFocused) {
-            if (isExectuingMission.get()) {
+            if (isExecutingMission.get()) {
                 mapPanelStopMissionButton.setVisibility(View.VISIBLE);
                 mapPanelCreateLinearLayout.setVisibility(View.GONE);
             } else {
