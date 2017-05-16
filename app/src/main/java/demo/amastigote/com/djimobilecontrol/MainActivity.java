@@ -3,7 +3,6 @@ package demo.amastigote.com.djimobilecontrol;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,10 +38,17 @@ import com.baidu.mapapi.map.PolylineOptions;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
 
-import java.util.Vector;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Vector;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -88,6 +94,7 @@ import dji.sdk.sdkmanager.DJISDKManager;
 
 
 public class MainActivity extends Activity {
+    private final static String LINE_BROKER = "\r\n";
     private static BaseProduct baseProduct;
     private final AtomicInteger atomicInteger = new AtomicInteger();
     /*
@@ -117,9 +124,7 @@ public class MainActivity extends Activity {
     private TextView statusLandingTextView;
     private TextView statusTrackingTextView;
     private TextView followStateTextView;
-
     private Vector<TextView> logTexts;
-
     private Button mapPanelUndoButton;
     private Button mapPanelStartMissionButton;
     private Button mapPanelCancelMissionButton;
@@ -130,29 +135,19 @@ public class MainActivity extends Activity {
     private Button debugClearLogButton;
     // a test for SendDataToOnBoardSDKDevice
     private Button debugSendDataLandingButton;
-
     private RadioGroup radioGroupMissionStartAction;
     private RadioGroup radioGroupMissionFinishAction;
     private RadioGroup radioGroupPathMode;
     private RadioGroup radioGroupHeading;
-
     private Switch[] developSwitchGroup;
-
-
     private TextView textViewAutoFlightSpeed;
     private TextView textViewMaxFlightSpeed;
     private TextView textLogTitle;
-
     private SimpleProgressDialog startUpInfoDialog;
     private SimpleProgressDialog uploadInfoDialog;
-
     private TextureView videoTextureView;
-
     private RectView rectView;
-
     private ScreenSizeConverter screenSizeConverter;
-
-
     /*
         baidu map
      */
@@ -165,13 +160,15 @@ public class MainActivity extends Activity {
         data
      */
     private byte[] coordinations = new byte[4];
-
     private AtomicInteger previousWayPointIndex = new AtomicInteger();
     private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
     private AtomicBoolean isUsingPreciselyLanding = new AtomicBoolean(false);
     private AtomicBoolean isUsingObjectFollow = new AtomicBoolean(false);
     private AtomicBoolean isExectuingMission = new AtomicBoolean(false);
-
+    private AtomicBoolean isSocketConnected = new AtomicBoolean(false);
+    private Socket socket;
+    private BufferedWriter bufferedWriter;
+    private BlockingQueue<String> logQ = new LinkedBlockingQueue<>();
     /*
         DJI sdk
      */
@@ -331,23 +328,11 @@ public class MainActivity extends Activity {
             return true;
         }
     };
-
-
     private FlightController.OnboardSDKDeviceDataCallback onboardSDKDeviceDataCallback
             = new FlightController.OnboardSDKDeviceDataCallback() {
         @Override
         public void onReceive(final byte[] bytes) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    TextView txt = new TextView(MainActivity.this);
-                    txt.setTextColor(Color.YELLOW);
-                    txt.setShadowLayer(4.0f, 0.0f, 0.0f, Color.BLACK);
-                    txt.setText(String.format(Locale.CHINA, "Received:  %x %x //  %x %x %x %x", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]));
-                    logTexts.add(txt);
-                    logLinearLayout.addView(txt);
-                }
-            });
+            sendLogToServer(String.format(Locale.CHINA, "Received:  %02x %02x %02x %02x %02x %02x", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]));
             if (bytes[0] == 0x01) {
                 switch (bytes[1]) {
                     case 0x02:
@@ -576,9 +561,7 @@ public class MainActivity extends Activity {
         @Override
         public void onUpdate(@NonNull final FlightControllerState flightControllerState) {
             updateVelocity(flightControllerState);
-
             updateBaiduMapMyLocation(flightControllerState);
-
             updateSatellitesCount(flightControllerState.getSatelliteCount());
         }
     };
@@ -656,6 +639,10 @@ public class MainActivity extends Activity {
         }
     };
 
+    private void sendLogToServer(final String str) {
+        logQ.add(str + LINE_BROKER);
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -677,6 +664,8 @@ public class MainActivity extends Activity {
         initBaiduMap();
         initVideoTextureView();
         initOnClickListener();
+
+        checkSocketConnection();
 
         waypointMissionParams = new WaypointMissionParams();
 
@@ -900,6 +889,7 @@ public class MainActivity extends Activity {
 
             @Override
             public void onUploadUpdate(@NonNull WaypointMissionUploadEvent waypointMissionUploadEvent) {
+                Log.e(">> ", String.valueOf(waypointMissionUploadEvent.getProgress().uploadedWaypointIndex));
                 if (waypointMissionUploadEvent.getProgress() != null
                         && waypointMissionUploadEvent.getProgress().uploadedWaypointIndex == waypointMissionUploadEvent.getProgress().totalWaypointCount - 1
                         && waypointMissionUploadEvent.getProgress().isSummaryUploaded
@@ -1037,7 +1027,6 @@ public class MainActivity extends Activity {
             }
         });
     }
-
 
     private void initOnClickListener() {
         /*
@@ -1561,6 +1550,33 @@ public class MainActivity extends Activity {
         });
     }
 
+    private void checkSocketConnection() {
+        new Thread() {
+            @Override
+            public void run() {
+                String buff = null;
+                while (true) {
+                    if (socket == null || !socket.isConnected()) {
+                        try {
+                            socket = new Socket("192.168.1.102", 3000);
+                            bufferedWriter = new BufferedWriter((new OutputStreamWriter(socket.getOutputStream())));
+                            while (true) {
+                                if (!socket.isConnected()) throw new Exception();
+                                if (buff != null) {
+                                    bufferedWriter.write(buff);
+                                    bufferedWriter.flush();
+                                }
+                                buff = logQ.poll(3, TimeUnit.SECONDS);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }.start();
+    }
+
     private void updateBatteryState(int remainingBattery) {
         if (currentBatteryInPercent == -1) {
             final int temp[] = new int[1];
@@ -1714,7 +1730,9 @@ public class MainActivity extends Activity {
         if (!isMapPanelFocused) {
             if (isExectuingMission.get()) {
                 mapPanelStopMissionButton.setVisibility(View.VISIBLE);
+                mapPanelCreateLinearLayout.setVisibility(View.GONE);
             } else {
+                mapPanelStopMissionButton.setVisibility(View.GONE);
                 mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
             }
             relativeLayoutMain.removeView(cameraShootImageView);
@@ -1725,11 +1743,8 @@ public class MainActivity extends Activity {
             linearLayoutForMap.addView(videoTextureView);
             followLinearLayout.setVisibility(View.GONE);
         } else {
-            if (isExectuingMission.get()) {
-                mapPanelStopMissionButton.setVisibility(View.GONE);
-            } else {
-                mapPanelCreateLinearLayout.setVisibility(View.GONE);
-            }
+            mapPanelStopMissionButton.setVisibility(View.GONE);
+            mapPanelCreateLinearLayout.setVisibility(View.GONE);
             videoTextureViewFrameLayout.removeView(mapViewPanel);
             linearLayoutForMap.removeView(videoTextureView);
             linearLayoutForMap.addView(mapViewPanel);
@@ -1764,11 +1779,12 @@ public class MainActivity extends Activity {
             isCompletedByStopping.set(false);
 
             DJIError djiErrorFirst = waypointMissionOperator.loadMission(builder.build());
-            uploadInfoDialog = new SimpleProgressDialog(MainActivity.this, "正在上传数据…");
-            uploadInfoDialog.show();
+
             if (djiErrorFirst != null) {
                 SideToast.makeText(MainActivity.this, djiErrorFirst.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
             } else {
+                uploadInfoDialog = new SimpleProgressDialog(MainActivity.this, "正在上传数据…");
+                uploadInfoDialog.show();
                 waypointMissionOperator.uploadMission(new CommonCallbacks.CompletionCallback() {
                     @Override
                     public void onResult(DJIError djiError) {
