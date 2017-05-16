@@ -503,7 +503,6 @@ public class MainActivity extends Activity {
 //                                rectView.setElevation(Integer.MAX_VALUE - 1);
 
                                 if (isDrawingFollowObject) {
-                                    Log.e(">>", "dsadsads");
                                     rectView.invalidate();
                                 }
                             }
@@ -672,7 +671,6 @@ public class MainActivity extends Activity {
 
         startUpInfoDialog.show();
         DJISDKManager.getInstance().registerApp(this, sdkManagerCallback);
-
     }
 
     @Override
@@ -905,11 +903,24 @@ public class MainActivity extends Activity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     waypointMissionOperator.startMission(new CommonCallbacks.CompletionCallback() {
                                         @Override
-                                        public void onResult(DJIError djiError) {
+                                        public void onResult(final DJIError djiError) {
                                             if (djiError != null) {
-                                                SideToast.makeText(MainActivity.this, "任务执行失败:" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        SideToast.makeText(MainActivity.this, "任务执行失败:" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                                        mapPanelStopMissionButton.setVisibility(View.GONE);
+                                                        linearLayoutForMap.setVisibility(View.VISIBLE);
+                                                        switchPanelImageView.setVisibility(View.VISIBLE);
+                                                        mapPanelStartMissionButton.setVisibility(View.GONE);
+                                                        mapPanelCancelMissionButton.setVisibility(View.GONE);
+                                                        mapPanelUndoButton.setVisibility(View.GONE);
+                                                        mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
+                                                    }
+                                                });
                                             } else {
                                                 isExecutingMission.set(true);
+
                                             }
                                         }
                                     });
@@ -925,6 +936,17 @@ public class MainActivity extends Activity {
 
             @Override
             public void onExecutionStart() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mapPanelStopMissionButton.setVisibility(View.VISIBLE);
+                        linearLayoutForMap.setVisibility(View.VISIBLE);
+                        switchPanelImageView.setVisibility(View.VISIBLE);
+                        mapPanelStartMissionButton.setVisibility(View.GONE);
+                        mapPanelCancelMissionButton.setVisibility(View.GONE);
+                        mapPanelUndoButton.setVisibility(View.GONE);
+                    }
+                });
 
             }
 
@@ -1327,12 +1349,6 @@ public class MainActivity extends Activity {
                                     SideToast.makeText(MainActivity.this, "任务执行错误：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                     return;
                                 }
-                                mapPanelStopMissionButton.setVisibility(View.VISIBLE);
-                                linearLayoutForMap.setVisibility(View.VISIBLE);
-                                switchPanelImageView.setVisibility(View.VISIBLE);
-                                mapPanelStartMissionButton.setVisibility(View.GONE);
-                                mapPanelCancelMissionButton.setVisibility(View.GONE);
-                                mapPanelUndoButton.setVisibility(View.GONE);
                                 LocationCoordinate3D homeLocation = flightController.getState().getAircraftLocation();
                                 wayPointList.add(new Waypoint(homeLocation.getLatitude(), homeLocation.getLongitude(), 30.0f));
 
@@ -1781,6 +1797,13 @@ public class MainActivity extends Activity {
 
             if (djiErrorFirst != null) {
                 SideToast.makeText(MainActivity.this, djiErrorFirst.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                mapPanelStopMissionButton.setVisibility(View.GONE);
+                linearLayoutForMap.setVisibility(View.VISIBLE);
+                switchPanelImageView.setVisibility(View.VISIBLE);
+                mapPanelStartMissionButton.setVisibility(View.GONE);
+                mapPanelCancelMissionButton.setVisibility(View.GONE);
+                mapPanelUndoButton.setVisibility(View.GONE);
+                mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
             } else {
                 uploadInfoDialog = new SimpleProgressDialog(MainActivity.this, "正在上传数据…");
                 uploadInfoDialog.show();
@@ -1798,6 +1821,15 @@ public class MainActivity extends Activity {
                                             public void run() {
                                                 SideToast.makeText(MainActivity.this, djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                                 uploadInfoDialog.dismiss();
+
+                                                mapPanelStopMissionButton.setVisibility(View.GONE);
+                                                linearLayoutForMap.setVisibility(View.VISIBLE);
+                                                switchPanelImageView.setVisibility(View.VISIBLE);
+                                                mapPanelStartMissionButton.setVisibility(View.GONE);
+                                                mapPanelCancelMissionButton.setVisibility(View.GONE);
+                                                mapPanelUndoButton.setVisibility(View.GONE);
+                                                mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
+
                                             }
                                         });
                                     }
