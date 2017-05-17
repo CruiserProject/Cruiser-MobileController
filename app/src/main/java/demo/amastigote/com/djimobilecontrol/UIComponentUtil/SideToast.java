@@ -128,7 +128,7 @@ public class SideToast {
                         maxIndex = 0;
                     }
                 }
-            }, (long) (duration == 1 ? 3500 : 2000));
+            }, (long) (duration == 1 ? 3500 : 2500));
 
 
         }

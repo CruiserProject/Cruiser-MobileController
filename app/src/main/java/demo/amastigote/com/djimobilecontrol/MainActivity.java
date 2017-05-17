@@ -3,6 +3,7 @@ package demo.amastigote.com.djimobilecontrol;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
@@ -94,7 +95,8 @@ import dji.sdk.sdkmanager.DJISDKManager;
 
 public class MainActivity extends Activity {
     private final static String LINE_BROKER = "\r\n";
-    private static BaseProduct baseProduct;
+    //// TODO: 2017/5/17 check static is necessary
+    private BaseProduct baseProduct;
     private final AtomicInteger atomicInteger = new AtomicInteger();
     /*
         UI components
@@ -294,32 +296,45 @@ public class MainActivity extends Activity {
                     coordinators[2] = screenSizeConverter.convertX2XPercent(rectView.getX2());
                     coordinators[3] = screenSizeConverter.convertY2YPercent(rectView.getY2());
 
-                    byte[] data_start = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_START, null);
-
-                    if (baseProduct != null && baseProduct.isConnected() && flightController != null) {
-                        flightController.sendDataToOnboardSDKDevice(data_start, new CommonCallbacks.CompletionCallback() {
+                    if (flightController != null && baseProduct != null && baseProduct.isConnected()) {
+                        byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_VALUE, coordinators);
+                        sendLogToServer(String.format(Locale.CHINA, "Sent: %d %d %d %d", data[2], data[3], data[4], data[5]));
+                        flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
                             @Override
                             public void onResult(DJIError djiError) {
                                 if (djiError == null) {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            SideToast.makeText(MainActivity.this, "正在请求启用目标追踪", SideToast.LENGTH_SHORT).show();
+                                            SideToast.makeText(MainActivity.this, "正在上传目标信息", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                                         }
                                     });
                                 } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            SideToast.makeText(MainActivity.this, "请求启用目标追踪失败", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                            SideToast.makeText(MainActivity.this, "上传目标信息失败", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                         }
                                     });
                                 }
                             }
                         });
                     } else {
-                        SideToast.makeText(MainActivity.this, "无效操作：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "上传目标信息失败：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                            }
+                        });
                     }
+
+                    rectView.setX1(0.0f);
+                    rectView.setY1(0.0f);
+                    rectView.setX2(0.0f);
+                    rectView.setY2(0.0f);
+
+                    rectView.setVisibility(View.VISIBLE);
+
 
                     break;
 
@@ -331,7 +346,17 @@ public class MainActivity extends Activity {
             = new FlightController.OnboardSDKDeviceDataCallback() {
         @Override
         public void onReceive(final byte[] bytes) {
-            sendLogToServer(String.format(Locale.CHINA, "Received:  %02x %02x %02x %02x %02x %02x", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]));
+            sendLogToServer(String.format(Locale.CHINA, "Received:  %02x %02x %d %d %d %d", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]));
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    TextView textView = new TextView(MainActivity.this);
+//                    textView.setText(String.format(Locale.CHINA, "Received:  %02x %02x %02x %02x %02x %02x", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]));
+//                    textView.setTextColor(Color.RED);
+//                    logTexts.add(textView);
+//                    logLinearLayout.addView(textView);
+//                }
+//            });
             if (bytes[0] == 0x01) {
                 switch (bytes[1]) {
                     case 0x02:
@@ -391,7 +416,7 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                statusLandingTextView.setText(String.format(Locale.CHINA, "L:  deltaX: %d.%d   deltaY: %d.%d", (int) bytes[2], (int) bytes[3], (int) bytes[4], (int) bytes[5]));
+                                statusLandingTextView.setText(String.format(Locale.CHINA, "L:  deltaX: %d.%d   deltaY: %d.%d", bytes[2], Math.abs(bytes[3]), bytes[4], Math.abs(bytes[5])));
                             }
                         });
                         break;
@@ -421,50 +446,12 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (flightController != null && baseProduct != null && baseProduct.isConnected()) {
-                                    byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_VALUE, coordinators);
-                                    flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
-                                        @Override
-                                        public void onResult(DJIError djiError) {
-                                            if (djiError == null) {
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        SideToast.makeText(MainActivity.this, "正在上传目标信息", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
-                                                    }
-                                                });
-                                            } else {
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        SideToast.makeText(MainActivity.this, "上传目标信息失败", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            SideToast.makeText(MainActivity.this, "上传目标信息失败：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
-                                        }
-                                    });
-                                }
-//                                followStateTextView.setTextColor(Color.rgb(18,150,219));
-                                followStateTextView.setText("目标跟踪 ON");
-
-                                rectView.setX1(0.0f);
-                                rectView.setY1(0.0f);
-                                rectView.setX2(0.0f);
-                                rectView.setY2(0.0f);
-
-                                rectView.setVisibility(View.VISIBLE);
-
-                                followStateImageView.setImageDrawable(getDrawable(R.mipmap.follow_on));
+                                SideToast.makeText(MainActivity.this, "在屏幕上滑动以框定目标", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
                                 isUsingObjectFollow.set(true);
-
-
+                                followStateTextView.setText("目标跟踪 ON");
+                                followStateImageView.setImageDrawable(getDrawable(R.mipmap.follow_on));
+                                followLinearLayout.setVisibility(View.GONE);
+                                videoTextureViewFrameLayout.setOnTouchListener(videoTextureViewFrameLayoutOnTouchListener);
                             }
                         });
                         break;
@@ -483,11 +470,13 @@ public class MainActivity extends Activity {
                             }
                         });
                         break;
+                    case 0x12:
+                        break;
                     case 0x42:
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                statusTrackingTextView.setText(String.format(Locale.CHINA, "T:  deltaX: %d.%d   deltaY: %d.%d", (int) bytes[2], (int) bytes[3], (int) bytes[4], (int) bytes[5]));
+                                statusTrackingTextView.setText(String.format(Locale.CHINA, "T:  deltaX: %d.%d   deltaY: %d.%d", bytes[2], Math.abs(bytes[3]), bytes[4], Math.abs(bytes[3])));
                             }
                         });
                         break;
@@ -512,7 +501,7 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SideToast.makeText(MainActivity.this, "不可识别的消息", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR);
+                                SideToast.makeText(MainActivity.this, "不可识别的消息", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                             }
                         });
                         break;
@@ -870,7 +859,7 @@ public class MainActivity extends Activity {
     }
 
     private void initCamera() {
-        if (baseProduct != null) {
+        if (baseProduct != null && baseProduct.isConnected()) {
             camera = baseProduct.getCamera();
         }
     }
@@ -1158,9 +1147,17 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!isUsingObjectFollow.get()) {
-                    SideToast.makeText(MainActivity.this, "在屏幕上滑动以框定目标", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
-                    followLinearLayout.setVisibility(View.GONE);
-                    videoTextureViewFrameLayout.setOnTouchListener(videoTextureViewFrameLayoutOnTouchListener);
+                    byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_START, null);
+                    flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(final DJIError djiError) {
+                            if (djiError == null) {
+                                SideToast.makeText(MainActivity.this, "正在请求启用目标跟踪", SideToast.LENGTH_SHORT).show();
+                            } else {
+                                SideToast.makeText(MainActivity.this, "请求启用目标跟踪失败：" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                            }
+                        }
+                    });
 
                 } else {
                     byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_STOP, null);
@@ -1257,11 +1254,49 @@ public class MainActivity extends Activity {
                             break;
                         case RECORD_VIDEO:
                             if (isRecording) {
-                                camera.stopRecordVideo(null);
                                 isRecording = false;
+                                camera.stopRecordVideo(new CommonCallbacks.CompletionCallback() {
+                                    @Override
+                                    public void onResult(DJIError djiError) {
+                                        if (djiError != null) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    SideToast.makeText(MainActivity.this, "相机发生错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                                }
+                                            });
+                                        } else {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    SideToast.makeText(MainActivity.this, "已停止录像", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
                             } else {
-                                camera.startRecordVideo(null);
                                 isRecording = true;
+                                camera.startRecordVideo(new CommonCallbacks.CompletionCallback() {
+                                    @Override
+                                    public void onResult(DJIError djiError) {
+                                        if (djiError != null) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    SideToast.makeText(MainActivity.this, "相机发生错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                                }
+                                            });
+                                        } else {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    SideToast.makeText(MainActivity.this, "已开始录像", SideToast.LENGTH_SHORT, SideToast.TYPE_WARNING).show();
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
                             }
                             break;
                         case UNKNOWN:
@@ -1361,40 +1396,40 @@ public class MainActivity extends Activity {
                                         .anchor(0.5F, 0.5F)
                                         .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker))
                                         .draggable(false));
-
-                                baiduMap.addOverlay(new PolylineOptions()
-                                        .points(new ArrayList<LatLng>() {
-                                            {
-                                                add(CoordinationConverter.GPS2BD09(new LatLng(
-                                                        wayPointList.get(0).coordinate.getLatitude(),
-                                                        wayPointList.get(0).coordinate.getLongitude()
-                                                )));
-                                                add(CoordinationConverter.GPS2BD09(new LatLng(
-                                                        wayPointList.get(pointListSize - 1).coordinate.getLatitude(),
-                                                        wayPointList.get(pointListSize - 1).coordinate.getLongitude()
-                                                )));
-                                            }
-                                        })
-                                        .color(R.color.purple)
-                                        .dottedLine(true)
-                                );
-
-                                baiduMap.addOverlay(new PolylineOptions()
-                                        .points(new ArrayList<LatLng>() {
-                                            {
-                                                add(CoordinationConverter.GPS2BD09(new LatLng(
-                                                        wayPointList.get(pointListSize - 1).coordinate.getLatitude(),
-                                                        wayPointList.get(pointListSize - 1).coordinate.getLongitude()
-                                                )));
-                                                add(CoordinationConverter.GPS2BD09(new LatLng(
-                                                        wayPointList.get(pointListSize - 2).coordinate.getLatitude(),
-                                                        wayPointList.get(pointListSize - 2).coordinate.getLongitude()
-                                                )));
-                                            }
-                                        })
-                                        .color(R.color.purple)
-                                        .dottedLine(true)
-                                );
+                                if (pointListSize >= 2) {
+                                    baiduMap.addOverlay(new PolylineOptions()
+                                            .points(new ArrayList<LatLng>() {
+                                                {
+                                                    add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                            wayPointList.get(0).coordinate.getLatitude(),
+                                                            wayPointList.get(0).coordinate.getLongitude()
+                                                    )));
+                                                    add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                            wayPointList.get(pointListSize - 1).coordinate.getLatitude(),
+                                                            wayPointList.get(pointListSize - 1).coordinate.getLongitude()
+                                                    )));
+                                                }
+                                            })
+                                            .color(R.color.purple)
+                                            .dottedLine(true)
+                                    );
+                                    baiduMap.addOverlay(new PolylineOptions()
+                                            .points(new ArrayList<LatLng>() {
+                                                {
+                                                    add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                            wayPointList.get(pointListSize - 1).coordinate.getLatitude(),
+                                                            wayPointList.get(pointListSize - 1).coordinate.getLongitude()
+                                                    )));
+                                                    add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                            wayPointList.get(pointListSize - 2).coordinate.getLatitude(),
+                                                            wayPointList.get(pointListSize - 2).coordinate.getLongitude()
+                                                    )));
+                                                }
+                                            })
+                                            .color(R.color.purple)
+                                            .dottedLine(true)
+                                    );
+                                }
                                 executeWaypointMission(wayPointList, waypointMissionParams);
                             }
                         }));
@@ -1708,37 +1743,39 @@ public class MainActivity extends Activity {
     }
 
     private void changeCameraState() {
-        camera.getMode(new CommonCallbacks.CompletionCallbackWith<SettingsDefinitions.CameraMode>() {
-            @Override
-            public void onSuccess(SettingsDefinitions.CameraMode cameraMode) {
-                if (cameraMode.equals(SettingsDefinitions.CameraMode.SHOOT_PHOTO)) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_take));
-                            curCameraMode = SettingsDefinitions.CameraMode.SHOOT_PHOTO;
-                        }
-                    });
-                } else {
-                    if (cameraMode.equals(SettingsDefinitions.CameraMode.RECORD_VIDEO)) {
+        if (camera != null) {
+            camera.getMode(new CommonCallbacks.CompletionCallbackWith<SettingsDefinitions.CameraMode>() {
+                @Override
+                public void onSuccess(SettingsDefinitions.CameraMode cameraMode) {
+                    if (cameraMode.equals(SettingsDefinitions.CameraMode.SHOOT_PHOTO)) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_record));
-                                curCameraMode = SettingsDefinitions.CameraMode.RECORD_VIDEO;
+                                cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_take));
+                                curCameraMode = SettingsDefinitions.CameraMode.SHOOT_PHOTO;
                             }
                         });
+                    } else {
+                        if (cameraMode.equals(SettingsDefinitions.CameraMode.RECORD_VIDEO)) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    cameraShootImageView.setImageDrawable(MainActivity.this.getDrawable(R.mipmap.camera_record));
+                                    curCameraMode = SettingsDefinitions.CameraMode.RECORD_VIDEO;
+                                }
+                            });
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(DJIError djiError) {
-                Log.e("Camera State error", ">>" + djiError.toString());
+                @Override
+                public void onFailure(DJIError djiError) {
+                    Log.e("Camera State error", ">>" + djiError.toString());
 //                        SideToast.makeText(MainActivity.this,"获取相机状态失败",SideToast.LENGTH_SHORT,SideToast.TYPE_ERROR);
-                curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
-            }
-        });
+                    curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
+                }
+            });
+        }
     }
 
     private void switchMapPanelFocus() {
