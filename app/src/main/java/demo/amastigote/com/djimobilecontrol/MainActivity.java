@@ -3,7 +3,6 @@ package demo.amastigote.com.djimobilecontrol;
 import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -23,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -54,6 +51,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import demo.amastigote.com.djimobilecontrol.ConverterUtil.CoordinationConverter;
 import demo.amastigote.com.djimobilecontrol.ConverterUtil.DensityUtil;
+import demo.amastigote.com.djimobilecontrol.ConverterUtil.LLDistanceConverter;
 import demo.amastigote.com.djimobilecontrol.ConverterUtil.ScreenSizeConverter;
 import demo.amastigote.com.djimobilecontrol.DataUtil.OnboardDataEncoder;
 import demo.amastigote.com.djimobilecontrol.DataUtil.WaypointMissionParams;
@@ -95,9 +93,9 @@ import dji.sdk.sdkmanager.DJISDKManager;
 
 public class MainActivity extends Activity {
     private final static String LINE_BROKER = "\r\n";
+    private final AtomicInteger atomicInteger = new AtomicInteger();
     //// TODO: 2017/5/17 check static is necessary
     private BaseProduct baseProduct;
-    private final AtomicInteger atomicInteger = new AtomicInteger();
     /*
         UI components
      */
@@ -107,8 +105,6 @@ public class MainActivity extends Activity {
     private LinearLayout landLinearLayout;
     private LinearLayout mapPanelCreateLinearLayout;
     private LinearLayout followLinearLayout;
-    private LinearLayout logLinearLayout;
-    private ScrollView logScrollView;
     private RelativeLayout developerOptionsRelativeLayout;
     private ImageView remainingBatteryImageView;
     private ImageView gpsSignalLevelImageView;
@@ -120,12 +116,13 @@ public class MainActivity extends Activity {
     private ImageView developOptionImageView;
     private TextView aircraftTextView;
     private TextView satelliteNumberTextView;
-    private TextView statusAltitudeTextView;
-    private TextView statusVelocityTextView;
+    private TextView statusVerticaLDistanceTextView;
+    private TextView statusHorizontalDistanceTextView;
+    private TextView statusHorizontalVelocityTextView;
+    private TextView statusVerticalVelocityTextView;
     private TextView statusLandingTextView;
     private TextView statusTrackingTextView;
     private TextView followStateTextView;
-    private Vector<TextView> logTexts;
     private Button mapPanelUndoButton;
     private Button mapPanelStartMissionButton;
     private Button mapPanelCancelMissionButton;
@@ -133,9 +130,9 @@ public class MainActivity extends Activity {
     private Button missionConfigurationPanelOKButton;
     private Button missionConfigurationPanelCancelButton;
     private Button debugConfigurationExitButton;
-    private Button debugClearLogButton;
     // a test for SendDataToOnBoardSDKDevice
     private Button debugSendDataLandingButton;
+    private Button debugSendDataLandingCancelButton;
     private RadioGroup radioGroupMissionStartAction;
     private RadioGroup radioGroupMissionFinishAction;
     private RadioGroup radioGroupPathMode;
@@ -143,7 +140,6 @@ public class MainActivity extends Activity {
     private Switch[] developSwitchGroup;
     private TextView textViewAutoFlightSpeed;
     private TextView textViewMaxFlightSpeed;
-    private TextView textLogTitle;
     private SimpleProgressDialog startUpInfoDialog;
     private SimpleProgressDialog uploadInfoDialog;
     private TextureView videoTextureView;
@@ -215,7 +211,9 @@ public class MainActivity extends Activity {
     private MissionControl missionControl;
     private WaypointMissionOperator waypointMissionOperator;
     private WaypointMissionParams waypointMissionParams;
+    private WaypointMission mission;
     private List<Waypoint> wayPointList = new ArrayList<>();
+
     private BaiduMap.OnMapLongClickListener onMapLongClickListener
             = new BaiduMap.OnMapLongClickListener() {
         @Override
@@ -268,7 +266,6 @@ public class MainActivity extends Activity {
 
         }
     };
-
     private View.OnTouchListener videoTextureViewFrameLayoutOnTouchListener
             = new View.OnTouchListener() {
         @Override
@@ -346,7 +343,7 @@ public class MainActivity extends Activity {
             = new FlightController.OnboardSDKDeviceDataCallback() {
         @Override
         public void onReceive(final byte[] bytes) {
-            sendLogToServer(String.format(Locale.CHINA, "Received:  %02x %02x %d %d %d %d", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5]));
+            sendLogToServer(String.format(Locale.CHINA, "Received:  %02x %02x %d %d %d %d %d %d", bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]));
 //            runOnUiThread(new Runnable() {
 //                @Override
 //                public void run() {
@@ -363,7 +360,7 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SideToast.makeText(MainActivity.this, "精准辅助降落已启用", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                SideToast.makeText(MainActivity.this, "视觉辅助降落已启用", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                             }
                         });
                         break;
@@ -371,7 +368,7 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SideToast.makeText(MainActivity.this, "精准辅助降落已取消", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                SideToast.makeText(MainActivity.this, "视觉辅助降落已取消", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                             }
                         });
                         break;
@@ -379,7 +376,6 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                SideToast.makeText(MainActivity.this, "开始垂直下降", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                                 final byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.VISUAL_LANDING_STOP, null);
                                 flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
                                     @Override
@@ -401,6 +397,7 @@ public class MainActivity extends Activity {
                                         }
                                     }
                                 });
+                                SideToast.makeText(MainActivity.this, "开始垂直下降", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                             }
                         });
                         break;
@@ -416,7 +413,21 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                statusLandingTextView.setText(String.format(Locale.CHINA, "L:  deltaX: %d.%d   deltaY: %d.%d", bytes[2], Math.abs(bytes[3]), bytes[4], Math.abs(bytes[5])));
+                                String str;
+                                if (bytes[6] == -1 && bytes[7] == -1) {
+                                    str = String.format(Locale.CHINA, "L:  deltaX: -%d.%d    deltaY: -%d.%d", bytes[2], bytes[3], bytes[4], bytes[5]);
+                                } else {
+                                    if (bytes[6] == -1) {
+                                        str = String.format(Locale.CHINA, "L:  deltaX: -%d.%d    deltaY: %d.%d", bytes[2], bytes[3], bytes[4], bytes[5]);
+                                    } else {
+                                        if (bytes[7] == -1) {
+                                            str = String.format(Locale.CHINA, "L:  deltaX: %d.%d    deltaY: -%d.%d", bytes[2], bytes[3], bytes[4], bytes[5]);
+                                        } else {
+                                            str = String.format(Locale.CHINA, "L:  deltaX: %d.%d    deltaY: %d.%d", bytes[2], bytes[3], bytes[4], bytes[5]);
+                                        }
+                                    }
+                                }
+                                statusLandingTextView.setText(str);
                             }
                         });
                         break;
@@ -476,7 +487,21 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                statusTrackingTextView.setText(String.format(Locale.CHINA, "T:  deltaX: %d.%d   deltaY: %d.%d", bytes[2], Math.abs(bytes[3]), bytes[4], Math.abs(bytes[3])));
+                                String str;
+                                if (bytes[6] == -1 && bytes[7] == -1) {
+                                    str = String.format(Locale.CHINA, "T:  deltaX: -%d.%d    deltaY: -%d.%d", bytes[2], bytes[3], bytes[4], bytes[5]);
+                                } else {
+                                    if (bytes[6] == -1) {
+                                        str = String.format(Locale.CHINA, "T:  deltaX: -%d.%d    deltaY: %d.%d", bytes[2], bytes[3], bytes[4], bytes[5]);
+                                    } else {
+                                        if (bytes[7] == -1) {
+                                            str = String.format(Locale.CHINA, "T:  deltaX: %d.%d    deltaY: -%d.%d", bytes[2], bytes[3], bytes[4], bytes[5]);
+                                        } else {
+                                            str = String.format(Locale.CHINA, "T:  deltaX: %d.%d    deltaY: %d.%d", bytes[2], bytes[3], bytes[4], bytes[5]);
+                                        }
+                                    }
+                                }
+                                statusTrackingTextView.setText(str);
                             }
                         });
                         break;
@@ -534,8 +559,10 @@ public class MainActivity extends Activity {
                     public void run() {
                         SideToast.makeText(MainActivity.this, "飞行器已断开连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                         aircraftTextView.setText("飞行器未连接");
-                        statusVelocityTextView.setText("V: n/a");
-                        statusAltitudeTextView.setText("A: n/a");
+                        statusHorizontalVelocityTextView.setText("N/A");
+                        statusHorizontalDistanceTextView.setText("N/A");
+                        statusVerticaLDistanceTextView.setText("N/A");
+                        statusVerticalVelocityTextView.setText("N/A");
                         currentBatteryInPercent = -1;
                         curCameraMode = SettingsDefinitions.CameraMode.UNKNOWN;
                     }
@@ -547,7 +574,7 @@ public class MainActivity extends Activity {
             = new FlightControllerState.Callback() {
         @Override
         public void onUpdate(@NonNull final FlightControllerState flightControllerState) {
-            updateVelocity(flightControllerState);
+            updateFlightParams(flightControllerState);
             updateBaiduMapMyLocation(flightControllerState);
             updateSatellitesCount(flightControllerState.getSatelliteCount());
         }
@@ -572,9 +599,9 @@ public class MainActivity extends Activity {
                 SimpleAlertDialog.show(
                         MainActivity.this,
                         false,
-                        "API Key Validation Error",
-                        "Contact the developers or check your network connection",
-                        new SimpleDialogButton("quit", new DialogInterface.OnClickListener() {
+                        "验证失败",
+                        "请检查网络连接",
+                        new SimpleDialogButton("退出", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface x, int y) {
                                 System.exit(0);
@@ -656,7 +683,7 @@ public class MainActivity extends Activity {
 
         waypointMissionParams = new WaypointMissionParams();
 
-        startUpInfoDialog = new SimpleProgressDialog(MainActivity.this, "Validating API key");
+        startUpInfoDialog = new SimpleProgressDialog(MainActivity.this, "正在验证应用程序…");
 
         startUpInfoDialog.show();
         DJISDKManager.getInstance().registerApp(this, sdkManagerCallback);
@@ -699,6 +726,7 @@ public class MainActivity extends Activity {
         UiSettings uiSettings = baiduMap.getUiSettings();
         uiSettings.setCompassEnabled(false);
         uiSettings.setAllGesturesEnabled(false);
+        uiSettings.setScrollGesturesEnabled(true);
         uiSettings.setZoomGesturesEnabled(true);
 
 
@@ -754,30 +782,18 @@ public class MainActivity extends Activity {
         followStateTextView = (TextView) findViewById(R.id.follow_txt);
         aircraftTextView = (TextView) findViewById(R.id.status_aircraft);
         satelliteNumberTextView = (TextView) findViewById(R.id.satellite_number_txt);
-        statusAltitudeTextView = (TextView) findViewById(R.id.altitude_txt);
-        statusVelocityTextView = (TextView) findViewById(R.id.velocity_txt);
+        statusVerticaLDistanceTextView = (TextView) findViewById(R.id.altitude_txt);
+        statusHorizontalDistanceTextView = (TextView) findViewById(R.id.horizontal_distance_txt);
+//        //// TODO: 2017/5/30 test
+//        statusHorizontalDistanceTextView.setVisibility(View.GONE);
+        statusHorizontalVelocityTextView = (TextView) findViewById(R.id.velocity_txt);
+        statusVerticalVelocityTextView = (TextView) findViewById(R.id.vertical_velocity_txt);
         statusLandingTextView = (TextView) findViewById(R.id.landing_status_txt);
         statusTrackingTextView = (TextView) findViewById(R.id.tracking_status_txt);
-        textLogTitle = (TextView) findViewById(R.id.log_title);
         takeOffLinearLayout = (LinearLayout) findViewById(R.id.takeoff);
         landLinearLayout = (LinearLayout) findViewById(R.id.land);
         followLinearLayout = (LinearLayout) findViewById(R.id.folllow_ll);
 
-        logLinearLayout = (LinearLayout) findViewById(R.id.log_ll);
-        logScrollView = (ScrollView) findViewById(R.id.log_sv);
-        logTexts = new Vector<>();
-
-        logScrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                logLinearLayout.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        logScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                });
-            }
-        });
 
         rectView = new RectView(MainActivity.this);
         rectView.setX1(0.0f);
@@ -789,8 +805,6 @@ public class MainActivity extends Activity {
 
         statusTrackingTextView.setVisibility(View.GONE);
         statusLandingTextView.setVisibility(View.GONE);
-        textLogTitle.setVisibility(View.GONE);
-        logLinearLayout.setVisibility(View.GONE);
 
         videoTextureViewFrameLayout.addView(rectView);
 
@@ -809,7 +823,7 @@ public class MainActivity extends Activity {
 
         //// TODO: 2017/5/12 delete this Button
         debugSendDataLandingButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.send_data_test_btn);
-        debugClearLogButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.debug_clear_log_btn);
+        debugSendDataLandingCancelButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.send_data_test_cancel_btn);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(500, ViewGroup.LayoutParams.MATCH_PARENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_START);
         developerOptionsRelativeLayout.setElevation(Integer.MAX_VALUE);
@@ -882,39 +896,31 @@ public class MainActivity extends Activity {
                         && previousWayPointIndex.get() != waypointMissionUploadEvent.getProgress().uploadedWaypointIndex) {
                     previousWayPointIndex.set(waypointMissionUploadEvent.getProgress().uploadedWaypointIndex);
                     uploadInfoDialog.dismiss();
-                    SimpleAlertDialog.show(
-                            MainActivity.this,
-                            false,
-                            "Mission Uploaded",
-                            "Start mission immediately?",
-                            new SimpleDialogButton("yes", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    waypointMissionOperator.startMission(new CommonCallbacks.CompletionCallback() {
-                                        @Override
-                                        public void onResult(final DJIError djiError) {
-                                            if (djiError != null) {
-                                                runOnUiThread(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        SideToast.makeText(MainActivity.this, "任务执行失败:" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
-                                                        mapPanelStopMissionButton.setVisibility(View.GONE);
-                                                        linearLayoutForMap.setVisibility(View.VISIBLE);
-                                                        switchPanelImageView.setVisibility(View.VISIBLE);
-                                                        mapPanelStartMissionButton.setVisibility(View.GONE);
-                                                        mapPanelCancelMissionButton.setVisibility(View.GONE);
-                                                        mapPanelUndoButton.setVisibility(View.GONE);
-                                                        mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
-                                                    }
-                                                });
-                                            } else {
-                                                isExecutingMission.set(true);
+                    waypointMissionOperator.startMission(new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(final DJIError djiError) {
+                            if (djiError != null) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        SideToast.makeText(MainActivity.this, "任务执行失败:" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                        mapPanelStopMissionButton.setVisibility(View.GONE);
+                                        linearLayoutForMap.setVisibility(View.VISIBLE);
+                                        switchPanelImageView.setVisibility(View.VISIBLE);
+                                        mapPanelStartMissionButton.setVisibility(View.GONE);
+                                        mapPanelCancelMissionButton.setVisibility(View.GONE);
+                                        mapPanelUndoButton.setVisibility(View.GONE);
+                                        mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                            } else {
+                                isExecutingMission.set(true);
 
-                                            }
-                                        }
-                                    });
-                                }
-                            }));
+                            }
+                        }
+                    });
+
+
                 }
             }
 
@@ -925,15 +931,14 @@ public class MainActivity extends Activity {
 
             @Override
             public void onExecutionStart() {
+                Log.e(">> Status", "Execution Start");
+                mission = null;
+                System.gc();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mapPanelStopMissionButton.setVisibility(View.VISIBLE);
-                        linearLayoutForMap.setVisibility(View.VISIBLE);
-                        switchPanelImageView.setVisibility(View.VISIBLE);
-                        mapPanelStartMissionButton.setVisibility(View.GONE);
-                        mapPanelCancelMissionButton.setVisibility(View.GONE);
-                        mapPanelUndoButton.setVisibility(View.GONE);
+                        mapPanelCreateLinearLayout.setVisibility(View.GONE);
                     }
                 });
 
@@ -941,7 +946,9 @@ public class MainActivity extends Activity {
 
             @Override
             public void onExecutionFinish(@Nullable DJIError djiError) {
+                Log.e(">> Status", "Execution Finish");
                 isExecutingMission.set(false);
+
 
                 if (djiError != null) {
                     runOnUiThread(new Runnable() {
@@ -1005,7 +1012,7 @@ public class MainActivity extends Activity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            SideToast.makeText(MainActivity.this, "成功返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                            SideToast.makeText(MainActivity.this, "正在返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                                         }
                                     });
                                 }
@@ -1027,7 +1034,7 @@ public class MainActivity extends Activity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        SideToast.makeText(MainActivity.this, "成功返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                                        SideToast.makeText(MainActivity.this, "正在返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                                     }
                                 });
                             }
@@ -1073,29 +1080,44 @@ public class MainActivity extends Activity {
             }
         });
 
-        debugClearLogButton.setOnClickListener(new View.OnClickListener() {
+        debugSendDataLandingCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (TextView txt : logTexts) {
-                    logLinearLayout.removeView(txt);
+                if (flightController == null || !flightController.isConnected()) {
+                    SideToast.makeText(MainActivity.this, "发送失败：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                    return;
                 }
-                logTexts.clear();
+                byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.VISUAL_LANDING_STOP, null);
+                flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError djiError) {
+                        if (djiError != null) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SideToast.makeText(MainActivity.this, "视觉辅助降落终止失败", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                }
+                            });
+                        }
+                    }
+                });
             }
         });
+
 
         debugConfigurationExitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (developSwitchGroup[0].isChecked()) {
-                    statusVelocityTextView.setVisibility(View.VISIBLE);
+                    statusHorizontalVelocityTextView.setVisibility(View.VISIBLE);
                 } else {
-                    statusVelocityTextView.setVisibility(View.GONE);
+                    statusHorizontalVelocityTextView.setVisibility(View.GONE);
                 }
 
                 if (developSwitchGroup[1].isChecked()) {
-                    statusAltitudeTextView.setVisibility(View.VISIBLE);
+                    statusVerticaLDistanceTextView.setVisibility(View.VISIBLE);
                 } else {
-                    statusAltitudeTextView.setVisibility(View.GONE);
+                    statusVerticaLDistanceTextView.setVisibility(View.GONE);
                 }
 
                 if (developSwitchGroup[2].isChecked()) {
@@ -1122,14 +1144,6 @@ public class MainActivity extends Activity {
                     isDrawingFollowObject = false;
                 }
 
-                if (developSwitchGroup[6].isChecked()) {
-                    logLinearLayout.setVisibility(View.VISIBLE);
-                    textLogTitle.setVisibility(View.VISIBLE);
-                } else {
-                    logLinearLayout.setVisibility(View.GONE);
-                    textLogTitle.setVisibility(View.GONE);
-                }
-
                 developerOptionsRelativeLayout.setVisibility(View.GONE);
             }
         });
@@ -1147,7 +1161,12 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!isUsingObjectFollow.get()) {
+                    if (baseProduct == null || !baseProduct.isConnected()) {
+                        SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                        return;
+                    }
                     byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_START, null);
+
                     flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
                         @Override
                         public void onResult(final DJIError djiError) {
@@ -1160,6 +1179,11 @@ public class MainActivity extends Activity {
                     });
 
                 } else {
+                    if (baseProduct == null || !baseProduct.isConnected()) {
+                        SideToast.makeText(MainActivity.this, "无效操作：飞机未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                        return;
+                    }
+
                     byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.OBJECT_TRACKING_STOP, null);
                     flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
                         @Override
@@ -1187,7 +1211,7 @@ public class MainActivity extends Activity {
                             true,
                             "",
                             "确认起飞",
-                            new SimpleDialogButton("Yes", new DialogInterface.OnClickListener() {
+                            new SimpleDialogButton("是", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     flightController.startTakeoff(new CommonCallbacks.CompletionCallback() {
@@ -1221,7 +1245,7 @@ public class MainActivity extends Activity {
                             true,
                             "",
                             "确认降落",
-                            new SimpleDialogButton("Yes", new DialogInterface.OnClickListener() {
+                            new SimpleDialogButton("是", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     flightController.startGoHome(new CommonCallbacks.CompletionCallback() {
@@ -1374,10 +1398,10 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 SimpleAlertDialog.show(
                         MainActivity.this,
-                        false,
-                        "Mission Confirm",
-                        "Start mission immediately?",
-                        new SimpleDialogButton("yes", new DialogInterface.OnClickListener() {
+                        true,
+                        "任务确认",
+                        "是否立即开始任务",
+                        new SimpleDialogButton("是", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if (flightController == null || !flightController.isConnected()) {
@@ -1430,6 +1454,24 @@ public class MainActivity extends Activity {
                                             .dottedLine(true)
                                     );
                                 }
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mapPanelStartMissionButton.setVisibility(View.GONE);
+                                        mapPanelCancelMissionButton.setVisibility(View.GONE);
+                                        mapPanelUndoButton.setVisibility(View.GONE);
+                                        mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
+                                        linearLayoutForMap.setVisibility(View.VISIBLE);
+                                        switchPanelImageView.setVisibility(View.VISIBLE);
+                                        baiduMap.setOnMapLongClickListener(null);
+                                        baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
+                                                MyLocationConfiguration.LocationMode.FOLLOWING,
+                                                true,
+                                                null));
+                                    }
+                                });
+
                                 executeWaypointMission(wayPointList, waypointMissionParams);
                             }
                         }));
@@ -1444,6 +1486,8 @@ public class MainActivity extends Activity {
                 mapPanelUndoButton.setVisibility(View.GONE);
                 baiduMap.setOnMapLongClickListener(null);
                 mapViewPanel.addView(missionConfigurationPanel);
+
+                baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
             }
         });
 
@@ -1463,6 +1507,7 @@ public class MainActivity extends Activity {
                                 }
                             });
                             isCompletedByStopping.set(true);
+                            isExecutingMission.set(false);
 
                         } else {
                             runOnUiThread(new Runnable() {
@@ -1499,11 +1544,12 @@ public class MainActivity extends Activity {
         missionConfigurationPanelOKButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null));
+
                 isCompletedByStopping.set(false);
                 isUsingPreciselyLanding.set(false);
 
-                wayPointList.clear();
-                baiduMap.clear();
+                clearWaypoint();
                 baiduMap.setOnMapLongClickListener(onMapLongClickListener);
                 WaypointMissionFinishedAction waypointMissionFinishedAction;
                 WaypointMissionFlightPathMode waypointMissionFlightPathMode;
@@ -1586,8 +1632,7 @@ public class MainActivity extends Activity {
         mapPanelUndoButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                baiduMap.clear();
-                wayPointList.clear();
+                clearWaypoint();
                 return true;
             }
         });
@@ -1600,6 +1645,12 @@ public class MainActivity extends Activity {
         });
     }
 
+    private void clearWaypoint() {
+        baiduMap.clear();
+        wayPointList.clear();
+        System.gc();
+    }
+
     private void checkSocketConnection() {
         new Thread() {
             @Override
@@ -1608,7 +1659,7 @@ public class MainActivity extends Activity {
                 while (true) {
                     if (socket == null || !socket.isConnected()) {
                         try {
-                            socket = new Socket("192.168.1.102", 3000);
+                            socket = new Socket("192.168.1.101", 3000);
                             bufferedWriter = new BufferedWriter((new OutputStreamWriter(socket.getOutputStream())));
                             while (true) {
                                 if (!socket.isConnected()) throw new Exception();
@@ -1716,13 +1767,16 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void updateVelocity(final FlightControllerState flightControllerState) {
+    private void updateFlightParams(final FlightControllerState flightControllerState) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                statusAltitudeTextView.setText(String.format(Locale.CHINA, "A: %.1f", flightControllerState.getAircraftLocation().getAltitude()));
+                statusVerticaLDistanceTextView.setText(String.format(Locale.CHINA, "%.1f", flightControllerState.getAircraftLocation().getAltitude()));
                 float velocity = (float) Math.sqrt(Math.pow(flightControllerState.getVelocityX(), 2) + Math.pow(flightControllerState.getVelocityY(), 2));
-                statusVelocityTextView.setText(String.format(Locale.CHINA, "V: %.1f", velocity));
+                statusHorizontalVelocityTextView.setText(String.format(Locale.CHINA, "%.1f", velocity));
+                statusVerticalVelocityTextView.setText(String.format(Locale.CHINA, "%.1f", (int) (flightControllerState.getVelocityZ() * 10) == 0 ? 0.0000f : (-1.0) * flightControllerState.getVelocityZ()));
+                double distance = LLDistanceConverter.LL2Distance(flightControllerState.getHomeLocation().getLatitude(), flightControllerState.getHomeLocation().getLongitude(), flightControllerState.getAircraftLocation().getLatitude(), flightControllerState.getAircraftLocation().getLongitude());
+                statusHorizontalDistanceTextView.setText(String.format(Locale.CHINA, "%.1f", distance));
             }
         });
     }
@@ -1787,12 +1841,15 @@ public class MainActivity extends Activity {
                 mapPanelStopMissionButton.setVisibility(View.GONE);
                 mapPanelCreateLinearLayout.setVisibility(View.VISIBLE);
             }
+
             relativeLayoutMain.removeView(cameraShootImageView);
             relativeLayoutMain.removeView(cameraSwitchImageView);
             linearLayoutForMap.removeView(mapViewPanel);
             videoTextureViewFrameLayout.removeView(videoTextureView);
             videoTextureViewFrameLayout.addView(mapViewPanel);
             linearLayoutForMap.addView(videoTextureView);
+            landLinearLayout.setVisibility(View.GONE);
+            takeOffLinearLayout.setVisibility(View.GONE);
             followLinearLayout.setVisibility(View.GONE);
         } else {
             mapPanelStopMissionButton.setVisibility(View.GONE);
@@ -1803,6 +1860,8 @@ public class MainActivity extends Activity {
             videoTextureViewFrameLayout.addView(videoTextureView);
             relativeLayoutMain.addView(cameraShootImageView);
             relativeLayoutMain.addView(cameraSwitchImageView);
+            takeOffLinearLayout.setVisibility(View.VISIBLE);
+            landLinearLayout.setVisibility(View.VISIBLE);
             followLinearLayout.setVisibility(View.VISIBLE);
         }
 
@@ -1830,7 +1889,9 @@ public class MainActivity extends Activity {
             atomicInteger.set(0);
             isCompletedByStopping.set(false);
 
-            DJIError djiErrorFirst = waypointMissionOperator.loadMission(builder.build());
+            mission = builder.build();
+
+            DJIError djiErrorFirst = waypointMissionOperator.loadMission(mission);
 
             if (djiErrorFirst != null) {
                 SideToast.makeText(MainActivity.this, djiErrorFirst.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();

@@ -17,7 +17,7 @@
         android:backgroundTint="@color/white"
         android:drawablePadding="8dp"
         android:longClickable="true"
-        android:text="clean up"
+        android:text="清空路径点"
         android:textColor="@color/black"
         android:visibility="gone" />
 
@@ -54,7 +54,7 @@
         android:layout_alignParentEnd="true"
         android:backgroundTint="@color/red"
         android:drawablePadding="8dp"
-        android:text="cancel"
+        android:text="取消"
         android:textColor="@color/white"
         android:visibility="gone" />
 
@@ -65,7 +65,7 @@
         android:layout_toStartOf="@id/mv_btn_cancel"
         android:backgroundTint="@color/green"
         android:drawablePadding="8dp"
-        android:text="start"
+        android:text="开始"
         android:textColor="@color/white"
         android:visibility="gone" />
 
@@ -76,7 +76,7 @@
         android:layout_alignParentEnd="true"
         android:backgroundTint="@color/red"
         android:drawablePadding="8dp"
-        android:text="stop"
+        android:text="停止任务"
         android:textColor="@color/white"
         android:visibility="gone" />
 </RelativeLayout>

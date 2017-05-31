@@ -30,11 +30,21 @@
             android:textColor="@color/white" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/debug_title_spliter"
+        android:layout_below="@+id/debug_title_ll"
+        android:layout_marginBottom="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/whiteTrans"
+        android:layout_marginTop="7dp" />
+
+
     <ScrollView
         android:scrollbars="none"
         android:layout_above="@+id/debug_exit_btn"
         android:id="@+id/debug_scrollView"
-        android:layout_below="@+id/debug_title_ll"
+        android:layout_below="@+id/debug_title_spliter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -42,13 +52,6 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <View
-                android:layout_marginBottom="2dp"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/whiteTrans"
-                android:layout_marginTop="7dp" />
 
             <Switch
                 android:id="@+id/switch1"
@@ -124,7 +127,7 @@
 
             <Button
                 android:textSize="10sp"
-                android:id="@+id/debug_clear_log_btn"
+                android:id="@+id/send_data_test_cancel_btn"
                 android:text="清空日志"
                 android:layout_width="80dp"
                 android:layout_height="40dp" />

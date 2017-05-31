@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:buttonTint="@color/white"
-                    android:text="无"
+                    android:text="悬停"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
@@ -166,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:buttonTint="@color/white"
-                    android:text="视觉辅助精准降落"
+                    android:text="视觉辅助降落"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </RadioGroup>
@@ -241,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
                     android:buttonTint="@color/white"
-                    android:text="根据初始"
+                    android:text="初始朝向"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 

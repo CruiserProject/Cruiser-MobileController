@@ -182,17 +182,34 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/takeoff"
-        android:layout_below="@+id/status_bar_ll"
-        android:layout_marginBottom="5dp"
+    <RelativeLayout
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:background="@drawable/background_round"
+        android:gravity="center_vertical"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/status_ll_va"
+        android:layout_centerHorizontal="true"
+        android:layout_width="310dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="18dp"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:orientation="vertical">
+        android:layout_marginTop="5dp">
 
         <TextView
+            android:id="@+id/hs_title"
+            android:textSize="12sp"
+            android:text="H.S: "
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_toRightOf="@id/hs_title"
             android:id="@+id/velocity_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -200,11 +217,79 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
-            android:text="V: 5.31 LY/US"
+            android:text=" N/A"
             android:textColor="@color/white"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <TextView
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/hs_title"
+            android:id="@+id/vs_title"
+            android:textSize="12sp"
+            android:text="V.S: "
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_toRightOf="@id/vs_title"
+            android:id="@+id/vertical_velocity_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:text="N/A"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/vs_title"
+            android:id="@+id/d_title"
+            android:textSize="12sp"
+            android:text="D: "
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_toRightOf="@id/d_title"
+            android:id="@+id/horizontal_distance_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:text="N/A"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/d_title"
+            android:id="@+id/h_title"
+            android:textSize="12sp"
+            android:text="H: "
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="5"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_toRightOf="@id/h_title"
             android:id="@+id/altitude_txt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -212,9 +297,20 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
-            android:text="A: 173.6 LY"
+            android:text="N/A"
             android:textColor="@color/white"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
+
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_below="@+id/status_bar_ll"
+        android:id="@+id/status_ll_lt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
 
         <TextView
             android:id="@+id/landing_status_txt"
@@ -224,9 +320,9 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
-            android:text="L: NO MARK DETECTED"
+            android:text="L: N/A"
             android:textColor="@color/white"
-            android:textSize="10sp" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/tracking_status_txt"
@@ -236,34 +332,9 @@
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="5"
-            android:text="T: NO TARGET ASSIGNED"
+            android:text="T: N/A"
             android:textColor="@color/white"
-            android:textSize="10sp" />
-
-        <TextView
-            android:id="@+id/log_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:shadowColor="@color/black"
-            android:shadowDx="0"
-            android:shadowDy="0"
-            android:shadowRadius="5"
-            android:text="LOG:"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
-
-        <ScrollView
-            android:scrollbars="none"
-            android:id="@+id/log_sv"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:id="@+id/log_ll"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </ScrollView>
+            android:textSize="12sp" />
     </LinearLayout>
 
     <ImageView
@@ -305,7 +376,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/takeoff"
+        android:layout_toRightOf="@+id/takeoff"
         android:background="@drawable/background_round"
         android:elevation="2dp"
         android:orientation="horizontal">
