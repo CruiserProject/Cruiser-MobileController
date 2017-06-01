@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -42,6 +43,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -77,6 +80,7 @@ import dji.common.mission.waypoint.WaypointMissionFlightPathMode;
 import dji.common.mission.waypoint.WaypointMissionGotoWaypointMode;
 import dji.common.mission.waypoint.WaypointMissionHeadingMode;
 import dji.common.mission.waypoint.WaypointMissionUploadEvent;
+import dji.common.model.LocationCoordinate2D;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
@@ -130,6 +134,10 @@ public class MainActivity extends Activity {
     private Button missionConfigurationPanelOKButton;
     private Button missionConfigurationPanelCancelButton;
     private Button debugConfigurationExitButton;
+    private SeekBar autoFlightSpeedSeekbar;
+    private SeekBar flightHeightSeekbar;
+    private TextView textViewAutoFlightSpeed;
+    private TextView textViewflightHeight;
     // a test for SendDataToOnBoardSDKDevice
     private Button debugSendDataLandingButton;
     private Button debugSendDataLandingCancelButton;
@@ -138,8 +146,7 @@ public class MainActivity extends Activity {
     private RadioGroup radioGroupPathMode;
     private RadioGroup radioGroupHeading;
     private Switch[] developSwitchGroup;
-    private TextView textViewAutoFlightSpeed;
-    private TextView textViewMaxFlightSpeed;
+
     private SimpleProgressDialog startUpInfoDialog;
     private SimpleProgressDialog uploadInfoDialog;
     private TextureView videoTextureView;
@@ -156,10 +163,11 @@ public class MainActivity extends Activity {
     /*
         data
      */
+    private float waypointMissionFlightHeight = 30.0f;
     private byte[] coordinators = new byte[4];
     private AtomicInteger previousWayPointIndex = new AtomicInteger();
     private AtomicBoolean isCompletedByStopping = new AtomicBoolean();
-    private AtomicBoolean isUsingPreciselyLanding = new AtomicBoolean(false);
+    private AtomicInteger missionFinishMode = new AtomicInteger();
     private AtomicBoolean isUsingObjectFollow = new AtomicBoolean(false);
     private AtomicBoolean isExecutingMission = new AtomicBoolean(false);
     private AtomicBoolean isSocketConnected = new AtomicBoolean(false);
@@ -212,6 +220,7 @@ public class MainActivity extends Activity {
     private WaypointMissionOperator waypointMissionOperator;
     private WaypointMissionParams waypointMissionParams;
     private WaypointMission mission;
+
     private List<Waypoint> wayPointList = new ArrayList<>();
 
     private BaiduMap.OnMapLongClickListener onMapLongClickListener
@@ -222,7 +231,7 @@ public class MainActivity extends Activity {
             wayPointList.add(new Waypoint(
                     latLngGPS84.latitude,
                     latLngGPS84.longitude,
-                    30F)
+                    waypointMissionFlightHeight)
             );
             baiduMap.addOverlay(new MarkerOptions()
                     .position(latLng)
@@ -252,7 +261,6 @@ public class MainActivity extends Activity {
             }
         }
     };
-
     private View.OnClickListener newMissionOnClickListener
             = new View.OnClickListener() {
         @Override
@@ -376,6 +384,15 @@ public class MainActivity extends Activity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                SideToast.makeText(MainActivity.this, "开始垂直下降", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
+                            }
+                        });
+                        break;
+                    case 0x08:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                SideToast.makeText(MainActivity.this, "已成功降落", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                                 final byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.VISUAL_LANDING_STOP, null);
                                 flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
                                     @Override
@@ -397,15 +414,6 @@ public class MainActivity extends Activity {
                                         }
                                     }
                                 });
-                                SideToast.makeText(MainActivity.this, "开始垂直下降", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
-                            }
-                        });
-                        break;
-                    case 0x08:
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                SideToast.makeText(MainActivity.this, "已成功降落", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                             }
                         });
                         break;
@@ -749,8 +757,44 @@ public class MainActivity extends Activity {
         radioGroupMissionFinishAction = (RadioGroup) missionConfigurationPanel.findViewById(R.id.rg_mission_finish_action);
         radioGroupPathMode = (RadioGroup) missionConfigurationPanel.findViewById(R.id.rg_path_mode);
         radioGroupHeading = (RadioGroup) missionConfigurationPanel.findViewById(R.id.rg_heading);
-        textViewMaxFlightSpeed = (TextView) missionConfigurationPanel.findViewById(R.id.edtxt_max_flight_speed);
-        textViewAutoFlightSpeed = (TextView) missionConfigurationPanel.findViewById(R.id.edtxt_auto_flight_speed);
+        autoFlightSpeedSeekbar = (SeekBar) missionConfigurationPanel.findViewById(R.id.afs_seekbar);
+        flightHeightSeekbar = (SeekBar) missionConfigurationPanel.findViewById(R.id.fh_seekbar);
+        textViewAutoFlightSpeed = (TextView) missionConfigurationPanel.findViewById(R.id.afs_txt);
+        textViewflightHeight = (TextView) missionConfigurationPanel.findViewById(R.id.fh_txt);
+
+        autoFlightSpeedSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textViewAutoFlightSpeed.setText(String.format(Locale.CHINA, "飞行速度： %d m/s", progress + 2));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+        flightHeightSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textViewflightHeight.setText(String.format(Locale.CHINA, "飞行高度： %d m", progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
     }
 
     private void initVideoTextureView() {
@@ -817,9 +861,6 @@ public class MainActivity extends Activity {
         developSwitchGroup[1] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch2);
         developSwitchGroup[2] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch3);
         developSwitchGroup[3] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch4);
-        developSwitchGroup[4] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch5);
-        developSwitchGroup[5] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch6);
-        developSwitchGroup[6] = (Switch) developerOptionsRelativeLayout.findViewById(R.id.switch7);
 
         //// TODO: 2017/5/12 delete this Button
         debugSendDataLandingButton = (Button) developerOptionsRelativeLayout.findViewById(R.id.send_data_test_btn);
@@ -944,11 +985,11 @@ public class MainActivity extends Activity {
 
             }
 
+
             @Override
             public void onExecutionFinish(@Nullable DJIError djiError) {
                 Log.e(">> Status", "Execution Finish");
                 isExecutingMission.set(false);
-
 
                 if (djiError != null) {
                     runOnUiThread(new Runnable() {
@@ -973,7 +1014,57 @@ public class MainActivity extends Activity {
                         }
                     }
                 });
-                if (isUsingPreciselyLanding.get()) {
+
+                if (isCompletedByStopping.get()) {
+                    if (missionFinishMode.get() != 0) {
+                        goHome();
+                    }
+                    return;
+                }
+
+                switch (missionFinishMode.get()) {
+                    case 0:
+                        break;
+                    case 1:
+                        goHome();
+                        break;
+                    case 2:
+                        TimerTask task = new TimerTask() {
+                            @Override
+                            public void run() {
+                                byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.VISUAL_LANDING_START, null);
+                                flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
+                                    @Override
+                                    public void onResult(final DJIError djiError) {
+                                        if (djiError == null) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    SideToast.makeText(MainActivity.this, "正在请求视觉辅助降落", SideToast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        } else {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    SideToast.makeText(MainActivity.this, "请求降落失败：" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        };
+
+                        Timer timer = new Timer();
+                        timer.schedule(task, 10000);
+                        break;
+                    default:
+                        goHome();
+                        break;
+                }
+
+                /*if (isUsingPreciselyLanding.get()) {
                     if (!isCompletedByStopping.get()) {
                         byte[] data = OnboardDataEncoder.encode(OnboardDataEncoder.DataType.VISUAL_LANDING_START, null);
                         flightController.sendDataToOnboardSDKDevice(data, new CommonCallbacks.CompletionCallback() {
@@ -983,20 +1074,19 @@ public class MainActivity extends Activity {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            SideToast.makeText(MainActivity.this, "正在请求视觉辅助精准降落", SideToast.LENGTH_SHORT).show();
+                                            SideToast.makeText(MainActivity.this, "正在请求视觉辅助降落", SideToast.LENGTH_SHORT).show();
                                         }
                                     });
                                 } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            SideToast.makeText(MainActivity.this, "请求精准降落失败：" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                            SideToast.makeText(MainActivity.this, "请求降落失败：" + djiError.toString(), SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                         }
                                     });
                                 }
                             }
                         });
-
                     } else {
                         flightController.startGoHome(new CommonCallbacks.CompletionCallback() {
                             @Override
@@ -1038,6 +1128,29 @@ public class MainActivity extends Activity {
                                     }
                                 });
                             }
+                        }
+                    });
+                }*/
+            }
+        });
+    }
+
+    private void goHome() {
+        flightController.startGoHome(new CommonCallbacks.CompletionCallback() {
+            @Override
+            public void onResult(DJIError djiError) {
+                if (djiError != null) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SideToast.makeText(MainActivity.this, "返航时出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                        }
+                    });
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SideToast.makeText(MainActivity.this, "正在返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
                         }
                     });
                 }
@@ -1109,36 +1222,24 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (developSwitchGroup[0].isChecked()) {
-                    statusHorizontalVelocityTextView.setVisibility(View.VISIBLE);
-                } else {
-                    statusHorizontalVelocityTextView.setVisibility(View.GONE);
-                }
-
-                if (developSwitchGroup[1].isChecked()) {
-                    statusVerticaLDistanceTextView.setVisibility(View.VISIBLE);
-                } else {
-                    statusVerticaLDistanceTextView.setVisibility(View.GONE);
-                }
-
-                if (developSwitchGroup[2].isChecked()) {
                     statusLandingTextView.setVisibility(View.VISIBLE);
                 } else {
                     statusLandingTextView.setVisibility(View.GONE);
                 }
 
-                if (developSwitchGroup[3].isChecked()) {
+                if (developSwitchGroup[1].isChecked()) {
                     statusTrackingTextView.setVisibility(View.VISIBLE);
                 } else {
                     statusTrackingTextView.setVisibility(View.GONE);
                 }
 
-                if (developSwitchGroup[4].isChecked()) {
+                if (developSwitchGroup[2].isChecked()) {
                     isDrawingLandingCircle = true;
                 } else {
                     isDrawingLandingCircle = false;
                 }
 
-                if (developSwitchGroup[5].isChecked()) {
+                if (developSwitchGroup[3].isChecked()) {
                     isDrawingFollowObject = true;
                 } else {
                     isDrawingFollowObject = false;
@@ -1248,16 +1349,7 @@ public class MainActivity extends Activity {
                             new SimpleDialogButton("是", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    flightController.startGoHome(new CommonCallbacks.CompletionCallback() {
-                                        @Override
-                                        public void onResult(DJIError djiError) {
-                                            if (djiError != null) {
-                                                SideToast.makeText(MainActivity.this, "返航时出现错误", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
-                                            } else {
-                                                SideToast.makeText(MainActivity.this, "成功返航", SideToast.LENGTH_SHORT, SideToast.TYPE_NORMAL).show();
-                                            }
-                                        }
-                                    });
+                                    goHome();
                                 }
                             })
                     );
@@ -1408,11 +1500,77 @@ public class MainActivity extends Activity {
                                     SideToast.makeText(MainActivity.this, "任务执行错误：飞行器未连接", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
                                     return;
                                 }
-                                LocationCoordinate3D homeLocation = flightController.getState().getAircraftLocation();
-                                wayPointList.add(new Waypoint(homeLocation.getLatitude(), homeLocation.getLongitude(), 30.0f));
+
+                                if (wayPointList.size() <= 0) {
+                                    SideToast.makeText(MainActivity.this, "路径点数量不合法", SideToast.LENGTH_SHORT, SideToast.TYPE_ERROR).show();
+                                    return;
+                                }
+                                LocationCoordinate3D curLocation = flightController.getState().getAircraftLocation();
+                                wayPointList.add(0, new Waypoint(curLocation.getLatitude(), curLocation.getLongitude(), waypointMissionFlightHeight));
+                                LatLng latLngBD09 = CoordinationConverter.GPS2BD09(new LatLng(curLocation.getLatitude(), curLocation.getLongitude()));
+                                baiduMap.addOverlay(new MarkerOptions()
+                                        .position(latLngBD09)
+                                        .animateType(MarkerOptions.MarkerAnimateType.grow)
+                                        .flat(true)
+                                        .anchor(0.5F, 0.5F)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker))
+                                        .draggable(false));
+                                baiduMap.addOverlay(new PolylineOptions()
+                                        .points(new ArrayList<LatLng>() {
+                                            {
+                                                add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                        wayPointList.get(0).coordinate.getLatitude(),
+                                                        wayPointList.get(0).coordinate.getLongitude()
+                                                )));
+                                                add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                        wayPointList.get(1).coordinate.getLatitude(),
+                                                        wayPointList.get(1).coordinate.getLongitude()
+                                                )));
+                                            }
+                                        })
+                                        .color(R.color.purple)
+                                        .dottedLine(true)
+                                );
+                                final LocationCoordinate2D homeLocation = flightController.getState().getHomeLocation();
+                                final int pointListSize = wayPointList.size();
+                                switch (missionFinishMode.get()) {
+                                    case 0:
+                                        break;
+                                    case 2:
+                                        wayPointList.add(new Waypoint(homeLocation.getLatitude(), homeLocation.getLongitude(), waypointMissionFlightHeight));
+                                    case 1:
+                                        latLngBD09 = CoordinationConverter.GPS2BD09(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()));
+                                        baiduMap.addOverlay(new MarkerOptions()
+                                                .position(latLngBD09)
+                                                .animateType(MarkerOptions.MarkerAnimateType.grow)
+                                                .flat(true)
+                                                .anchor(0.5F, 0.5F)
+                                                .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker))
+                                                .draggable(false));
+                                        baiduMap.addOverlay(new PolylineOptions()
+                                                .points(new ArrayList<LatLng>() {
+                                                    {
+                                                        add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                                homeLocation.getLatitude(),
+                                                                homeLocation.getLongitude()
+                                                        )));
+                                                        add(CoordinationConverter.GPS2BD09(new LatLng(
+                                                                wayPointList.get(pointListSize - 1).coordinate.getLatitude(),
+                                                                wayPointList.get(pointListSize - 1).coordinate.getLongitude()
+                                                        )));
+                                                    }
+                                                })
+                                                .color(R.color.purple)
+                                                .dottedLine(true)
+                                        );
+                                        break;
+                                }
+
+                              /*  LocationCoordinate3D homeLocation = flightController.getState().getAircraftLocation();
+                                wayPointList.add(new Waypoint(homeLocation.getLatitude(), homeLocation.getLongitude(), waypointMissionFlightHeight));
 
                                 final int pointListSize = wayPointList.size();
-                                LatLng latLngBD09 = CoordinationConverter.GPS2BD09(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()));
+                                latLngBD09 = CoordinationConverter.GPS2BD09(new LatLng(homeLocation.getLatitude(), homeLocation.getLongitude()));
                                 baiduMap.addOverlay(new MarkerOptions()
                                         .position(latLngBD09)
                                         .animateType(MarkerOptions.MarkerAnimateType.grow)
@@ -1453,7 +1611,7 @@ public class MainActivity extends Activity {
                                             .color(R.color.purple)
                                             .dottedLine(true)
                                     );
-                                }
+                                }*/
 
                                 runOnUiThread(new Runnable() {
                                     @Override
@@ -1547,7 +1705,7 @@ public class MainActivity extends Activity {
                 baiduMap.setMyLocationConfigeration(new MyLocationConfiguration(MyLocationConfiguration.LocationMode.NORMAL, true, null));
 
                 isCompletedByStopping.set(false);
-                isUsingPreciselyLanding.set(false);
+                missionFinishMode.set(1);
 
                 clearWaypoint();
                 baiduMap.setOnMapLongClickListener(onMapLongClickListener);
@@ -1559,18 +1717,18 @@ public class MainActivity extends Activity {
                 switch (radioGroupMissionFinishAction.getCheckedRadioButtonId()) {
                     case R.id.rb_c:
                         waypointMissionFinishedAction = WaypointMissionFinishedAction.NO_ACTION;
-                        isUsingPreciselyLanding.set(false);
+                        missionFinishMode.set(0);
                         break;
                     case R.id.rb_d:
                         waypointMissionFinishedAction = WaypointMissionFinishedAction.NO_ACTION;
-                        isUsingPreciselyLanding.set(false);
+                        missionFinishMode.set(1);
                         break;
                     case R.id.rb_e:
                         waypointMissionFinishedAction = WaypointMissionFinishedAction.NO_ACTION;
-                        isUsingPreciselyLanding.set(true);
+                        missionFinishMode.set(2);
                         break;
                     default:
-                        isUsingPreciselyLanding.set(false);
+                        missionFinishMode.set(1);
                         waypointMissionFinishedAction = WaypointMissionFinishedAction.NO_ACTION;
                         break;
                 }
@@ -1614,18 +1772,19 @@ public class MainActivity extends Activity {
                         break;
                 }
 
+                waypointMissionFlightHeight = flightHeightSeekbar.getProgress();
                 waypointMissionParams.setMissionFinishedAction(waypointMissionFinishedAction);
                 waypointMissionParams.setMissionFlightPathMode(waypointMissionFlightPathMode);
                 waypointMissionParams.setMissionGotoWaypointMode(waypointMissionGotoWaypointModel);
                 waypointMissionParams.setMissionHeadingMode(waypointMissionHeadingMode);
-                String maxSpeedString = textViewMaxFlightSpeed.getText().toString().trim();
-                String autoSpeedString = textViewAutoFlightSpeed.getText().toString().trim();
-                waypointMissionParams.setMaxFlightSpeed(Float.valueOf("".equals(maxSpeedString) ? "5" : maxSpeedString));
-                waypointMissionParams.setAutoFlightSpeed(Float.valueOf("".equals(autoSpeedString) ? "2" : autoSpeedString));
+                waypointMissionParams.setAutoFlightSpeed(autoFlightSpeedSeekbar.getProgress() + 2);
+                waypointMissionParams.setMaxFlightSpeed(15.0f);
                 mapViewPanel.removeView(missionConfigurationPanel);
                 mapPanelStartMissionButton.setVisibility(View.VISIBLE);
                 mapPanelCancelMissionButton.setVisibility(View.VISIBLE);
                 mapPanelUndoButton.setVisibility(View.VISIBLE);
+
+
             }
         });
 

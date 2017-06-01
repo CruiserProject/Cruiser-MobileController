@@ -11,6 +11,7 @@
         android:layout_height="match_parent" />
 
     <Button
+        android:foreground="?attr/selectableItemBackground"
         android:id="@+id/mv_btn_undo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,6 +49,7 @@
     </LinearLayout>
 
     <Button
+        android:foreground="?attr/selectableItemBackground"
         android:id="@+id/mv_btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,6 +61,7 @@
         android:visibility="gone" />
 
     <Button
+        android:foreground="?attr/selectableItemBackground"
         android:id="@+id/mv_btn_start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,6 +73,7 @@
         android:visibility="gone" />
 
     <Button
+        android:foreground="?attr/selectableItemBackground"
         android:id="@+id/mv_btn_stop_mission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
