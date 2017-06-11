@@ -266,7 +266,7 @@ public class MainActivity extends Activity {
         @Override
         public void onClick(View v) {
             mapPanelCreateLinearLayout.setVisibility(View.GONE);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(DensityUtil.dip2px(MainActivity.this, 200.0f), ViewGroup.LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(DensityUtil.dip2px(MainActivity.this, 165.0f), ViewGroup.LayoutParams.MATCH_PARENT);
             params.addRule(RelativeLayout.ALIGN_PARENT_END);
             mapViewPanel.addView(missionConfigurationPanel, params);
             linearLayoutForMap.setVisibility(View.GONE);

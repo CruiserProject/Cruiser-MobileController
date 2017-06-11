@@ -185,13 +185,12 @@
 
     <RelativeLayout
         android:paddingStart="15dp"
-        android:paddingEnd="15dp"
         android:background="@drawable/background_round"
         android:gravity="center_vertical"
         android:layout_alignParentBottom="true"
         android:id="@+id/status_ll_va"
         android:layout_centerHorizontal="true"
-        android:layout_width="310dp"
+        android:layout_width="290dp"
         android:layout_height="25dp"
         android:layout_marginBottom="18dp"
         android:layout_marginStart="5dp"
@@ -374,16 +373,16 @@
     <LinearLayout
         android:id="@+id/land"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="35dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/takeoff"
         android:background="@drawable/background_round"
         android:elevation="2dp"
         android:orientation="horizontal">
 
         <ImageView
+            android:layout_gravity="center_vertical"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:elevation="2dp"
@@ -402,9 +401,8 @@
     <LinearLayout
         android:id="@+id/takeoff"
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
+        android:layout_height="35dp"
         android:layout_above="@+id/land"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10dp"
@@ -413,6 +411,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:layout_gravity="center_vertical"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="10dp"

@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="200dp"
     android:layout_height="match_parent"
-    android:layout_alignParentEnd="true"
     android:background="@color/grey">
 
     <ScrollView
@@ -22,8 +21,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingBottom="10dp"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
+            android:paddingEnd="1dp"
+            android:paddingStart="1dp"
             android:paddingTop="10dp">
 
             <TextView
@@ -261,6 +260,8 @@
     </ScrollView>
 
     <LinearLayout
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp"
         android:id="@+id/control_mission_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
